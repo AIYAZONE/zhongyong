@@ -4,8 +4,9 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="color-scheme" content="light">
-<link rel="icon" type="image/svg+xml" href="favicon.svg">
 <title>中庸 · 三十三天共读</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2NCA2NCI+CiAgPGRlZnM+CiAgICA8bGluZWFyR3JhZGllbnQgaWQ9ImciIHgxPSIwIiB5MT0iMCIgeDI9IjEiIHkyPSIxIj4KICAgICAgPHN0b3Agb2Zmc2V0PSIwIiBzdG9wLWNvbG9yPSIjYjIzMDJiIi8+CiAgICAgIDxzdG9wIG9mZnNldD0iMSIgc3RvcC1jb2xvcj0iIzhhMWYxZiIvPgogICAgPC9saW5lYXJHcmFkaWVudD4KICA8L2RlZnM+CiAgPHJlY3QgeD0iMyIgeT0iMyIgd2lkdGg9IjU4IiBoZWlnaHQ9IjU4IiByeD0iMTQiIGZpbGw9InVybCgjZykiLz4KICA8cmVjdCB4PSI2LjUiIHk9IjYuNSIgd2lkdGg9IjUxIiBoZWlnaHQ9IjUxIiByeD0iMTEiIGZpbGw9Im5vbmUiIHN0cm9rZT0iI2YzZDlkMiIgc3Ryb2tlLW9wYWNpdHk9Ii41NSIgc3Ryb2tlLXdpZHRoPSIxLjUiLz4KICA8dGV4dCB4PSIzMiIgeT0iNDUiIGZvbnQtZmFtaWx5PSInU29uZ3RpIFNDJywnU1RTb25nJywnTm90byBTZXJpZiBTQycsJ1NpbVN1bicsc2VyaWYiIGZvbnQtc2l6ZT0iNDAiIGZvbnQtd2VpZ2h0PSI3MDAiIGZpbGw9IiNmZmYiIHRleHQtYW5jaG9yPSJtaWRkbGUiPuS4rTwvdGV4dD4KPC9zdmc+">
+<meta name="theme-color" content="#a02c2c">
 <style>
 :root{
   --paper:#f6f1e6; --card:#fffdf7; --ink:#2e2a22; --soft:#71695a;
@@ -412,12 +413,14 @@ body.paged.view-chapter .pager{display:flex}
 .sheng-note{width:100%;box-sizing:border-box;font:inherit;font-size:14.5px;line-height:1.8;color:var(--ink);
   background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:10px 12px;resize:vertical;min-height:64px}
 .sheng-note:focus{outline:none;border-color:var(--accent)}
+.sheng-hint{margin:6px 0 0;font-size:12px;line-height:1.6;color:var(--soft);opacity:.85}
 
 /* ========== 今日安心签 ========== */
 .anshen-card{margin-top:14px;background:linear-gradient(135deg,var(--accent-bg),#fdf3ee);border:1px solid #eccfc6;border-radius:12px;padding:14px 16px;display:flex;flex-direction:column;align-items:flex-start;gap:8px}
 .anshen-label{font-size:12px;letter-spacing:2px;color:var(--accent-deep);font-weight:600}
 .anshen-text{font-family:"STKaiti","KaiTi",serif;font-size:19px;line-height:1.7;color:var(--ink);text-align:justify}
 .anshen-share{margin-top:2px}
+.anshen-block{margin-top:18px}
 
 /* ========== 中庸与当代焦虑 ========== */
 .mxgrid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
@@ -457,8 +460,6 @@ body.paged.view-chapter .pager{display:flex}
   .tools-panel{left:auto;right:14px;bottom:auto;top:64px;width:300px;max-width:300px;margin:0;border-radius:16px;box-shadow:0 10px 36px rgba(0,0,0,.18)}
 }
 /* 践行笔记登录门控浮层 */
-.sheng-lock{margin-top:12px;padding:14px;border:1px dashed var(--accent);border-radius:10px;background:var(--accent-bg);text-align:center}
-.sheng-lock p{margin:0 0 10px;font-size:13.5px;line-height:1.7;color:var(--accent-deep)}
 .sheng-note:disabled{opacity:.5;background:var(--paper);cursor:not-allowed}
 
 /* ========== 响应式收尾（必须位于基础规则之后，否则同优先级会被覆盖） ========== */
@@ -546,7 +547,7 @@ body.paged.view-chapter .pager{display:flex}
           <button class="btn nav-btn act-today" id="todayBtn" title="跳到今日共读章节">今日<span class="tlong">共读</span></button>
           <button class="btn ghost nav-btn act-toc desk-hide" id="tocBtn">目录</button>
           <span class="top-spacer"></span>
-          <button class="btn ghost" id="toolsBtn" title="工具箱：阅读设置 / 我的云端 / 分享">工具</button>
+          <button class="btn ghost" id="toolsBtn" title="工具箱：阅读设置 / 共读设置 / 分享">工具箱</button>
         </div>
       </div>
 
@@ -557,10 +558,10 @@ body.paged.view-chapter .pager{display:flex}
       <div class="tp-head"><span>工具箱</span><button class="tp-close" id="toolsClose" type="button" aria-label="关闭">×</button></div>
 
       <div class="tp-sec">
-        <div class="tp-sec-t">我的云端</div>
-        <div class="tp-status" id="cloudStatus">未登录</div>
+        <div class="tp-sec-t">我的践行笔记</div>
         <button class="btn block" id="exportSheng" type="button">导出我的 33 天自省</button>
-        <div class="tp-note">登录后，阅读进度与笔记在设备间同步</div>
+        <div class="tp-note">笔记与导出都只保存在当前浏览器，不会上传云端。清除缓存、更换设备或浏览器后将不可见，建议定期导出备份。</div>
+        <div class="tp-note" id="exportTip"></div>
       </div>
 
       <div class="tp-sec">
@@ -606,12 +607,15 @@ body.paged.view-chapter .pager{display:flex}
             <button class="btn" id="resumeBtn" hidden>继续阅读</button>
             <button class="btn" id="jumpBtn">跳到本章</button>
           </div>
-          <div class="anshen-card" id="anshenCard">
-            <div class="anshen-label">今日安心签</div>
-            <div class="anshen-text" id="anshenText"></div>
-            <button class="btn ghost anshen-share" id="anshenShare" type="button">分享这句</button>
-          </div>
           <noscript><p class="noscript-tip" style="display:block">当前环境未启用脚本：目录跳转与全文阅读可正常使用，「今日共读」定位与「分享本章」链接不可用。</p></noscript>
+        </div>
+      </section>
+
+      <section class="anshen-block">
+        <div class="anshen-card" id="anshenCard">
+          <div class="anshen-label">今日安心签</div>
+          <div class="anshen-text" id="anshenText"></div>
+          <button class="btn ghost anshen-share" id="anshenShare" type="button">分享这句</button>
         </div>
       </section>
       </section>
@@ -689,7 +693,7 @@ body.paged.view-chapter .pager{display:flex}
         <div class="panel" data-panel="zz"><p class="zz-head">朱子此章所注，首在：<span class="zz-ref">天命之谓性，率性之谓道，修道之谓教。</span></p><p class="zz">子思述所传之意以立言：首明道之本原出于天而不可易，其实体备于己而不可离；次言存养省察之要；终言圣神功化之极。盖欲学者反求诸身而自得之，以去外诱之私，而充其本然之善。杨氏所谓「一篇之体要」是也。其下十章，盖子思引夫子之言以终此章之义。</p></div>
         <div class="panel" data-panel="jiedu"><div class="jiedu"><p class="jhint">学派名称可点击，展开该学派的简介</p><div class="jrow"><button type="button" class="jlabel" aria-expanded="false">程朱理学</button><div class="jbody"><span class="jbasis">所本：《论语》·《易·系辞》·《中庸章句》</span><div class="jintro">北宋程颢、程颐奠基，南宋朱熹集大成的儒学流派，合称「程朱理学」。主张「性即理」，认为天理贯于万事万物，为学当「居敬穷理」——持敬存心、即物穷理，由格物致知步步贯通。元明以来长期为科举官学，深刻塑造了后世的教育与伦理。本书原文即用朱熹《中庸章句》的三十三章分章。</div><p>朱子以“心之体”说未发之中（性）、“心之用”说已发之和（情），由此开立宋儒“已发未发”之辨，主张未发时须居敬涵养以立大本，已发时须省察以达达道，体用动静交相养，方是中和实功。</p></div></div><div class="jrow"><button type="button" class="jlabel" aria-expanded="false">陆王心学</button><div class="jbody"><span class="jbasis">所本：《孟子》·《传习录》</span><div class="jintro">南宋陆九渊开创、明代王守仁（阳明）发扬的心学一系，与程朱并称「陆王」。主张「心即理」，说「宇宙便是吾心」，为学重在发明本心、知行合一，晚年以「致良知」为宗旨；认为道理不假外求，反求诸身自能明觉。以此读《中庸》，尤其看重「慎独」与「诚」——把它们视作本心的直接呈现。</div><p>阳明以“未发之中即良知”，不主张强分体用为二；良知本是浑然具足、知是知非的，中和只是一事，慎独即是致良知于独知之地，不必外求尺度。</p></div></div><div class="jrow"><button type="button" class="jlabel" aria-expanded="false">现代视界</button><div class="jbody"><span class="jbasis">所本：现代哲学·心理学（非古典）</span><div class="jintro">以近现代的眼光重看《中庸》：现代新儒家（如冯友兰、牟宗三等）的哲学阐释、道德心理学与教育学的研究视角等，把「中」「和」「诚」这些古典概念放进今天的生活与知识框架中理解。此栏目文字为本阅读器自撰的通识性说明，不摘引现代著作原文。</div><p>牟宗三以“天命之谓性”为道德主体之先天根据，性即“道德创造性”自身，可会通康德实践理性之自律；唐君毅、钱穆亦视此为儒家肯定人可上达天德的人本精神。</p></div></div><div class="jrow"><button type="button" class="jlabel" aria-expanded="false">生活启发</button><div class="jbody"><span class="jbasis">所本：日用践履</span><div class="jintro">落到日用常行：把该章义理转译成可操作的提醒与练习，重在「怎么做」。内容为本阅读器自撰，供共读时对照自身、在群内交流。</div><p>真正的修养发生在没人看见的时刻：独处、深夜、无人评判的念头里，仍诚实地不欺暗室。每天留一点反躬自省，比任何外在表现都更接近“中”。</p></div></div></div></div>
         <div class="panel" data-panel="dao"><p>开宗明义三句提出性、道、教三层。全篇以“中”“和”为枢纽，末以“致中和”收束，示天命—人性—修道—教化—位育天地的次第，为全书总纲。</p></div>
-        <div class="panel" data-panel="sheng"><div class="sheng-wrap"><ol class="sheng"><li>你今日情绪是否有过或不及？能否在「未发」时稍作静观？</li><li>你愿意把「天命之谓性」理解为外在的命令，还是内在的根据？</li></ol><div class="sheng-note-box"><label class="sheng-lab">我的践行笔记 <span class="sheng-count" id="shengCount-1">0</span> 字</label><textarea class="sheng-note" id="shengNote-1" data-n="1" rows="3" disabled placeholder="把今天的体悟写下来：哪一句戳中你？你打算怎么用？登录后记录，跨设备同步。"></textarea><div class="sheng-lock" id="shengLock-1"><p>登录后记录，跨设备同步查看</p><button class="btn" id="shengLogin-1" type="button">登录后记录</button></div></div></div></div>
+        <div class="panel" data-panel="sheng"><div class="sheng-wrap"><ol class="sheng"><li>你今日情绪是否有过或不及？能否在「未发」时稍作静观？</li><li>你愿意把「天命之谓性」理解为外在的命令，还是内在的根据？</li></ol><div class="sheng-note-box"><label class="sheng-lab">我的践行笔记 <span class="sheng-count" id="shengCount-1">0</span> 字</label><textarea class="sheng-note" id="shengNote-1" data-n="1" rows="3" placeholder="把今天的体悟写下来：哪一句戳中你？你打算怎么用？"></textarea><p class="sheng-hint">仅保存在本浏览器，不会上传；更换设备、清除缓存后将不可见。</p></div></div></div>
       </div>
     </div>
   </article>
@@ -718,7 +722,7 @@ body.paged.view-chapter .pager{display:flex}
         <div class="panel" data-panel="zz"><p class="zz-head">朱子此章所注，首在：<span class="zz-ref">仲尼曰：“君子中庸，小人反中庸。</span></p><p class="zz">此下十章，皆论中庸以释首章之义。文虽不属，而义则相承，皆言无过不及之意也。</p></div>
         <div class="panel" data-panel="jiedu"><div class="jiedu"><p class="jhint">学派名称可点击，展开该学派的简介</p><div class="jrow"><button type="button" class="jlabel" aria-expanded="false">程朱理学</button><div class="jbody"><span class="jbasis">所本：《论语》·《易·系辞》·《中庸章句》</span><div class="jintro">北宋程颢、程颐奠基，南宋朱熹集大成的儒学流派，合称「程朱理学」。主张「性即理」，认为天理贯于万事万物，为学当「居敬穷理」——持敬存心、即物穷理，由格物致知步步贯通。元明以来长期为科举官学，深刻塑造了后世的教育与伦理。本书原文即用朱熹《中庸章句》的三十三章分章。</div><p>程颐释“中庸”为“不偏之谓中，不易之谓庸”，中庸即万世不易之常理；朱子强调“时中”须以涵养为本，随时处中而非执一，故君子与小人之别在能否持守此中。</p></div></div><div class="jrow"><button type="button" class="jlabel" aria-expanded="false">陆王心学</button><div class="jbody"><span class="jbasis">所本：《孟子》·《传习录》</span><div class="jintro">南宋陆九渊开创、明代王守仁（阳明）发扬的心学一系，与程朱并称「陆王」。主张「心即理」，说「宇宙便是吾心」，为学重在发明本心、知行合一，晚年以「致良知」为宗旨；认为道理不假外求，反求诸身自能明觉。以此读《中庸》，尤其看重「慎独」与「诚」——把它们视作本心的直接呈现。</div><p>良知自然知是知非，时中即是良知在当下情境中天然的妙用，不假外求尺度；小人之无忌惮，正是蔽其良知、随气质私欲流转。</p></div></div><div class="jrow"><button type="button" class="jlabel" aria-expanded="false">现代视界</button><div class="jbody"><span class="jbasis">所本：现代哲学·心理学（非古典）</span><div class="jintro">以近现代的眼光重看《中庸》：现代新儒家（如冯友兰、牟宗三等）的哲学阐释、道德心理学与教育学的研究视角等，把「中」「和」「诚」这些古典概念放进今天的生活与知识框架中理解。此栏目文字为本阅读器自撰的通识性说明，不摘引现代著作原文。</div><p>唐君毅以“时中”为具体情境中道义之活的实现；贺麟等视作一种“合理的”生活艺术，即在变动处境中把握恰好的分寸，具有普遍的实践智慧意义。</p></div></div><div class="jrow"><button type="button" class="jlabel" aria-expanded="false">生活启发</button><div class="jbody"><span class="jbasis">所本：日用践履</span><div class="jintro">落到日用常行：把该章义理转译成可操作的提醒与练习，重在「怎么做」。内容为本阅读器自撰，供共读时对照自身、在群内交流。</div><p>做事不必非左即右、非黑即白。在变动的环境里练出一种“火候感”：该坚持时坚持，该变通时变通，不固执也不盲从。</p></div></div></div></div>
         <div class="panel" data-panel="dao"><p>借孔子之口点出“君子中庸、小人反中庸”的对照，并揭“时中”为君子之德，是全篇第一次正面说“中庸”二字。</p></div>
-        <div class="panel" data-panel="sheng"><div class="sheng-wrap"><ol class="sheng"><li>你最近是否因「无忌惮」而失中？能否找到一处因时处中的例子？</li><li>面对同样的事，你昨天的做法与今天的做法，是否都能称为「时中」？</li></ol><div class="sheng-note-box"><label class="sheng-lab">我的践行笔记 <span class="sheng-count" id="shengCount-2">0</span> 字</label><textarea class="sheng-note" id="shengNote-2" data-n="2" rows="3" disabled placeholder="把今天的体悟写下来：哪一句戳中你？你打算怎么用？登录后记录，跨设备同步。"></textarea><div class="sheng-lock" id="shengLock-2"><p>登录后记录，跨设备同步查看</p><button class="btn" id="shengLogin-2" type="button">登录后记录</button></div></div></div></div>
+        <div class="panel" data-panel="sheng"><div class="sheng-wrap"><ol class="sheng"><li>你最近是否因「无忌惮」而失中？能否找到一处因时处中的例子？</li><li>面对同样的事，你昨天的做法与今天的做法，是否都能称为「时中」？</li></ol><div class="sheng-note-box"><label class="sheng-lab">我的践行笔记 <span class="sheng-count" id="shengCount-2">0</span> 字</label><textarea class="sheng-note" id="shengNote-2" data-n="2" rows="3" placeholder="把今天的体悟写下来：哪一句戳中你？你打算怎么用？"></textarea><p class="sheng-hint">仅保存在本浏览器，不会上传；更换设备、清除缓存后将不可见。</p></div></div></div>
       </div>
     </div>
   </article>
@@ -747,7 +751,7 @@ body.paged.view-chapter .pager{display:flex}
         <div class="panel" data-panel="zz"><p class="zz-head">朱子此章所注，首在：<span class="zz-ref">子曰：“中庸其至矣乎！民鲜能久矣！”。</span></p><p class="zz">此章承上章「鲜能」之意，而明「过」与「不及」之弊：道之不行、不明，皆由贤知过之、愚不肖不及之也。</p></div>
         <div class="panel" data-panel="jiedu"><div class="jiedu"><p class="jhint">学派名称可点击，展开该学派的简介</p><div class="jrow"><button type="button" class="jlabel" aria-expanded="false">程朱理学</button><div class="jbody"><span class="jbasis">所本：《论语》·《易·系辞》·《中庸章句》</span><div class="jintro">北宋程颢、程颐奠基，南宋朱熹集大成的儒学流派，合称「程朱理学」。主张「性即理」，认为天理贯于万事万物，为学当「居敬穷理」——持敬存心、即物穷理，由格物致知步步贯通。元明以来长期为科举官学，深刻塑造了后世的教育与伦理。本书原文即用朱熹《中庸章句》的三十三章分章。</div><p>朱子以为此章叹道之难行，根在私意间隔、习气牵缠，故人虽知之而不能久；救之之道在“择善而固执之”（见第二十章），以诚身夺回恒常。</p></div></div><div class="jrow"><button type="button" class="jlabel" aria-expanded="false">陆王心学</button><div class="jbody"><span class="jbasis">所本：《孟子》·《传习录》</span><div class="jintro">南宋陆九渊开创、明代王守仁（阳明）发扬的心学一系，与程朱并称「陆王」。主张「心即理」，说「宇宙便是吾心」，为学重在发明本心、知行合一，晚年以「致良知」为宗旨；认为道理不假外求，反求诸身自能明觉。以此读《中庸》，尤其看重「慎独」与「诚」——把它们视作本心的直接呈现。</div><p>阳明认为良知本自具足、未尝须臾离人，难在“致”——不能常觉常照、常知常行，故叹“鲜能久”是叹人之自昧其良知。</p></div></div><div class="jrow"><button type="button" class="jlabel" aria-expanded="false">现代视界</button><div class="jbody"><span class="jbasis">所本：现代哲学·心理学（非古典）</span><div class="jintro">以近现代的眼光重看《中庸》：现代新儒家（如冯友兰、牟宗三等）的哲学阐释、道德心理学与教育学的研究视角等，把「中」「和」「诚」这些古典概念放进今天的生活与知识框架中理解。此栏目文字为本阅读器自撰的通识性说明，不摘引现代著作原文。</div><p>钱穆视中庸为“人人可行而难恒”的常道，正体现儒家人文精神不尚高远玄谈、而重日用人伦的踏实；其“难久”揭示道德实践的时间性维度。</p></div></div><div class="jrow"><button type="button" class="jlabel" aria-expanded="false">生活启发</button><div class="jbody"><span class="jbasis">所本：日用践履</span><div class="jintro">落到日用常行：把该章义理转译成可操作的提醒与练习，重在「怎么做」。内容为本阅读器自撰，供共读时对照自身、在群内交流。</div><p>知道什么是对的并不稀奇，稀奇的是长期做到。把“坚持”本身当作一门功夫，一天天累积，比偶尔的爆发更有价值。</p></div></div></div></div>
         <div class="panel" data-panel="dao"><p>叹中庸之难能，承上章而言民鲜能久，为下文反复劝学张本。</p></div>
-        <div class="panel" data-panel="sheng"><div class="sheng-wrap"><ol class="sheng"><li>为何「中庸」常被误解为平庸、折中？你愿意如何向朋友解释它？</li><li>你觉得自己最近一次「恰到好处」是什么时候？</li></ol><div class="sheng-note-box"><label class="sheng-lab">我的践行笔记 <span class="sheng-count" id="shengCount-3">0</span> 字</label><textarea class="sheng-note" id="shengNote-3" data-n="3" rows="3" disabled placeholder="把今天的体悟写下来：哪一句戳中你？你打算怎么用？登录后记录，跨设备同步。"></textarea><div class="sheng-lock" id="shengLock-3"><p>登录后记录，跨设备同步查看</p><button class="btn" id="shengLogin-3" type="button">登录后记录</button></div></div></div></div>
+        <div class="panel" data-panel="sheng"><div class="sheng-wrap"><ol class="sheng"><li>为何「中庸」常被误解为平庸、折中？你愿意如何向朋友解释它？</li><li>你觉得自己最近一次「恰到好处」是什么时候？</li></ol><div class="sheng-note-box"><label class="sheng-lab">我的践行笔记 <span class="sheng-count" id="shengCount-3">0</span> 字</label><textarea class="sheng-note" id="shengNote-3" data-n="3" rows="3" placeholder="把今天的体悟写下来：哪一句戳中你？你打算怎么用？"></textarea><p class="sheng-hint">仅保存在本浏览器，不会上传；更换设备、清除缓存后将不可见。</p></div></div></div>
       </div>
     </div>
   </article>
@@ -776,7 +780,7 @@ body.paged.view-chapter .pager{display:flex}
         <div class="panel" data-panel="zz"><p class="zz-head">朱子此章所注，首在：<span class="zz-ref">子曰：“道之不行也，我知之矣，知者过之，愚者不及也；道之不明也，我知之矣，贤者过之，不肖者不及也。</span></p><p class="zz">此承上章「道不可离」之意，而言「君子之道，造端乎夫妇；及其至也，察乎天地」，以示道之费而隐。</p></div>
         <div class="panel" data-panel="jiedu"><div class="jiedu"><p class="jhint">学派名称可点击，展开该学派的简介</p><div class="jrow"><button type="button" class="jlabel" aria-expanded="false">程朱理学</button><div class="jbody"><span class="jbasis">所本：《论语》·《易·系辞》·《中庸章句》</span><div class="jintro">北宋程颢、程颐奠基，南宋朱熹集大成的儒学流派，合称「程朱理学」。主张「性即理」，认为天理贯于万事万物，为学当「居敬穷理」——持敬存心、即物穷理，由格物致知步步贯通。元明以来长期为科举官学，深刻塑造了后世的教育与伦理。本书原文即用朱熹《中庸章句》的三十三章分章。</div><p>朱子引此明“道不远人”，过与不及皆由私意偏着而生，须“择善而固执”以归中；饮食知味之喻，正是说道在日用、人患不能实知实味。</p></div></div><div class="jrow"><button type="button" class="jlabel" aria-expanded="false">陆王心学</button><div class="jbody"><span class="jbasis">所本：《孟子》·《传习录》</span><div class="jintro">南宋陆九渊开创、明代王守仁（阳明）发扬的心学一系，与程朱并称「陆王」。主张「心即理」，说「宇宙便是吾心」，为学重在发明本心、知行合一，晚年以「致良知」为宗旨；认为道理不假外求，反求诸身自能明觉。以此读《中庸》，尤其看重「慎独」与「诚」——把它们视作本心的直接呈现。</div><p>过与不及皆是心之本体失其平平正正，良知当下即知何处为过、何处为不及；致良知便是时时回到那天然的中。</p></div></div><div class="jrow"><button type="button" class="jlabel" aria-expanded="false">现代视界</button><div class="jbody"><span class="jbasis">所本：现代哲学·心理学（非古典）</span><div class="jintro">以近现代的眼光重看《中庸》：现代新儒家（如冯友兰、牟宗三等）的哲学阐释、道德心理学与教育学的研究视角等，把「中」「和」「诚」这些古典概念放进今天的生活与知识框架中理解。此栏目文字为本阅读器自撰的通识性说明，不摘引现代著作原文。</div><p>冯友兰以“过犹不及”为儒家辩证之中道；当代美德伦理学亦视“德性在于两极端之中”（亚里士多德式中庸），可见其为跨文化的实践智慧。</p></div></div><div class="jrow"><button type="button" class="jlabel" aria-expanded="false">生活启发</button><div class="jbody"><span class="jbasis">所本：日用践履</span><div class="jintro">落到日用常行：把该章义理转译成可操作的提醒与练习，重在「怎么做」。内容为本阅读器自撰，供共读时对照自身、在群内交流。</div><p>许多事就怕走极端：太紧张与太松懈、太苛责与太放纵皆失当。先看清自己偏向哪一端，再把“度”往回拉一点，往往就对了。</p></div></div></div></div>
         <div class="panel" data-panel="dao"><p>以“过”与“不及”两端说明道之所以不明不行，并以饮食知味为喻，点出中庸难在知行相称。</p></div>
-        <div class="panel" data-panel="sheng"><div class="sheng-wrap"><ol class="sheng"><li>你见过的「过」与「不及」中，自己更容易犯哪一种？</li><li>当有人指出你「做过头」时，你的第一反应是辩解还是反省？</li></ol><div class="sheng-note-box"><label class="sheng-lab">我的践行笔记 <span class="sheng-count" id="shengCount-4">0</span> 字</label><textarea class="sheng-note" id="shengNote-4" data-n="4" rows="3" disabled placeholder="把今天的体悟写下来：哪一句戳中你？你打算怎么用？登录后记录，跨设备同步。"></textarea><div class="sheng-lock" id="shengLock-4"><p>登录后记录，跨设备同步查看</p><button class="btn" id="shengLogin-4" type="button">登录后记录</button></div></div></div></div>
+        <div class="panel" data-panel="sheng"><div class="sheng-wrap"><ol class="sheng"><li>你见过的「过」与「不及」中，自己更容易犯哪一种？</li><li>当有人指出你「做过头」时，你的第一反应是辩解还是反省？</li></ol><div class="sheng-note-box"><label class="sheng-lab">我的践行笔记 <span class="sheng-count" id="shengCount-4">0</span> 字</label><textarea class="sheng-note" id="shengNote-4" data-n="4" rows="3" placeholder="把今天的体悟写下来：哪一句戳中你？你打算怎么用？"></textarea><p class="sheng-hint">仅保存在本浏览器，不会上传；更换设备、清除缓存后将不可见。</p></div></div></div>
       </div>
     </div>
   </article>
@@ -805,7 +809,7 @@ body.paged.view-chapter .pager{display:flex}
         <div class="panel" data-panel="zz"><p class="zz-head">朱子此章所注，首在：<span class="zz-ref">子曰：“道其不行矣夫！”。</span></p><p class="zz">此章言「道不远人」，即人之所行而不远乎人，故以「忠恕」「絜矩」明行之之方。</p></div>
         <div class="panel" data-panel="jiedu"><div class="jiedu"><p class="jhint">学派名称可点击，展开该学派的简介</p><div class="jrow"><button type="button" class="jlabel" aria-expanded="false">程朱理学</button><div class="jbody"><span class="jbasis">所本：《论语》·《易·系辞》·《中庸章句》</span><div class="jintro">北宋程颢、程颐奠基，南宋朱熹集大成的儒学流派，合称「程朱理学」。主张「性即理」，认为天理贯于万事万物，为学当「居敬穷理」——持敬存心、即物穷理，由格物致知步步贯通。元明以来长期为科举官学，深刻塑造了后世的教育与伦理。本书原文即用朱熹《中庸章句》的三十三章分章。</div><p>朱子以为圣人此叹，是忧世之深、望道之行于后世；道虽不行于一时，其理自在天壤，故学者当自立于不可行之世而勉行之。</p></div></div><div class="jrow"><button type="button" class="jlabel" aria-expanded="false">陆王心学</button><div class="jbody"><span class="jbasis">所本：《孟子》·《传习录》</span><div class="jintro">南宋陆九渊开创、明代王守仁（阳明）发扬的心学一系，与程朱并称「陆王」。主张「心即理」，说「宇宙便是吾心」，为学重在发明本心、知行合一，晚年以「致良知」为宗旨；认为道理不假外求，反求诸身自能明觉。以此读《中庸》，尤其看重「慎独」与「诚」——把它们视作本心的直接呈现。</div><p>阳明会谓道未尝不行，只是人自昏昧；良知之明如日，虽为云蔽未尝息灭，故“不行”是世人之不行，非道之不行。</p></div></div><div class="jrow"><button type="button" class="jlabel" aria-expanded="false">现代视界</button><div class="jbody"><span class="jbasis">所本：现代哲学·心理学（非古典）</span><div class="jintro">以近现代的眼光重看《中庸》：现代新儒家（如冯友兰、牟宗三等）的哲学阐释、道德心理学与教育学的研究视角等，把「中」「和」「诚」这些古典概念放进今天的生活与知识框架中理解。此栏目文字为本阅读器自撰的通识性说明，不摘引现代著作原文。</div><p>此叹可视为对任何一种时代中“常道失落”的普遍忧思，具有超越具体历史的意义，提醒人珍视那些“人人知道却少有人行”的基本价值。</p></div></div><div class="jrow"><button type="button" class="jlabel" aria-expanded="false">生活启发</button><div class="jbody"><span class="jbasis">所本：日用践履</span><div class="jintro">落到日用常行：把该章义理转译成可操作的提醒与练习，重在「怎么做」。内容为本阅读器自撰，供共读时对照自身、在群内交流。</div><p>面对大环境里普遍的不讲究，不必愤世也不必随俗。守住自己能做的那一分，哪怕周围少有人行，你的“守”本身就有意义。</p></div></div></div></div>
         <div class="panel" data-panel="dao"><p>仅一句，承上章而深叹道之不行，词简而意悲，为全篇最短之章。</p></div>
-        <div class="panel" data-panel="sheng"><div class="sheng-wrap"><ol class="sheng"><li>当理想难行时，你倾向于抱怨环境，还是反求诸己？</li><li>你相信「道」仍在日常待人接物中可行吗？</li></ol><div class="sheng-note-box"><label class="sheng-lab">我的践行笔记 <span class="sheng-count" id="shengCount-5">0</span> 字</label><textarea class="sheng-note" id="shengNote-5" data-n="5" rows="3" disabled placeholder="把今天的体悟写下来：哪一句戳中你？你打算怎么用？登录后记录，跨设备同步。"></textarea><div class="sheng-lock" id="shengLock-5"><p>登录后记录，跨设备同步查看</p><button class="btn" id="shengLogin-5" type="button">登录后记录</button></div></div></div></div>
+        <div class="panel" data-panel="sheng"><div class="sheng-wrap"><ol class="sheng"><li>当理想难行时，你倾向于抱怨环境，还是反求诸己？</li><li>你相信「道」仍在日常待人接物中可行吗？</li></ol><div class="sheng-note-box"><label class="sheng-lab">我的践行笔记 <span class="sheng-count" id="shengCount-5">0</span> 字</label><textarea class="sheng-note" id="shengNote-5" data-n="5" rows="3" placeholder="把今天的体悟写下来：哪一句戳中你？你打算怎么用？"></textarea><p class="sheng-hint">仅保存在本浏览器，不会上传；更换设备、清除缓存后将不可见。</p></div></div></div>
       </div>
     </div>
   </article>
@@ -834,7 +838,7 @@ body.paged.view-chapter .pager{display:flex}
         <div class="panel" data-panel="zz"><p class="zz-head">朱子此章所注，首在：<span class="zz-ref">子曰：“舜其大知也与！舜好问而好察迩言，隐恶而扬善，执其两端，用其中于民，其斯以为舜乎！”。</span></p><p class="zz">此章承上章「道不远人」而言「君子之道四」，以「恕」为行道之实；丘未能一焉，圣人谦辞也。</p></div>
         <div class="panel" data-panel="jiedu"><div class="jiedu"><p class="jhint">学派名称可点击，展开该学派的简介</p><div class="jrow"><button type="button" class="jlabel" aria-expanded="false">程朱理学</button><div class="jbody"><span class="jbasis">所本：《论语》·《易·系辞》·《中庸章句》</span><div class="jintro">北宋程颢、程颐奠基，南宋朱熹集大成的儒学流派，合称「程朱理学」。主张「性即理」，认为天理贯于万事万物，为学当「居敬穷理」——持敬存心、即物穷理，由格物致知步步贯通。元明以来长期为科举官学，深刻塑造了后世的教育与伦理。本书原文即用朱熹《中庸章句》的三十三章分章。</div><p>朱子释“两端”为众论不同之极处，于其中择理之中者而用之，此即舜之大知；隐恶扬善、好察迩言，皆是穷理精察、不敢轻下判断的居敬工夫。</p></div></div><div class="jrow"><button type="button" class="jlabel" aria-expanded="false">陆王心学</button><div class="jbody"><span class="jbasis">所本：《孟子》·《传习录》</span><div class="jintro">南宋陆九渊开创、明代王守仁（阳明）发扬的心学一系，与程朱并称「陆王」。主张「心即理」，说「宇宙便是吾心」，为学重在发明本心、知行合一，晚年以「致良知」为宗旨；认为道理不假外求，反求诸身自能明觉。以此读《中庸》，尤其看重「慎独」与「诚」——把它们视作本心的直接呈现。</div><p>舜之知是良知之圆照，好问察言、执两用中无非“致良知”于事事物物；大知非外铄，正是良知本体之无所偏蔽。</p></div></div><div class="jrow"><button type="button" class="jlabel" aria-expanded="false">现代视界</button><div class="jbody"><span class="jbasis">所本：现代哲学·心理学（非古典）</span><div class="jintro">以近现代的眼光重看《中庸》：现代新儒家（如冯友兰、牟宗三等）的哲学阐释、道德心理学与教育学的研究视角等，把「中」「和」「诚」这些古典概念放进今天的生活与知识框架中理解。此栏目文字为本阅读器自撰的通识性说明，不摘引现代著作原文。</div><p>徐复观等以舜为“政治理性”的典范；其执两用中的态度，与当代公共讨论中兼听异见、避免极化决策的精神相通，可视为审慎智慧之古型。</p></div></div><div class="jrow"><button type="button" class="jlabel" aria-expanded="false">生活启发</button><div class="jbody"><span class="jbasis">所本：日用践履</span><div class="jintro">落到日用常行：把该章义理转译成可操作的提醒与练习，重在「怎么做」。内容为本阅读器自撰，供共读时对照自身、在群内交流。</div><p>做重要决定前，刻意去找相反的意见、去想“另一极端会怎样”，再从中取妥当处。偏听则暗，能同时握住两端的人，判断才稳。</p></div></div></div></div>
         <div class="panel" data-panel="dao"><p>以舜为例，示“中庸”不是折衷取巧，而是好问、察迩、隐恶扬善、执两用中，是大智的落实。</p></div>
-        <div class="panel" data-panel="sheng"><div class="sheng-wrap"><ol class="sheng"><li>你能否像舜一样，对别人的过失「隐恶扬善」？</li><li>听到浅近的意见时，你是轻视，还是愿意体察其中的道理？</li></ol><div class="sheng-note-box"><label class="sheng-lab">我的践行笔记 <span class="sheng-count" id="shengCount-6">0</span> 字</label><textarea class="sheng-note" id="shengNote-6" data-n="6" rows="3" disabled placeholder="把今天的体悟写下来：哪一句戳中你？你打算怎么用？登录后记录，跨设备同步。"></textarea><div class="sheng-lock" id="shengLock-6"><p>登录后记录，跨设备同步查看</p><button class="btn" id="shengLogin-6" type="button">登录后记录</button></div></div></div></div>
+        <div class="panel" data-panel="sheng"><div class="sheng-wrap"><ol class="sheng"><li>你能否像舜一样，对别人的过失「隐恶扬善」？</li><li>听到浅近的意见时，你是轻视，还是愿意体察其中的道理？</li></ol><div class="sheng-note-box"><label class="sheng-lab">我的践行笔记 <span class="sheng-count" id="shengCount-6">0</span> 字</label><textarea class="sheng-note" id="shengNote-6" data-n="6" rows="3" placeholder="把今天的体悟写下来：哪一句戳中你？你打算怎么用？"></textarea><p class="sheng-hint">仅保存在本浏览器，不会上传；更换设备、清除缓存后将不可见。</p></div></div></div>
       </div>
     </div>
   </article>
@@ -863,7 +867,7 @@ body.paged.view-chapter .pager{display:flex}
         <div class="panel" data-panel="zz"><p class="zz-head">朱子此章所注，首在：<span class="zz-ref">子曰：“人皆曰‘予知’，驱而纳诸罟擭陷阱之中，而莫之知辟也。</span></p><p class="zz">此章申言「人之为道而远人，不可以为道」，归本于「忠恕违道不远」。</p></div>
         <div class="panel" data-panel="jiedu"><div class="jiedu"><p class="jhint">学派名称可点击，展开该学派的简介</p><div class="jrow"><button type="button" class="jlabel" aria-expanded="false">程朱理学</button><div class="jbody"><span class="jbasis">所本：《论语》·《易·系辞》·《中庸章句》</span><div class="jintro">北宋程颢、程颐奠基，南宋朱熹集大成的儒学流派，合称「程朱理学」。主张「性即理」，认为天理贯于万事万物，为学当「居敬穷理」——持敬存心、即物穷理，由格物致知步步贯通。元明以来长期为科举官学，深刻塑造了后世的教育与伦理。本书原文即用朱熹《中庸章句》的三十三章分章。</div><p>朱子以为知易守难，择中庸而易、守中庸实难，故须“拳拳服膺而弗失”；此章正见私欲之牵引，非真知则不足以有恒。</p></div></div><div class="jrow"><button type="button" class="jlabel" aria-expanded="false">陆王心学</button><div class="jbody"><span class="jbasis">所本：《孟子》·《传习录》</span><div class="jintro">南宋陆九渊开创、明代王守仁（阳明）发扬的心学一系，与程朱并称「陆王」。主张「心即理」，说「宇宙便是吾心」，为学重在发明本心、知行合一，晚年以「致良知」为宗旨；认为道理不假外求，反求诸身自能明觉。以此读《中庸》，尤其看重「慎独」与「诚」——把它们视作本心的直接呈现。</div><p>阳明“知行合一”最宜会此章：真知即能行，不能守便是知未真；世人自以为知，只是口耳之知、未曾实落于良知之知行。</p></div></div><div class="jrow"><button type="button" class="jlabel" aria-expanded="false">现代视界</button><div class="jbody"><span class="jbasis">所本：现代哲学·心理学（非古典）</span><div class="jintro">以近现代的眼光重看《中庸》：现代新儒家（如冯友兰、牟宗三等）的哲学阐释、道德心理学与教育学的研究视角等，把「中」「和」「诚」这些古典概念放进今天的生活与知识框架中理解。此栏目文字为本阅读器自撰的通识性说明，不摘引现代著作原文。</div><p>此章触及“知行的鸿沟”这一哲学与实践的老问题，与当代行动哲学、习惯心理学相呼应：知道与持守是两种能力，须分别下功。</p></div></div><div class="jrow"><button type="button" class="jlabel" aria-expanded="false">生活启发</button><div class="jbody"><span class="jbasis">所本：日用践履</span><div class="jintro">落到日用常行：把该章义理转译成可操作的提醒与练习，重在「怎么做」。内容为本阅读器自撰，供共读时对照自身、在群内交流。</div><p>你定下的好计划（读书、健身、早睡）为什么总垮？因为“选对”容易、“守住”难。别高估自己一时的决心，要设计能长期坚持的小机制。</p></div></div></div></div>
         <div class="panel" data-panel="dao"><p>讥世人之“知”徒在利害计较，真能择中庸而守之者极少，反显守道之难。</p></div>
-        <div class="panel" data-panel="sheng"><div class="sheng-wrap"><ol class="sheng"><li>你是否也曾「择乎中庸而不能期月守」？原因是什么？</li><li>是什么让你知道某事是对的，却仍难以坚持？</li></ol><div class="sheng-note-box"><label class="sheng-lab">我的践行笔记 <span class="sheng-count" id="shengCount-7">0</span> 字</label><textarea class="sheng-note" id="shengNote-7" data-n="7" rows="3" disabled placeholder="把今天的体悟写下来：哪一句戳中你？你打算怎么用？登录后记录，跨设备同步。"></textarea><div class="sheng-lock" id="shengLock-7"><p>登录后记录，跨设备同步查看</p><button class="btn" id="shengLogin-7" type="button">登录后记录</button></div></div></div></div>
+        <div class="panel" data-panel="sheng"><div class="sheng-wrap"><ol class="sheng"><li>你是否也曾「择乎中庸而不能期月守」？原因是什么？</li><li>是什么让你知道某事是对的，却仍难以坚持？</li></ol><div class="sheng-note-box"><label class="sheng-lab">我的践行笔记 <span class="sheng-count" id="shengCount-7">0</span> 字</label><textarea class="sheng-note" id="shengNote-7" data-n="7" rows="3" placeholder="把今天的体悟写下来：哪一句戳中你？你打算怎么用？"></textarea><p class="sheng-hint">仅保存在本浏览器，不会上传；更换设备、清除缓存后将不可见。</p></div></div></div>
       </div>
     </div>
   </article>
@@ -892,7 +896,7 @@ body.paged.view-chapter .pager{display:flex}
         <div class="panel" data-panel="zz"><p class="zz-head">朱子此章所注，首在：<span class="zz-ref">子曰：“回之为人也，择乎中庸，得一善，则拳拳服膺而弗失之矣。</span></p><p class="zz">此章引孔子言「忠恕违道不远」，以实「道不远人」之义。</p></div>
         <div class="panel" data-panel="jiedu"><div class="jiedu"><p class="jhint">学派名称可点击，展开该学派的简介</p><div class="jrow"><button type="button" class="jlabel" aria-expanded="false">程朱理学</button><div class="jbody"><span class="jbasis">所本：《论语》·《易·系辞》·《中庸章句》</span><div class="jintro">北宋程颢、程颐奠基，南宋朱熹集大成的儒学流派，合称「程朱理学」。主张「性即理」，认为天理贯于万事万物，为学当「居敬穷理」——持敬存心、即物穷理，由格物致知步步贯通。元明以来长期为科举官学，深刻塑造了后世的教育与伦理。本书原文即用朱熹《中庸章句》的三十三章分章。</div><p>朱子称颜子“具体而微”，于中庸能择能守，故夫子独许之；拳拳服膺即是持守之功，由勉强而渐入自然，是下学上达的真实路径。</p></div></div><div class="jrow"><button type="button" class="jlabel" aria-expanded="false">陆王心学</button><div class="jbody"><span class="jbasis">所本：《孟子》·《传习录》</span><div class="jintro">南宋陆九渊开创、明代王守仁（阳明）发扬的心学一系，与程朱并称「陆王」。主张「心即理」，说「宇宙便是吾心」，为学重在发明本心、知行合一，晚年以「致良知」为宗旨；认为道理不假外求，反求诸身自能明觉。以此读《中庸》，尤其看重「慎独」与「诚」——把它们视作本心的直接呈现。</div><p>颜子之守即良知之笃，弗失即“致知”之不息；得一善便服膺勿失，正是不假外力的良知自明自守，最合“知行合一”之教。</p></div></div><div class="jrow"><button type="button" class="jlabel" aria-expanded="false">现代视界</button><div class="jbody"><span class="jbasis">所本：现代哲学·心理学（非古典）</span><div class="jintro">以近现代的眼光重看《中庸》：现代新儒家（如冯友兰、牟宗三等）的哲学阐释、道德心理学与教育学的研究视角等，把「中」「和」「诚」这些古典概念放进今天的生活与知识框架中理解。此栏目文字为本阅读器自撰的通识性说明，不摘引现代著作原文。</div><p>颜回代表一种“专注持守”的人格理想，与当代心理学中“刻意练习”“习惯养成”“深度专注”相通；其“不改其乐”更示人以内在动机高于外在奖赏。</p></div></div><div class="jrow"><button type="button" class="jlabel" aria-expanded="false">生活启发</button><div class="jbody"><span class="jbasis">所本：日用践履</span><div class="jintro">落到日用常行：把该章义理转译成可操作的提醒与练习，重在「怎么做」。内容为本阅读器自撰，供共读时对照自身、在群内交流。</div><p>与其贪多、样样蜻蜓点水，不如认准少数真正好的事，像颜回那样“得一善便牢牢记住、日日去做”。少而精的坚持，胜过广而浅的尝试。</p></div></div></div></div>
         <div class="panel" data-panel="dao"><p>以颜回为能守中庸的榜样，与前章“不能期月守”对照，示真知必落实为恒守。</p></div>
-        <div class="panel" data-panel="sheng"><div class="sheng-wrap"><ol class="sheng"><li>面对一个好道理，你能「拳拳服膺」多久？</li><li>你心中有没有一句话，愿意把它贴在每天都能看见的地方？</li></ol><div class="sheng-note-box"><label class="sheng-lab">我的践行笔记 <span class="sheng-count" id="shengCount-8">0</span> 字</label><textarea class="sheng-note" id="shengNote-8" data-n="8" rows="3" disabled placeholder="把今天的体悟写下来：哪一句戳中你？你打算怎么用？登录后记录，跨设备同步。"></textarea><div class="sheng-lock" id="shengLock-8"><p>登录后记录，跨设备同步查看</p><button class="btn" id="shengLogin-8" type="button">登录后记录</button></div></div></div></div>
+        <div class="panel" data-panel="sheng"><div class="sheng-wrap"><ol class="sheng"><li>面对一个好道理，你能「拳拳服膺」多久？</li><li>你心中有没有一句话，愿意把它贴在每天都能看见的地方？</li></ol><div class="sheng-note-box"><label class="sheng-lab">我的践行笔记 <span class="sheng-count" id="shengCount-8">0</span> 字</label><textarea class="sheng-note" id="shengNote-8" data-n="8" rows="3" placeholder="把今天的体悟写下来：哪一句戳中你？你打算怎么用？"></textarea><p class="sheng-hint">仅保存在本浏览器，不会上传；更换设备、清除缓存后将不可见。</p></div></div></div>
       </div>
     </div>
   </article>
@@ -921,7 +925,7 @@ body.paged.view-chapter .pager{display:flex}
         <div class="panel" data-panel="zz"><p class="zz-head">朱子此章所注，首在：<span class="zz-ref">子曰：“天下国家可均也，爵禄可辞也，白刃可蹈也，中庸不可能也。</span></p><p class="zz">此章言「君子素其位而行，不愿乎其外」，承上而推言居易俟命之道。</p></div>
         <div class="panel" data-panel="jiedu"><div class="jiedu"><p class="jhint">学派名称可点击，展开该学派的简介</p><div class="jrow"><button type="button" class="jlabel" aria-expanded="false">程朱理学</button><div class="jbody"><span class="jbasis">所本：《论语》·《易·系辞》·《中庸章句》</span><div class="jintro">北宋程颢、程颐奠基，南宋朱熹集大成的儒学流派，合称「程朱理学」。主张「性即理」，认为天理贯于万事万物，为学当「居敬穷理」——持敬存心、即物穷理，由格物致知步步贯通。元明以来长期为科举官学，深刻塑造了后世的教育与伦理。本书原文即用朱熹《中庸章句》的三十三章分章。</div><p>朱子以为均天下、辞禄、蹈刃皆才力勇决可几，独中庸非智力勇力所致，必由“诚身”而后能（见第二十章“诚者天之道”）；其难在体道之实，非事功之比。</p></div></div><div class="jrow"><button type="button" class="jlabel" aria-expanded="false">陆王心学</button><div class="jbody"><span class="jbasis">所本：《孟子》·《传习录》</span><div class="jintro">南宋陆九渊开创、明代王守仁（阳明）发扬的心学一系，与程朱并称「陆王」。主张「心即理」，说「宇宙便是吾心」，为学重在发明本心、知行合一，晚年以「致良知」为宗旨；认为道理不假外求，反求诸身自能明觉。以此读《中庸》，尤其看重「慎独」与「诚」——把它们视作本心的直接呈现。</div><p>中庸即良知之自然中节，须“致”到极熟处、纯然无间，方的可能；非血气之勇、非才智之炫，正是良知彻上彻下之难，故曰不可能。</p></div></div><div class="jrow"><button type="button" class="jlabel" aria-expanded="false">现代视界</button><div class="jbody"><span class="jbasis">所本：现代哲学·心理学（非古典）</span><div class="jintro">以近现代的眼光重看《中庸》：现代新儒家（如冯友兰、牟宗三等）的哲学阐释、道德心理学与教育学的研究视角等，把「中」「和」「诚」这些古典概念放进今天的生活与知识框架中理解。此栏目文字为本阅读器自撰的通识性说明，不摘引现代著作原文。</div><p>牟宗三以中庸之难在“工夫”之实——须逆觉体证、反身而诚，非任何外在他力可代；此即儒家“内圣”之学之所以难，亦所以贵。</p></div></div><div class="jrow"><button type="button" class="jlabel" aria-expanded="false">生活启发</button><div class="jbody"><span class="jbasis">所本：日用践履</span><div class="jintro">落到日用常行：把该章义理转译成可操作的提醒与练习，重在「怎么做」。内容为本阅读器自撰，供共读时对照自身、在群内交流。</div><p>世上最难的往往不是做一件惊天动地的大事，而是日复一日修养自己、始终如一。把“成为更好的人”当作一生的事，比任何单次壮举都更难也更值。</p></div></div></div></div>
         <div class="panel" data-panel="dao"><p>以三件极难之事衬托中庸尤难，因其须性分上修养，非勉强可至。</p></div>
-        <div class="panel" data-panel="sheng"><div class="sheng-wrap"><ol class="sheng"><li>「智、仁、勇」三者中，你觉得自己最缺哪一项？</li><li>你最近一次主动认错，是出于智慧、仁爱，还是勇气？</li></ol><div class="sheng-note-box"><label class="sheng-lab">我的践行笔记 <span class="sheng-count" id="shengCount-9">0</span> 字</label><textarea class="sheng-note" id="shengNote-9" data-n="9" rows="3" disabled placeholder="把今天的体悟写下来：哪一句戳中你？你打算怎么用？登录后记录，跨设备同步。"></textarea><div class="sheng-lock" id="shengLock-9"><p>登录后记录，跨设备同步查看</p><button class="btn" id="shengLogin-9" type="button">登录后记录</button></div></div></div></div>
+        <div class="panel" data-panel="sheng"><div class="sheng-wrap"><ol class="sheng"><li>「智、仁、勇」三者中，你觉得自己最缺哪一项？</li><li>你最近一次主动认错，是出于智慧、仁爱，还是勇气？</li></ol><div class="sheng-note-box"><label class="sheng-lab">我的践行笔记 <span class="sheng-count" id="shengCount-9">0</span> 字</label><textarea class="sheng-note" id="shengNote-9" data-n="9" rows="3" placeholder="把今天的体悟写下来：哪一句戳中你？你打算怎么用？"></textarea><p class="sheng-hint">仅保存在本浏览器，不会上传；更换设备、清除缓存后将不可见。</p></div></div></div>
       </div>
     </div>
   </article>
@@ -950,7 +954,7 @@ body.paged.view-chapter .pager{display:flex}
         <div class="panel" data-panel="zz"><p class="zz-head">朱子此章所注，首在：<span class="zz-ref">子路问强。</span></p><p class="zz">此章承上「素位」而言「行远自迩，登高自卑」，引《诗》妻子、兄弟之好，以明「达道」「达德」之有序。</p></div>
         <div class="panel" data-panel="jiedu"><div class="jiedu"><p class="jhint">学派名称可点击，展开该学派的简介</p><div class="jrow"><button type="button" class="jlabel" aria-expanded="false">程朱理学</button><div class="jbody"><span class="jbasis">所本：《论语》·《易·系辞》·《中庸章句》</span><div class="jintro">北宋程颢、程颐奠基，南宋朱熹集大成的儒学流派，合称「程朱理学」。主张「性即理」，认为天理贯于万事万物，为学当「居敬穷理」——持敬存心、即物穷理，由格物致知步步贯通。元明以来长期为科举官学，深刻塑造了后世的教育与伦理。本书原文即用朱熹《中庸章句》的三十三章分章。</div><p>朱熹以本章为“中庸之强”的注脚，认为君子之强即“至健”之德：和而不流是不为物迁，中立不倚是卓然独立，有道无道皆不变其守，此即“理”之当然、性分之所当。北方之强是“血气之刚”、南方之强是“委靡”，皆未及“义理之勇”。</p></div></div><div class="jrow"><button type="button" class="jlabel" aria-expanded="false">陆王心学</button><div class="jbody"><span class="jbasis">所本：《孟子》·《传习录》</span><div class="jintro">南宋陆九渊开创、明代王守仁（阳明）发扬的心学一系，与程朱并称「陆王」。主张「心即理」，说「宇宙便是吾心」，为学重在发明本心、知行合一，晚年以「致良知」为宗旨；认为道理不假外求，反求诸身自能明觉。以此读《中庸》，尤其看重「慎独」与「诚」——把它们视作本心的直接呈现。</div><p>王阳明以“致良知”说此章，君子之强不过是良知本体之不动摇——和而不流是良知不为习俗所染，中立不倚是良知自然中正，至死不变是良知之“恒”。强不在外物而在本心之定。</p></div></div><div class="jrow"><button type="button" class="jlabel" aria-expanded="false">现代视界</button><div class="jbody"><span class="jbasis">所本：现代哲学·心理学（非古典）</span><div class="jintro">以近现代的眼光重看《中庸》：现代新儒家（如冯友兰、牟宗三等）的哲学阐释、道德心理学与教育学的研究视角等，把「中」「和」「诚」这些古典概念放进今天的生活与知识框架中理解。此栏目文字为本阅读器自撰的通识性说明，不摘引现代著作原文。</div><p>现代新儒家多以本章为儒家“独立人格”之宣言：真正的强是道德上的自主与坚守，不随波逐流、不依附权势，在顺逆之境皆能持守价值。它区别了“力的强”与“德的强”，对理解知识分子的操守有普遍意义。</p></div></div><div class="jrow"><button type="button" class="jlabel" aria-expanded="false">生活启发</button><div class="jbody"><span class="jbasis">所本：日用践履</span><div class="jintro">落到日用常行：把该章义理转译成可操作的提醒与练习，重在「怎么做」。内容为本阅读器自撰，供共读时对照自身、在群内交流。</div><p>今天遇到群体压力想让你妥协、或为利益想让你放弃原则时，回想“和而不流”——可以温和待人，但不在关键处随波逐流；遇到顺境别忘本，逆境别改志，这就是普通人能修的“强”。</p></div></div></div></div>
         <div class="panel" data-panel="dao"><p>借子路问强，抉发儒家之“强”非血气之勇，而是和而不流、中立不倚、守道不变的“大强”，即中庸之德的刚性一面。</p></div>
-        <div class="panel" data-panel="sheng"><div class="sheng-wrap"><ol class="sheng"><li>你理解的「强」，是血气之强，还是「和而不流、中立不倚」？</li><li>当你被反对时，能否既坚持原则，又保持和气？</li></ol><div class="sheng-note-box"><label class="sheng-lab">我的践行笔记 <span class="sheng-count" id="shengCount-10">0</span> 字</label><textarea class="sheng-note" id="shengNote-10" data-n="10" rows="3" disabled placeholder="把今天的体悟写下来：哪一句戳中你？你打算怎么用？登录后记录，跨设备同步。"></textarea><div class="sheng-lock" id="shengLock-10"><p>登录后记录，跨设备同步查看</p><button class="btn" id="shengLogin-10" type="button">登录后记录</button></div></div></div></div>
+        <div class="panel" data-panel="sheng"><div class="sheng-wrap"><ol class="sheng"><li>你理解的「强」，是血气之强，还是「和而不流、中立不倚」？</li><li>当你被反对时，能否既坚持原则，又保持和气？</li></ol><div class="sheng-note-box"><label class="sheng-lab">我的践行笔记 <span class="sheng-count" id="shengCount-10">0</span> 字</label><textarea class="sheng-note" id="shengNote-10" data-n="10" rows="3" placeholder="把今天的体悟写下来：哪一句戳中你？你打算怎么用？"></textarea><p class="sheng-hint">仅保存在本浏览器，不会上传；更换设备、清除缓存后将不可见。</p></div></div></div>
       </div>
     </div>
   </article>
@@ -979,7 +983,7 @@ body.paged.view-chapter .pager{display:flex}
         <div class="panel" data-panel="zz"><p class="zz-head">朱子此章所注，首在：<span class="zz-ref">子曰：“素隐行怪，后世有述焉，吾弗为之矣。</span></p><p class="zz">此章言「鬼神之为德，其盛矣乎」，以明道之「费」而「隐」，洋洋乎如在其上、如在其左右。</p></div>
         <div class="panel" data-panel="jiedu"><div class="jiedu"><p class="jhint">学派名称可点击，展开该学派的简介</p><div class="jrow"><button type="button" class="jlabel" aria-expanded="false">程朱理学</button><div class="jbody"><span class="jbasis">所本：《论语》·《易·系辞》·《中庸章句》</span><div class="jintro">北宋程颢、程颐奠基，南宋朱熹集大成的儒学流派，合称「程朱理学」。主张「性即理」，认为天理贯于万事万物，为学当「居敬穷理」——持敬存心、即物穷理，由格物致知步步贯通。元明以来长期为科举官学，深刻塑造了后世的教育与伦理。本书原文即用朱熹《中庸章句》的三十三章分章。</div><p>朱熹谓“素隐行怪”是“索隐行怪”，即舍中庸平正之道而求异端奇诡，虽可“后世有述”终非正道；“半涂而废”则是知而不能守。二者皆不及“依乎中庸”之诚。遯世不悔唯圣人能，因圣人德盛、自然不求知于世。</p></div></div><div class="jrow"><button type="button" class="jlabel" aria-expanded="false">陆王心学</button><div class="jbody"><span class="jbasis">所本：《孟子》·《传习录》</span><div class="jintro">南宋陆九渊开创、明代王守仁（阳明）发扬的心学一系，与程朱并称「陆王」。主张「心即理」，说「宇宙便是吾心」，为学重在发明本心、知行合一，晚年以「致良知」为宗旨；认为道理不假外求，反求诸身自能明觉。以此读《中庸》，尤其看重「慎独」与「诚」——把它们视作本心的直接呈现。</div><p>阳明以良知为准，素隐行怪是良知被好奇好名所蔽，半涂而废是致良知未能到底。依乎中庸而遯世不悔，正是良知自然流行、不假外求名闻的境界。</p></div></div><div class="jrow"><button type="button" class="jlabel" aria-expanded="false">现代视界</button><div class="jbody"><span class="jbasis">所本：现代哲学·心理学（非古典）</span><div class="jintro">以近现代的眼光重看《中庸》：现代新儒家（如冯友兰、牟宗三等）的哲学阐释、道德心理学与教育学的研究视角等，把「中」「和」「诚」这些古典概念放进今天的生活与知识框架中理解。此栏目文字为本阅读器自撰的通识性说明，不摘引现代著作原文。</div><p>现代视界下，本章可理解为对“标新立异”与“浅尝辄止”两种时代病的反省：真正有价值的坚持不靠怪异吸睛，也不靠三分钟热度，而是默默依道而行、不问收获。学术与创作尤忌此两端。</p></div></div><div class="jrow"><button type="button" class="jlabel" aria-expanded="false">生活启发</button><div class="jbody"><span class="jbasis">所本：日用践履</span><div class="jintro">落到日用常行：把该章义理转译成可操作的提醒与练习，重在「怎么做」。内容为本阅读器自撰，供共读时对照自身、在群内交流。</div><p>做事不必靠噱头博眼球（素隐行怪），也不必一遇困难就放弃（半涂而废）。选定正道就默默做下去，即便一时无人认可也不后悔——把“不悔”当作对自己诚实的奖赏。</p></div></div></div></div>
         <div class="panel" data-panel="dao"><p>戒“索隐行怪”之异端，亦戒“半途而废”之怠，而归本于依中庸、遯世不悔的圣人境界。</p></div>
-        <div class="panel" data-panel="sheng"><div class="sheng-wrap"><ol class="sheng"><li>你是否有过为了标新立异而远离常道的念头？</li><li>你愿意做「暗然而日章」的人，还是「的然而日亡」的人？</li></ol><div class="sheng-note-box"><label class="sheng-lab">我的践行笔记 <span class="sheng-count" id="shengCount-11">0</span> 字</label><textarea class="sheng-note" id="shengNote-11" data-n="11" rows="3" disabled placeholder="把今天的体悟写下来：哪一句戳中你？你打算怎么用？登录后记录，跨设备同步。"></textarea><div class="sheng-lock" id="shengLock-11"><p>登录后记录，跨设备同步查看</p><button class="btn" id="shengLogin-11" type="button">登录后记录</button></div></div></div></div>
+        <div class="panel" data-panel="sheng"><div class="sheng-wrap"><ol class="sheng"><li>你是否有过为了标新立异而远离常道的念头？</li><li>你愿意做「暗然而日章」的人，还是「的然而日亡」的人？</li></ol><div class="sheng-note-box"><label class="sheng-lab">我的践行笔记 <span class="sheng-count" id="shengCount-11">0</span> 字</label><textarea class="sheng-note" id="shengNote-11" data-n="11" rows="3" placeholder="把今天的体悟写下来：哪一句戳中你？你打算怎么用？"></textarea><p class="sheng-hint">仅保存在本浏览器，不会上传；更换设备、清除缓存后将不可见。</p></div></div></div>
       </div>
     </div>
   </article>
@@ -1008,7 +1012,7 @@ body.paged.view-chapter .pager{display:flex}
         <div class="panel" data-panel="zz"><p class="zz-head">朱子此章所注，首在：<span class="zz-ref">君子之道费而隐。</span></p><p class="zz">此章承上章「鬼神」之「费隐」，而归本于「孝」，以明「中庸」之实于事亲。</p></div>
         <div class="panel" data-panel="jiedu"><div class="jiedu"><p class="jhint">学派名称可点击，展开该学派的简介</p><div class="jrow"><button type="button" class="jlabel" aria-expanded="false">程朱理学</button><div class="jbody"><span class="jbasis">所本：《论语》·《易·系辞》·《中庸章句》</span><div class="jintro">北宋程颢、程颐奠基，南宋朱熹集大成的儒学流派，合称「程朱理学」。主张「性即理」，认为天理贯于万事万物，为学当「居敬穷理」——持敬存心、即物穷理，由格物致知步步贯通。元明以来长期为科举官学，深刻塑造了后世的教育与伦理。本书原文即用朱熹《中庸章句》的三十三章分章。</div><p>朱熹以“费”为道之用之无穷、“隐”为道之体之微密，费隐即体用一本。鸢飞鱼跃是“活泼泼地”道体流行于上下，学者即此可见天理之昭著。造端夫妇、察乎天地，示下学上达之序。</p></div></div><div class="jrow"><button type="button" class="jlabel" aria-expanded="false">陆王心学</button><div class="jbody"><span class="jbasis">所本：《孟子》·《传习录》</span><div class="jintro">南宋陆九渊开创、明代王守仁（阳明）发扬的心学一系，与程朱并称「陆王」。主张「心即理」，说「宇宙便是吾心」，为学重在发明本心、知行合一，晚年以「致良知」为宗旨；认为道理不假外求，反求诸身自能明觉。以此读《中庸》，尤其看重「慎独」与「诚」——把它们视作本心的直接呈现。</div><p>王阳明以“鸢飞鱼跃”为良知之发见流行，“无人己、无内外”，万物一体之仁于此可见。费隐非二物，只是良知充塞乎天地、亦不离乎视听言动。</p></div></div><div class="jrow"><button type="button" class="jlabel" aria-expanded="false">现代视界</button><div class="jbody"><span class="jbasis">所本：现代哲学·心理学（非古典）</span><div class="jintro">以近现代的眼光重看《中庸》：现代新儒家（如冯友兰、牟宗三等）的哲学阐释、道德心理学与教育学的研究视角等，把「中」「和」「诚」这些古典概念放进今天的生活与知识框架中理解。此栏目文字为本阅读器自撰的通识性说明，不摘引现代著作原文。</div><p>牟宗三、唐君毅等新儒家多以“费而隐”表道之“既内在又超越”：道内在乎人伦日用（内在），又超越乎圣人知能之上（超越）。这为儒家“内在超越”说提供了经典依据，亦揭示真理既平实又深奥的双重性格。</p></div></div><div class="jrow"><button type="button" class="jlabel" aria-expanded="false">生活启发</button><div class="jbody"><span class="jbasis">所本：日用践履</span><div class="jintro">落到日用常行：把该章义理转译成可操作的提醒与练习，重在「怎么做」。内容为本阅读器自撰，供共读时对照自身、在群内交流。</div><p>伟大的道理往往藏在最平常的事里——好好吃饭、好好待人、好好尽责，这些“愚夫妇可与知”的日用，正是道之“费”；别因它平常就轻视，也别因它深奥就却步。从眼前小事体认，自然能渐渐“察乎天地”。</p></div></div></div></div>
         <div class="panel" data-panel="dao"><p>揭示中庸之道“费而隐”：近在夫妇日用，远极于天地造化，巨细无外，示道之无所不在。</p></div>
-        <div class="panel" data-panel="sheng"><div class="sheng-wrap"><ol class="sheng"><li>你如何理解「高深」与「日用」并不矛盾？</li><li>在柴米油盐中，你能发现哪些「费而隐」的道理？</li></ol><div class="sheng-note-box"><label class="sheng-lab">我的践行笔记 <span class="sheng-count" id="shengCount-12">0</span> 字</label><textarea class="sheng-note" id="shengNote-12" data-n="12" rows="3" disabled placeholder="把今天的体悟写下来：哪一句戳中你？你打算怎么用？登录后记录，跨设备同步。"></textarea><div class="sheng-lock" id="shengLock-12"><p>登录后记录，跨设备同步查看</p><button class="btn" id="shengLogin-12" type="button">登录后记录</button></div></div></div></div>
+        <div class="panel" data-panel="sheng"><div class="sheng-wrap"><ol class="sheng"><li>你如何理解「高深」与「日用」并不矛盾？</li><li>在柴米油盐中，你能发现哪些「费而隐」的道理？</li></ol><div class="sheng-note-box"><label class="sheng-lab">我的践行笔记 <span class="sheng-count" id="shengCount-12">0</span> 字</label><textarea class="sheng-note" id="shengNote-12" data-n="12" rows="3" placeholder="把今天的体悟写下来：哪一句戳中你？你打算怎么用？"></textarea><p class="sheng-hint">仅保存在本浏览器，不会上传；更换设备、清除缓存后将不可见。</p></div></div></div>
       </div>
     </div>
   </article>
@@ -1037,7 +1041,7 @@ body.paged.view-chapter .pager{display:flex}
         <div class="panel" data-panel="zz"><p class="zz-head">朱子此章所注，首在：<span class="zz-ref">子曰：“道不远人。</span></p><p class="zz">此章承上章「孝」而言「达孝」，武王、周公善继志、述事，使天下诵其名、修其礼、陈其器。</p></div>
         <div class="panel" data-panel="jiedu"><div class="jiedu"><p class="jhint">学派名称可点击，展开该学派的简介</p><div class="jrow"><button type="button" class="jlabel" aria-expanded="false">程朱理学</button><div class="jbody"><span class="jbasis">所本：《论语》·《易·系辞》·《中庸章句》</span><div class="jintro">北宋程颢、程颐奠基，南宋朱熹集大成的儒学流派，合称「程朱理学」。主张「性即理」，认为天理贯于万事万物，为学当「居敬穷理」——持敬存心、即物穷理，由格物致知步步贯通。元明以来长期为科举官学，深刻塑造了后世的教育与伦理。本书原文即用朱熹《中庸章句》的三十三章分章。</div><p>朱熹以“忠恕”为“违道不远”之方，“忠”是尽己、“恕”是推己及人，即《大学》絜矩之道。夫子自言“四未能”，正见圣贤“为己”、不敢自满之谦德；“庸德庸言”则是下学之实地。</p></div></div><div class="jrow"><button type="button" class="jlabel" aria-expanded="false">陆王心学</button><div class="jbody"><span class="jbasis">所本：《孟子》·《传习录》</span><div class="jintro">南宋陆九渊开创、明代王守仁（阳明）发扬的心学一系，与程朱并称「陆王」。主张「心即理」，说「宇宙便是吾心」，为学重在发明本心、知行合一，晚年以「致良知」为宗旨；认为道理不假外求，反求诸身自能明觉。以此读《中庸》，尤其看重「慎独」与「诚」——把它们视作本心的直接呈现。</div><p>阳明以“忠恕”即良知之自然条理——“施诸己而不愿亦勿施于人”本是心所同然。所谓“以人治人”，只是就各人本有之良知而唤醒之，非以外力强加之。</p></div></div><div class="jrow"><button type="button" class="jlabel" aria-expanded="false">现代视界</button><div class="jbody"><span class="jbasis">所本：现代哲学·心理学（非古典）</span><div class="jintro">以近现代的眼光重看《中庸》：现代新儒家（如冯友兰、牟宗三等）的哲学阐释、道德心理学与教育学的研究视角等，把「中」「和」「诚」这些古典概念放进今天的生活与知识框架中理解。此栏目文字为本阅读器自撰的通识性说明，不摘引现代著作原文。</div><p>现代伦理学多以“忠恕”作为“金规则”（己所不欲勿施于人）的中国表达，钱穆等先生强调它是中国人最根本的待人准则，具有跨文化的普遍伦理价值；“道不远人”亦提示真理须落实于具体生活而非抽象思辨。</p></div></div><div class="jrow"><button type="button" class="jlabel" aria-expanded="false">生活启发</button><div class="jbody"><span class="jbasis">所本：日用践履</span><div class="jintro">落到日用常行：把该章义理转译成可操作的提醒与练习，重在「怎么做」。内容为本阅读器自撰，供共读时对照自身、在群内交流。</div><p>与人相处先问自己：这件事若加在我身上，我愿不愿意？不愿意就别对别人做（忠恕）。少说漂亮话、多踏踏实实做事，说了就做到，这就是“言顾行、行顾言”——道就在你今天对家人的一句实话、对同事的一次体谅里。</p></div></div></div></div>
         <div class="panel" data-panel="dao"><p>由“道不远人”引出忠恕、絜矩与“四未能”之谦，示中庸落实于伦常日用的笃实，而非高远处玄谈。</p></div>
-        <div class="panel" data-panel="sheng"><div class="sheng-wrap"><ol class="sheng"><li>你最常忽略身边的哪条「道」？</li><li>「忠恕」二字，今天可以在哪一段关系中实践？</li></ol><div class="sheng-note-box"><label class="sheng-lab">我的践行笔记 <span class="sheng-count" id="shengCount-13">0</span> 字</label><textarea class="sheng-note" id="shengNote-13" data-n="13" rows="3" disabled placeholder="把今天的体悟写下来：哪一句戳中你？你打算怎么用？登录后记录，跨设备同步。"></textarea><div class="sheng-lock" id="shengLock-13"><p>登录后记录，跨设备同步查看</p><button class="btn" id="shengLogin-13" type="button">登录后记录</button></div></div></div></div>
+        <div class="panel" data-panel="sheng"><div class="sheng-wrap"><ol class="sheng"><li>你最常忽略身边的哪条「道」？</li><li>「忠恕」二字，今天可以在哪一段关系中实践？</li></ol><div class="sheng-note-box"><label class="sheng-lab">我的践行笔记 <span class="sheng-count" id="shengCount-13">0</span> 字</label><textarea class="sheng-note" id="shengNote-13" data-n="13" rows="3" placeholder="把今天的体悟写下来：哪一句戳中你？你打算怎么用？"></textarea><p class="sheng-hint">仅保存在本浏览器，不会上传；更换设备、清除缓存后将不可见。</p></div></div></div>
       </div>
     </div>
   </article>
@@ -1066,7 +1070,7 @@ body.paged.view-chapter .pager{display:flex}
         <div class="panel" data-panel="zz"><p class="zz-head">朱子此章所注，首在：<span class="zz-ref">君子素其位而行，不愿乎其外。</span></p><p class="zz">此章承上「达孝」而推之以「治天下」之道，举「郊社」「禘尝」之礼，明仁敬之至。</p></div>
         <div class="panel" data-panel="jiedu"><div class="jiedu"><p class="jhint">学派名称可点击，展开该学派的简介</p><div class="jrow"><button type="button" class="jlabel" aria-expanded="false">程朱理学</button><div class="jbody"><span class="jbasis">所本：《论语》·《易·系辞》·《中庸章句》</span><div class="jintro">北宋程颢、程颐奠基，南宋朱熹集大成的儒学流派，合称「程朱理学」。主张「性即理」，认为天理贯于万事万物，为学当「居敬穷理」——持敬存心、即物穷理，由格物致知步步贯通。元明以来长期为科举官学，深刻塑造了后世的教育与伦理。本书原文即用朱熹《中庸章句》的三十三章分章。</div><p>朱熹以“素位”为“安分”，居易是“素位而行”之安稳，俟命是“不怨天尤人”之定。射不中而“反求诸身”，尽君子自治之学；素位则随所遇而安、无入不自得，皆是“理”之当然处之。</p></div></div><div class="jrow"><button type="button" class="jlabel" aria-expanded="false">陆王心学</button><div class="jbody"><span class="jbasis">所本：《孟子》·《传习录》</span><div class="jintro">南宋陆九渊开创、明代王守仁（阳明）发扬的心学一系，与程朱并称「陆王」。主张「心即理」，说「宇宙便是吾心」，为学重在发明本心、知行合一，晚年以「致良知」为宗旨；认为道理不假外求，反求诸身自能明觉。以此读《中庸》，尤其看重「慎独」与「诚」——把它们视作本心的直接呈现。</div><p>阳明以良知说素位：良知当下知是在富贵当如何、在贫贱当如何，依良知便是“素其位”；反求诸身即“致良知”——不向外攀援、不怨天尤人，一切回到本心之是非。</p></div></div><div class="jrow"><button type="button" class="jlabel" aria-expanded="false">现代视界</button><div class="jbody"><span class="jbasis">所本：现代哲学·心理学（非古典）</span><div class="jintro">以近现代的眼光重看《中庸》：现代新儒家（如冯友兰、牟宗三等）的哲学阐释、道德心理学与教育学的研究视角等，把「中」「和」「诚」这些古典概念放进今天的生活与知识框架中理解。此栏目文字为本阅读器自撰的通识性说明，不摘引现代著作原文。</div><p>现代心理学与存在主义可与之会通：人所能负责的只是自己的选择与态度（反求诸身），对不可控的外境（命）则坦然接纳，这正是一种成熟的“内控点”与“斯多葛式”的安顿，对当代人的焦虑有疏导之效。</p></div></div><div class="jrow"><button type="button" class="jlabel" aria-expanded="false">生活启发</button><div class="jbody"><span class="jbasis">所本：日用践履</span><div class="jintro">落到日用常行：把该章义理转译成可操作的提醒与练习，重在「怎么做」。内容为本阅读器自撰，供共读时对照自身、在群内交流。</div><p>处在什么位置就把那个位置的事做好：当员工就尽本分，不当“向上攀附”的人；遇困境就把它当修炼，不怨天尤人。事情没做成先问自己哪里没做好（反求诸身），别急着怪环境、怪别人。</p></div></div></div></div>
         <div class="panel" data-panel="dao"><p>言君子“素位而行”，随处境而安、反求诸己，与小人“行险徼幸”对照，是“道不远人”在出处进退上的展开。</p></div>
-        <div class="panel" data-panel="sheng"><div class="sheng-wrap"><ol class="sheng"><li>你对当下处境是否心安？若不能，是处境的问题，还是心的问题？</li><li>能否尝试今天只说该说的话、只做该做的事，而不羡慕别人？</li></ol><div class="sheng-note-box"><label class="sheng-lab">我的践行笔记 <span class="sheng-count" id="shengCount-14">0</span> 字</label><textarea class="sheng-note" id="shengNote-14" data-n="14" rows="3" disabled placeholder="把今天的体悟写下来：哪一句戳中你？你打算怎么用？登录后记录，跨设备同步。"></textarea><div class="sheng-lock" id="shengLock-14"><p>登录后记录，跨设备同步查看</p><button class="btn" id="shengLogin-14" type="button">登录后记录</button></div></div></div></div>
+        <div class="panel" data-panel="sheng"><div class="sheng-wrap"><ol class="sheng"><li>你对当下处境是否心安？若不能，是处境的问题，还是心的问题？</li><li>能否尝试今天只说该说的话、只做该做的事，而不羡慕别人？</li></ol><div class="sheng-note-box"><label class="sheng-lab">我的践行笔记 <span class="sheng-count" id="shengCount-14">0</span> 字</label><textarea class="sheng-note" id="shengNote-14" data-n="14" rows="3" placeholder="把今天的体悟写下来：哪一句戳中你？你打算怎么用？"></textarea><p class="sheng-hint">仅保存在本浏览器，不会上传；更换设备、清除缓存后将不可见。</p></div></div></div>
       </div>
     </div>
   </article>
@@ -1095,7 +1099,7 @@ body.paged.view-chapter .pager{display:flex}
         <div class="panel" data-panel="zz"><p class="zz-head">朱子此章所注，首在：<span class="zz-ref">君子之道，辟如行远必自迩，辟如登高必自卑。</span></p><p class="zz">此章记哀公问政，孔子告以「文武之政，布在方策」，为政在人，取人以身，修身以道，修道以仁。</p></div>
         <div class="panel" data-panel="jiedu"><div class="jiedu"><p class="jhint">学派名称可点击，展开该学派的简介</p><div class="jrow"><button type="button" class="jlabel" aria-expanded="false">程朱理学</button><div class="jbody"><span class="jbasis">所本：《论语》·《易·系辞》·《中庸章句》</span><div class="jintro">北宋程颢、程颐奠基，南宋朱熹集大成的儒学流派，合称「程朱理学」。主张「性即理」，认为天理贯于万事万物，为学当「居敬穷理」——持敬存心、即物穷理，由格物致知步步贯通。元明以来长期为科举官学，深刻塑造了后世的教育与伦理。本书原文即用朱熹《中庸章句》的三十三章分章。</div><p>朱熹以“行远自迩、登高自卑”明“下学上达”之序，学者须自卑近做起，不可躐等。引《常棣》之诗言齐家和乐，正是“迩”“卑”之实处；能顺父母，则修道之基本立。</p></div></div><div class="jrow"><button type="button" class="jlabel" aria-expanded="false">陆王心学</button><div class="jbody"><span class="jbasis">所本：《孟子》·《传习录》</span><div class="jintro">南宋陆九渊开创、明代王守仁（阳明）发扬的心学一系，与程朱并称「陆王」。主张「心即理」，说「宇宙便是吾心」，为学重在发明本心、知行合一，晚年以「致良知」为宗旨；认为道理不假外求，反求诸身自能明觉。以此读《中庸》，尤其看重「慎独」与「诚」——把它们视作本心的直接呈现。</div><p>阳明以良知之发用必由近及远，齐家和乐亦是良知在家庭间自然流露；“自迩自卑”非谓迟缓，而是良知不容已地“充拓”——从一念之孝弟推至万物一体。</p></div></div><div class="jrow"><button type="button" class="jlabel" aria-expanded="false">现代视界</button><div class="jbody"><span class="jbasis">所本：现代哲学·心理学（非古典）</span><div class="jintro">以近现代的眼光重看《中庸》：现代新儒家（如冯友兰、牟宗三等）的哲学阐释、道德心理学与教育学的研究视角等，把「中」「和」「诚」这些古典概念放进今天的生活与知识框架中理解。此栏目文字为本阅读器自撰的通识性说明，不摘引现代著作原文。</div><p>现代教育与发展心理学强调“最近发展区”与“循序渐进”，与“行远自迩”若合符节；而把家庭和睦作为人格与社会健全的起点，亦与当代“关系本位”的伦理观察相契。</p></div></div><div class="jrow"><button type="button" class="jlabel" aria-expanded="false">生活启发</button><div class="jbody"><span class="jbasis">所本：日用践履</span><div class="jintro">落到日用常行：把该章义理转译成可操作的提醒与练习，重在「怎么做」。内容为本阅读器自撰，供共读时对照自身、在群内交流。</div><p>想做成大事，先把身边小事做好：今天好好跟伴侣说句话、陪父母吃顿饭、跟兄弟化解一点隔阂，这些“近”与“卑”就是你能走多远、登多高的第一步。别总想着一步登天。</p></div></div></div></div>
         <div class="panel" data-panel="dao"><p>以行远登高喻修道必由近及远、由卑升高，并引齐家之和收束，示中庸从伦常做起、不可躐等。</p></div>
-        <div class="panel" data-panel="sheng"><div class="sheng-wrap"><ol class="sheng"><li>今天的一件事，能否从最近处、最切实处做起？</li><li>你想达成的远方，脚下的「迩」是什么？</li></ol><div class="sheng-note-box"><label class="sheng-lab">我的践行笔记 <span class="sheng-count" id="shengCount-15">0</span> 字</label><textarea class="sheng-note" id="shengNote-15" data-n="15" rows="3" disabled placeholder="把今天的体悟写下来：哪一句戳中你？你打算怎么用？登录后记录，跨设备同步。"></textarea><div class="sheng-lock" id="shengLock-15"><p>登录后记录，跨设备同步查看</p><button class="btn" id="shengLogin-15" type="button">登录后记录</button></div></div></div></div>
+        <div class="panel" data-panel="sheng"><div class="sheng-wrap"><ol class="sheng"><li>今天的一件事，能否从最近处、最切实处做起？</li><li>你想达成的远方，脚下的「迩」是什么？</li></ol><div class="sheng-note-box"><label class="sheng-lab">我的践行笔记 <span class="sheng-count" id="shengCount-15">0</span> 字</label><textarea class="sheng-note" id="shengNote-15" data-n="15" rows="3" placeholder="把今天的体悟写下来：哪一句戳中你？你打算怎么用？"></textarea><p class="sheng-hint">仅保存在本浏览器，不会上传；更换设备、清除缓存后将不可见。</p></div></div></div>
       </div>
     </div>
   </article>
@@ -1124,7 +1128,7 @@ body.paged.view-chapter .pager{display:flex}
         <div class="panel" data-panel="zz"><p class="zz-head">朱子此章所注，首在：<span class="zz-ref">子曰：“鬼神之为德，其盛矣乎！视之而弗见，听之而弗闻，体物而不可遗。</span></p><p class="zz">此章承上「问政」而详言「五达道」「三达德」与「九经」之治，而归本于「诚」。</p></div>
         <div class="panel" data-panel="jiedu"><div class="jiedu"><p class="jhint">学派名称可点击，展开该学派的简介</p><div class="jrow"><button type="button" class="jlabel" aria-expanded="false">程朱理学</button><div class="jbody"><span class="jbasis">所本：《论语》·《易·系辞》·《中庸章句》</span><div class="jintro">北宋程颢、程颐奠基，南宋朱熹集大成的儒学流派，合称「程朱理学」。主张「性即理」，认为天理贯于万事万物，为学当「居敬穷理」——持敬存心、即物穷理，由格物致知步步贯通。元明以来长期为科举官学，深刻塑造了后世的教育与伦理。本书原文即用朱熹《中庸章句》的三十三章分章。</div><p>朱熹以鬼神喻“诚”：鬼神无形而能“体物不遗”，正如“诚”无声无臭而真实贯通一切。“微之显，诚之不可掩”正是天道实然之写照，借此转出“诚者天之道”，为后半篇诚论之纲。</p></div></div><div class="jrow"><button type="button" class="jlabel" aria-expanded="false">陆王心学</button><div class="jbody"><span class="jbasis">所本：《孟子》·《传习录》</span><div class="jintro">南宋陆九渊开创、明代王守仁（阳明）发扬的心学一系，与程朱并称「陆王」。主张「心即理」，说「宇宙便是吾心」，为学重在发明本心、知行合一，晚年以「致良知」为宗旨；认为道理不假外求，反求诸身自能明觉。以此读《中庸》，尤其看重「慎独」与「诚」——把它们视作本心的直接呈现。</div><p>阳明不以鬼神为外在于心之存在，而视“如在其上、如在其左右”为人心诚敬之自然感通；“诚不可掩”即良知之昭明不可欺昧，幽明只是一心之诚。</p></div></div><div class="jrow"><button type="button" class="jlabel" aria-expanded="false">现代视界</button><div class="jbody"><span class="jbasis">所本：现代哲学·心理学（非古典）</span><div class="jintro">以近现代的眼光重看《中庸》：现代新儒家（如冯友兰、牟宗三等）的哲学阐释、道德心理学与教育学的研究视角等，把「中」「和」「诚」这些古典概念放进今天的生活与知识框架中理解。此栏目文字为本阅读器自撰的通识性说明，不摘引现代著作原文。</div><p>现代新儒家（如钱穆、唐君毅）多释此章为“诚”贯通幽明、超越而又内在的体证：它不依赖人格神，而以“真实感通”说宗教性，体现中国哲学“神道设教”的人文精神，对理解无宗教传统的精神安顿有启发。</p></div></div><div class="jrow"><button type="button" class="jlabel" aria-expanded="false">生活启发</button><div class="jbody"><span class="jbasis">所本：日用践履</span><div class="jintro">落到日用常行：把该章义理转译成可操作的提醒与练习，重在「怎么做」。内容为本阅读器自撰，供共读时对照自身、在群内交流。</div><p>你心里真正诚实与否，瞒不过最亲近的人，也瞒不过自己——这就是“诚不可掩”。不必装样子，真诚的微小举动（一句问候、一次守约）比盛大排场更能打动人；做人求“暗室不欺”，自会安稳。</p></div></div></div></div>
         <div class="panel" data-panel="dao"><p>借“鬼神”之诚不可掩，引出“诚”的课题，为下半篇“诚”论张本；微之显、诚之不可掩，是承上启下的关键。</p></div>
-        <div class="panel" data-panel="sheng"><div class="sheng-wrap"><ol class="sheng"><li>你如何看待「看不见的敬畏」对行为的约束？</li><li>在无人知晓时，你的行为是否仍能保持一致？</li></ol><div class="sheng-note-box"><label class="sheng-lab">我的践行笔记 <span class="sheng-count" id="shengCount-16">0</span> 字</label><textarea class="sheng-note" id="shengNote-16" data-n="16" rows="3" disabled placeholder="把今天的体悟写下来：哪一句戳中你？你打算怎么用？登录后记录，跨设备同步。"></textarea><div class="sheng-lock" id="shengLock-16"><p>登录后记录，跨设备同步查看</p><button class="btn" id="shengLogin-16" type="button">登录后记录</button></div></div></div></div>
+        <div class="panel" data-panel="sheng"><div class="sheng-wrap"><ol class="sheng"><li>你如何看待「看不见的敬畏」对行为的约束？</li><li>在无人知晓时，你的行为是否仍能保持一致？</li></ol><div class="sheng-note-box"><label class="sheng-lab">我的践行笔记 <span class="sheng-count" id="shengCount-16">0</span> 字</label><textarea class="sheng-note" id="shengNote-16" data-n="16" rows="3" placeholder="把今天的体悟写下来：哪一句戳中你？你打算怎么用？"></textarea><p class="sheng-hint">仅保存在本浏览器，不会上传；更换设备、清除缓存后将不可见。</p></div></div></div>
       </div>
     </div>
   </article>
@@ -1153,7 +1157,7 @@ body.paged.view-chapter .pager{display:flex}
         <div class="panel" data-panel="zz"><p class="zz-head">朱子此章所注，首在：<span class="zz-ref">子曰：“舜其大孝也与！德为圣人，尊为天子，富有四海之内。</span></p><p class="zz">此章承上「诚」而言「天道」「人道」之合一：诚者天之道，诚之者人之道。</p></div>
         <div class="panel" data-panel="jiedu"><div class="jiedu"><p class="jhint">学派名称可点击，展开该学派的简介</p><div class="jrow"><button type="button" class="jlabel" aria-expanded="false">程朱理学</button><div class="jbody"><span class="jbasis">所本：《论语》·《易·系辞》·《中庸章句》</span><div class="jintro">北宋程颢、程颐奠基，南宋朱熹集大成的儒学流派，合称「程朱理学」。主张「性即理」，认为天理贯于万事万物，为学当「居敬穷理」——持敬存心、即物穷理，由格物致知步步贯通。元明以来长期为科举官学，深刻塑造了后世的教育与伦理。本书原文即用朱熹《中庸章句》的三十三章分章。</div><p>朱熹释“大德必受命”为“理之自然”：德与位禄名寿本相称，如“栽者培之、倾者覆之”，非是圣人求福。此正显“天命”不虚——有是德则有是命，与首章“天命之谓性”一以贯之。</p></div></div><div class="jrow"><button type="button" class="jlabel" aria-expanded="false">陆王心学</button><div class="jbody"><span class="jbasis">所本：《孟子》·《传习录》</span><div class="jintro">南宋陆九渊开创、明代王守仁（阳明）发扬的心学一系，与程朱并称「陆王」。主张「心即理」，说「宇宙便是吾心」，为学重在发明本心、知行合一，晚年以「致良知」为宗旨；认为道理不假外求，反求诸身自能明觉。以此读《中庸》，尤其看重「慎独」与「诚」——把它们视作本心的直接呈现。</div><p>阳明以“心即理”，舜之大德即是本心良知之充极其盛；“受命”非外铄，而是良知大明自然“位育”于天地之间，德位一如，皆一心之诚所感。</p></div></div><div class="jrow"><button type="button" class="jlabel" aria-expanded="false">现代视界</button><div class="jbody"><span class="jbasis">所本：现代哲学·心理学（非古典）</span><div class="jintro">以近现代的眼光重看《中庸》：现代新儒家（如冯友兰、牟宗三等）的哲学阐释、道德心理学与教育学的研究视角等，把「中」「和」「诚」这些古典概念放进今天的生活与知识框架中理解。此栏目文字为本阅读器自撰的通识性说明，不摘引现代著作原文。</div><p>现代新儒家（如牟宗三）讲“圣王”理想，认为德与位在理想形态中应统一；但唐君毅等亦指出历史上“有德无位”者众，故“大德受命”更宜理解为一种“价值上的必然”——德之尊贵自在，不假外位。这对“成功学”式功利观是纠偏。</p></div></div><div class="jrow"><button type="button" class="jlabel" aria-expanded="false">生活启发</button><div class="jbody"><span class="jbasis">所本：日用践履</span><div class="jintro">落到日用常行：把该章义理转译成可操作的提醒与练习，重在「怎么做」。内容为本阅读器自撰，供共读时对照自身、在群内交流。</div><p>别把“好人有好报”理解成交易。真正重要的是把德性活出来——你成为一个值得信赖、肯担当的人，位、禄、名、寿这些“外在结果”往往会自然相随；即便不随，你自身已自足。专注修德，少算回报。</p></div></div></div></div>
         <div class="panel" data-panel="dao"><p>以舜之大孝大德受命，明“大德必受命”，将“孝”与“天命”相绾，为下二章论孝与受命之绪。</p></div>
-        <div class="panel" data-panel="sheng"><div class="sheng-wrap"><ol class="sheng"><li>你对父母的孝，能否从「养口体」进到「养志」？</li><li>你最近一次让父母感到被理解，是什么时候？</li></ol><div class="sheng-note-box"><label class="sheng-lab">我的践行笔记 <span class="sheng-count" id="shengCount-17">0</span> 字</label><textarea class="sheng-note" id="shengNote-17" data-n="17" rows="3" disabled placeholder="把今天的体悟写下来：哪一句戳中你？你打算怎么用？登录后记录，跨设备同步。"></textarea><div class="sheng-lock" id="shengLock-17"><p>登录后记录，跨设备同步查看</p><button class="btn" id="shengLogin-17" type="button">登录后记录</button></div></div></div></div>
+        <div class="panel" data-panel="sheng"><div class="sheng-wrap"><ol class="sheng"><li>你对父母的孝，能否从「养口体」进到「养志」？</li><li>你最近一次让父母感到被理解，是什么时候？</li></ol><div class="sheng-note-box"><label class="sheng-lab">我的践行笔记 <span class="sheng-count" id="shengCount-17">0</span> 字</label><textarea class="sheng-note" id="shengNote-17" data-n="17" rows="3" placeholder="把今天的体悟写下来：哪一句戳中你？你打算怎么用？"></textarea><p class="sheng-hint">仅保存在本浏览器，不会上传；更换设备、清除缓存后将不可见。</p></div></div></div>
       </div>
     </div>
   </article>
@@ -1182,7 +1186,7 @@ body.paged.view-chapter .pager{display:flex}
         <div class="panel" data-panel="zz"><p class="zz-head">朱子此章所注，首在：<span class="zz-ref">子曰：“无忧者其惟文王乎！以王季为父，以武王为子，父作之，子述之。</span></p><p class="zz">此章承上「诚」而言「成己」「成物」：仁也、知也，性之德也，合内外之道。</p></div>
         <div class="panel" data-panel="jiedu"><div class="jiedu"><p class="jhint">学派名称可点击，展开该学派的简介</p><div class="jrow"><button type="button" class="jlabel" aria-expanded="false">程朱理学</button><div class="jbody"><span class="jbasis">所本：《论语》·《易·系辞》·《中庸章句》</span><div class="jintro">北宋程颢、程颐奠基，南宋朱熹集大成的儒学流派，合称「程朱理学」。主张「性即理」，认为天理贯于万事万物，为学当「居敬穷理」——持敬存心、即物穷理，由格物致知步步贯通。元明以来长期为科举官学，深刻塑造了后世的教育与伦理。本书原文即用朱熹《中庸章句》的三十三章分章。</div><p>朱熹以“达孝”之礼自天子达庶人，皆本于“亲亲尊尊”之序；周公追王、制礼达于上下，正是“礼所生也”之实。武王末受命、周公述德，见“父作子述”之无尤，与“大德受命”相足。</p></div></div><div class="jrow"><button type="button" class="jlabel" aria-expanded="false">陆王心学</button><div class="jbody"><span class="jbasis">所本：《孟子》·《传习录》</span><div class="jintro">南宋陆九渊开创、明代王守仁（阳明）发扬的心学一系，与程朱并称「陆王」。主张「心即理」，说「宇宙便是吾心」，为学重在发明本心、知行合一，晚年以「致良知」为宗旨；认为道理不假外求，反求诸身自能明觉。以此读《中庸》，尤其看重「慎独」与「诚」——把它们视作本心的直接呈现。</div><p>阳明以“事死如事生”之孝，皆是良知“一本”之爱的自然推扩；礼文等差（葬祭之异）非外在强制，而是良知因亲疏厚薄所显之“天然条理”。</p></div></div><div class="jrow"><button type="button" class="jlabel" aria-expanded="false">现代视界</button><div class="jbody"><span class="jbasis">所本：现代哲学·心理学（非古典）</span><div class="jintro">以近现代的眼光重看《中庸》：现代新儒家（如冯友兰、牟宗三等）的哲学阐释、道德心理学与教育学的研究视角等，把「中」「和」「诚」这些古典概念放进今天的生活与知识框架中理解。此栏目文字为本阅读器自撰的通识性说明，不摘引现代著作原文。</div><p>现代视界下，本章可视为“礼”作为社会整合机制的古典范本：通过丧祭之制把家族伦理上升为公共秩序（“达乎天子庶人”），体现儒家“由亲及疏、由家及国”的文明构想；三年之丧“无贵贱一”则彰显人格平等的情感基底。</p></div></div><div class="jrow"><button type="button" class="jlabel" aria-expanded="false">生活启发</button><div class="jbody"><span class="jbasis">所本：日用践履</span><div class="jintro">落到日用常行：把该章义理转译成可操作的提醒与练习，重在「怎么做」。内容为本阅读器自撰，供共读时对照自身、在群内交流。</div><p>“孝”不只是私人的心意，也要有恰当的表达与规矩（如丧祭之礼），把对长辈的敬意落到实处。更重要的是“父作子述”——承接上一代的好，再好好传给下一代，让家庭的善意与家风代代延续，这就是普通人能做的“达孝”。</p></div></div></div></div>
         <div class="panel" data-panel="dao"><p>以文王、武王、周公“父作子述”、制礼达于上下，明孝之推及礼乐刑政，示中庸之德见于家邦之礼。</p></div>
-        <div class="panel" data-panel="sheng"><div class="sheng-wrap"><ol class="sheng"><li>你是否能如文王般承志述事，不添忧虑？</li><li>对于父辈的期望，你是继承，还是对抗？有没有第三种可能？</li></ol><div class="sheng-note-box"><label class="sheng-lab">我的践行笔记 <span class="sheng-count" id="shengCount-18">0</span> 字</label><textarea class="sheng-note" id="shengNote-18" data-n="18" rows="3" disabled placeholder="把今天的体悟写下来：哪一句戳中你？你打算怎么用？登录后记录，跨设备同步。"></textarea><div class="sheng-lock" id="shengLock-18"><p>登录后记录，跨设备同步查看</p><button class="btn" id="shengLogin-18" type="button">登录后记录</button></div></div></div></div>
+        <div class="panel" data-panel="sheng"><div class="sheng-wrap"><ol class="sheng"><li>你是否能如文王般承志述事，不添忧虑？</li><li>对于父辈的期望，你是继承，还是对抗？有没有第三种可能？</li></ol><div class="sheng-note-box"><label class="sheng-lab">我的践行笔记 <span class="sheng-count" id="shengCount-18">0</span> 字</label><textarea class="sheng-note" id="shengNote-18" data-n="18" rows="3" placeholder="把今天的体悟写下来：哪一句戳中你？你打算怎么用？"></textarea><p class="sheng-hint">仅保存在本浏览器，不会上传；更换设备、清除缓存后将不可见。</p></div></div></div>
       </div>
     </div>
   </article>
@@ -1211,7 +1215,7 @@ body.paged.view-chapter .pager{display:flex}
         <div class="panel" data-panel="zz"><p class="zz-head">朱子此章所注，首在：<span class="zz-ref">子曰：“武王、周公，其达孝矣乎！夫孝者：善继人之志，善述人之事者也。</span></p><p class="zz">此章承上而言「时措之宜」，故「居上不骄，为下不倍」，国有道其言足以兴。</p></div>
         <div class="panel" data-panel="jiedu"><div class="jiedu"><p class="jhint">学派名称可点击，展开该学派的简介</p><div class="jrow"><button type="button" class="jlabel" aria-expanded="false">程朱理学</button><div class="jbody"><span class="jbasis">所本：《论语》·《易·系辞》·《中庸章句》</span><div class="jintro">北宋程颢、程颐奠基，南宋朱熹集大成的儒学流派，合称「程朱理学」。主张「性即理」，认为天理贯于万事万物，为学当「居敬穷理」——持敬存心、即物穷理，由格物致知步步贯通。元明以来长期为科举官学，深刻塑造了后世的教育与伦理。本书原文即用朱熹《中庸章句》的三十三章分章。</div><p>朱熹以“达孝”之“达”为通上下、贯终始，谓武王周公能“继志述事”，故孝非徒养口体。又言“事死如事生”是“敬之一端”推极，宗庙之礼序昭穆、辨贵贱贤否，皆所以“立爱自亲始”，由亲亲而仁民，故“治天下如示诸掌”乃理势之自然，非智计之巧。</p></div></div><div class="jrow"><button type="button" class="jlabel" aria-expanded="false">陆王心学</button><div class="jbody"><span class="jbasis">所本：《孟子》·《传习录》</span><div class="jintro">南宋陆九渊开创、明代王守仁（阳明）发扬的心学一系，与程朱并称「陆王」。主张「心即理」，说「宇宙便是吾心」，为学重在发明本心、知行合一，晚年以「致良知」为宗旨；认为道理不假外求，反求诸身自能明觉。以此读《中庸》，尤其看重「慎独」与「诚」——把它们视作本心的直接呈现。</div><p>阳明以“致良知”说孝，本章之“继志述事”即是依本心之良知去承续先人善念，非在外在礼节上求全。其所谓“事死如事生”，重在“心”之不已——一念之诚贯通幽明，礼文不过此心之流行发见，若徒泥仪节而心无哀敬，则非真达孝。</p></div></div><div class="jrow"><button type="button" class="jlabel" aria-expanded="false">现代视界</button><div class="jbody"><span class="jbasis">所本：现代哲学·心理学（非古典）</span><div class="jintro">以近现代的眼光重看《中庸》：现代新儒家（如冯友兰、牟宗三等）的哲学阐释、道德心理学与教育学的研究视角等，把「中」「和」「诚」这些古典概念放进今天的生活与知识框架中理解。此栏目文字为本阅读器自撰的通识性说明，不摘引现代著作原文。</div><p>现代新儒家（如钱穆、唐君毅）多指出，本章把“孝”从家族私德提升为文化生命的承传：祭祖、继志、述事，实为华夏“慎终追远”传统的哲学表达，使个体生命在世代相续中获得意义。这种“承前启后”的时间意识，可与当代关于文化记忆、代际责任的讨论相会通。</p></div></div><div class="jrow"><button type="button" class="jlabel" aria-expanded="false">生活启发</button><div class="jbody"><span class="jbasis">所本：日用践履</span><div class="jintro">落到日用常行：把该章义理转译成可操作的提醒与练习，重在「怎么做」。内容为本阅读器自撰，供共读时对照自身、在群内交流。</div><p>今天的“孝”不必止于祭祀，而可落实为：认真承接父母长辈真正看重的事与价值（如他们未竟的善愿、家族的好家风），并在待人接物中延续那份敬与爱。对逝者最好的纪念，是把其生命中值得传递的部分活成自己的生活。</p></div></div></div></div>
         <div class="panel" data-panel="dao"><p>以武王周公之“达孝”尽礼之序，而归本于“事死如事生”，更以“明乎郊社禘尝”收束到“治天下如示诸掌”，示孝悌即政教之本。</p></div>
-        <div class="panel" data-panel="sheng"><div class="sheng-wrap"><ol class="sheng"><li>面对重大责任，你能否「善继善述」而不居功？</li><li>你更愿意开创，还是把已有的路走得更稳？</li></ol><div class="sheng-note-box"><label class="sheng-lab">我的践行笔记 <span class="sheng-count" id="shengCount-19">0</span> 字</label><textarea class="sheng-note" id="shengNote-19" data-n="19" rows="3" disabled placeholder="把今天的体悟写下来：哪一句戳中你？你打算怎么用？登录后记录，跨设备同步。"></textarea><div class="sheng-lock" id="shengLock-19"><p>登录后记录，跨设备同步查看</p><button class="btn" id="shengLogin-19" type="button">登录后记录</button></div></div></div></div>
+        <div class="panel" data-panel="sheng"><div class="sheng-wrap"><ol class="sheng"><li>面对重大责任，你能否「善继善述」而不居功？</li><li>你更愿意开创，还是把已有的路走得更稳？</li></ol><div class="sheng-note-box"><label class="sheng-lab">我的践行笔记 <span class="sheng-count" id="shengCount-19">0</span> 字</label><textarea class="sheng-note" id="shengNote-19" data-n="19" rows="3" placeholder="把今天的体悟写下来：哪一句戳中你？你打算怎么用？"></textarea><p class="sheng-hint">仅保存在本浏览器，不会上传；更换设备、清除缓存后将不可见。</p></div></div></div>
       </div>
     </div>
   </article>
@@ -1240,7 +1244,7 @@ body.paged.view-chapter .pager{display:flex}
         <div class="panel" data-panel="zz"><p class="zz-head">朱子此章所注，首在：<span class="zz-ref">哀公问政。</span></p><p class="zz">此章（「诚者天之道」至「故至诚如神」）极言「诚」为「天道」「人道」之本，至诚可以前知。</p></div>
         <div class="panel" data-panel="jiedu"><div class="jiedu"><p class="jhint">学派名称可点击，展开该学派的简介</p><div class="jrow"><button type="button" class="jlabel" aria-expanded="false">程朱理学</button><div class="jbody"><span class="jbasis">所本：《论语》·《易·系辞》·《中庸章句》</span><div class="jintro">北宋程颢、程颐奠基，南宋朱熹集大成的儒学流派，合称「程朱理学」。主张「性即理」，认为天理贯于万事万物，为学当「居敬穷理」——持敬存心、即物穷理，由格物致知步步贯通。元明以来长期为科举官学，深刻塑造了后世的教育与伦理。本书原文即用朱熹《中庸章句》的三十三章分章。</div><p>朱熹视此章“诚”字为一篇之枢：上半由“为政在人”推到“知天”，下半由“诚者天之道”落到“学问思辨行”，皆“择善固执”之目。五达道、三达德、九经，皆是“修道以仁”的节目；而“豫则立”之“豫”非计较短长，是“道前定”的诚于中，故“所以行之者一”者，一于诚也。</p></div></div><div class="jrow"><button type="button" class="jlabel" aria-expanded="false">陆王心学</button><div class="jbody"><span class="jbasis">所本：《孟子》·《传习录》</span><div class="jintro">南宋陆九渊开创、明代王守仁（阳明）发扬的心学一系，与程朱并称「陆王」。主张「心即理」，说「宇宙便是吾心」，为学重在发明本心、知行合一，晚年以「致良知」为宗旨；认为道理不假外求，反求诸身自能明觉。以此读《中庸》，尤其看重「慎独」与「诚」——把它们视作本心的直接呈现。</div><p>阳明以“心即理”会通本章：五伦三德本在心之良知中自然条理，“九经”只是良知之推扩。其《传习录》强调“知行合一”，正可说“笃行”非在“学、问、思、辨”之外另立一截，而是知到极处即是行；又“不明乎善”之“明善”，亦即致吾心之良知。</p></div></div><div class="jrow"><button type="button" class="jlabel" aria-expanded="false">现代视界</button><div class="jbody"><span class="jbasis">所本：现代哲学·心理学（非古典）</span><div class="jintro">以近现代的眼光重看《中庸》：现代新儒家（如冯友兰、牟宗三等）的哲学阐释、道德心理学与教育学的研究视角等，把「中」「和」「诚」这些古典概念放进今天的生活与知识框架中理解。此栏目文字为本阅读器自撰的通识性说明，不摘引现代著作原文。</div><p>当代学者（如牟宗三、杜维明）多将本章读作“内圣外王”的政治哲学总纲：政之根本在“人”，人之根本在“修身”，而修身终归“诚”。这种把制度问题还原为人格与价值问题的思路，对反思现代治理中“有制度而无主体性”的困境，仍有启发；“三近”（好学、力行、知耻）亦被诠释为普遍可践的公民德行。</p></div></div><div class="jrow"><button type="button" class="jlabel" aria-expanded="false">生活启发</button><div class="jbody"><span class="jbasis">所本：日用践履</span><div class="jintro">落到日用常行：把该章义理转译成可操作的提醒与练习，重在「怎么做」。内容为本阅读器自撰，供共读时对照自身、在群内交流。</div><p>大到带团队、小到做一件事，都可借本章次序自省：先把人立住（修身），再谈方法（九经之“各有所劝”）。所谓“豫则立”，不是把别人算计进来，而是自己先把原则、话术、行动在心里定好，临事便不慌不乱。要紧处是“笃行”的笨功夫——别人一遍会，自己百遍，这比聪明更可靠。</p></div></div></div></div>
         <div class="panel" data-panel="dao"><p>全篇最长、最要之章。由“为政在人”直贯到“修身—事亲—知人—知天”，再开“五达道、三达德、九经”，终归于“诚”与“博学审问慎思明辨笃行”，为下篇“诚”论的枢纽。</p></div>
-        <div class="panel" data-panel="sheng"><div class="sheng-wrap"><ol class="sheng"><li>你的「修身—尊贤—亲亲」是否落在实处？</li><li>博学、审问、慎思、明辨、笃行五步，你最近在哪一步最弱？</li></ol><div class="sheng-note-box"><label class="sheng-lab">我的践行笔记 <span class="sheng-count" id="shengCount-20">0</span> 字</label><textarea class="sheng-note" id="shengNote-20" data-n="20" rows="3" disabled placeholder="把今天的体悟写下来：哪一句戳中你？你打算怎么用？登录后记录，跨设备同步。"></textarea><div class="sheng-lock" id="shengLock-20"><p>登录后记录，跨设备同步查看</p><button class="btn" id="shengLogin-20" type="button">登录后记录</button></div></div></div></div>
+        <div class="panel" data-panel="sheng"><div class="sheng-wrap"><ol class="sheng"><li>你的「修身—尊贤—亲亲」是否落在实处？</li><li>博学、审问、慎思、明辨、笃行五步，你最近在哪一步最弱？</li></ol><div class="sheng-note-box"><label class="sheng-lab">我的践行笔记 <span class="sheng-count" id="shengCount-20">0</span> 字</label><textarea class="sheng-note" id="shengNote-20" data-n="20" rows="3" placeholder="把今天的体悟写下来：哪一句戳中你？你打算怎么用？"></textarea><p class="sheng-hint">仅保存在本浏览器，不会上传；更换设备、清除缓存后将不可见。</p></div></div></div>
       </div>
     </div>
   </article>
@@ -1269,7 +1273,7 @@ body.paged.view-chapter .pager{display:flex}
         <div class="panel" data-panel="zz"><p class="zz-head">朱子此章所注，首在：<span class="zz-ref">自诚明，谓之性；自明诚，谓之教。</span></p><p class="zz">此章承上「诚」而言「自诚明」谓之「性」，「自明诚」谓之「教」，合而言之「诚则明，明则诚」。</p></div>
         <div class="panel" data-panel="jiedu"><div class="jiedu"><p class="jhint">学派名称可点击，展开该学派的简介</p><div class="jrow"><button type="button" class="jlabel" aria-expanded="false">程朱理学</button><div class="jbody"><span class="jbasis">所本：《论语》·《易·系辞》·《中庸章句》</span><div class="jintro">北宋程颢、程颐奠基，南宋朱熹集大成的儒学流派，合称「程朱理学」。主张「性即理」，认为天理贯于万事万物，为学当「居敬穷理」——持敬存心、即物穷理，由格物致知步步贯通。元明以来长期为科举官学，深刻塑造了后世的教育与伦理。本书原文即用朱熹《中庸章句》的三十三章分章。</div><p>朱熹以“自诚明”为圣人之性（德无不实而明无不照），“自明诚”为贤人之教（先明乎善而后能实其善）。虽分性与教为二途，而结以“诚则明、明则诚”，示其终归一诚，与首章“性、道、教”三句遥相呼应，是理气心性论中“本体—功夫”一源之证。</p></div></div><div class="jrow"><button type="button" class="jlabel" aria-expanded="false">陆王心学</button><div class="jbody"><span class="jbasis">所本：《孟子》·《传习录》</span><div class="jintro">南宋陆九渊开创、明代王守仁（阳明）发扬的心学一系，与程朱并称「陆王」。主张「心即理」，说「宇宙便是吾心」，为学重在发明本心、知行合一，晚年以「致良知」为宗旨；认为道理不假外求，反求诸身自能明觉。以此读《中庸》，尤其看重「慎独」与「诚」——把它们视作本心的直接呈现。</div><p>阳明谓“明”即良知之知，“诚”即良知之纯，二者本非两事。其言“良知只是一个天理自然明觉发见处”，故“自诚明”与“自明诚”皆是良知之流行，不必强分体用、天人为二；此正可破程朱“分属圣人贤人”之拘。</p></div></div><div class="jrow"><button type="button" class="jlabel" aria-expanded="false">现代视界</button><div class="jbody"><span class="jbasis">所本：现代哲学·心理学（非古典）</span><div class="jintro">以近现代的眼光重看《中庸》：现代新儒家（如冯友兰、牟宗三等）的哲学阐释、道德心理学与教育学的研究视角等，把「中」「和」「诚」这些古典概念放进今天的生活与知识框架中理解。此栏目文字为本阅读器自撰的通识性说明，不摘引现代著作原文。</div><p>现代学者常以“诚明”对扬“存在与认知”：真实的存在自然生出真切的理解，真切的理解也必归于真实的践行。这种“存在与真理合一”的论式，被牟宗三等视为中国哲学对“理论与实践分裂”问题的独特回应。</p></div></div><div class="jrow"><button type="button" class="jlabel" aria-expanded="false">生活启发</button><div class="jbody"><span class="jbasis">所本：日用践履</span><div class="jintro">落到日用常行：把该章义理转译成可操作的提醒与练习，重在「怎么做」。内容为本阅读器自撰，供共读时对照自身、在群内交流。</div><p>做人不必等“全想通了”才去做，也不必只顾埋头做而不反思。真诚地活着，自会越活越明白；而肯下功夫去明辨事理，人也自然变得越来越诚恳。知与行、诚与明，本该互相带动，别把自己卡在“我还想不清楚”或“我只要去做”的极端里。</p></div></div></div></div>
         <div class="panel" data-panel="dao"><p>上承哀公问政之“诚”，分“性”“教”两路说诚明相生，转入下半篇专论“诚”。</p></div>
-        <div class="panel" data-panel="sheng"><div class="sheng-wrap"><ol class="sheng"><li>你是否经历过「诚则明」的直觉顿悟？</li><li>你更相信先明理后诚，还是先诚后明理？</li></ol><div class="sheng-note-box"><label class="sheng-lab">我的践行笔记 <span class="sheng-count" id="shengCount-21">0</span> 字</label><textarea class="sheng-note" id="shengNote-21" data-n="21" rows="3" disabled placeholder="把今天的体悟写下来：哪一句戳中你？你打算怎么用？登录后记录，跨设备同步。"></textarea><div class="sheng-lock" id="shengLock-21"><p>登录后记录，跨设备同步查看</p><button class="btn" id="shengLogin-21" type="button">登录后记录</button></div></div></div></div>
+        <div class="panel" data-panel="sheng"><div class="sheng-wrap"><ol class="sheng"><li>你是否经历过「诚则明」的直觉顿悟？</li><li>你更相信先明理后诚，还是先诚后明理？</li></ol><div class="sheng-note-box"><label class="sheng-lab">我的践行笔记 <span class="sheng-count" id="shengCount-21">0</span> 字</label><textarea class="sheng-note" id="shengNote-21" data-n="21" rows="3" placeholder="把今天的体悟写下来：哪一句戳中你？你打算怎么用？"></textarea><p class="sheng-hint">仅保存在本浏览器，不会上传；更换设备、清除缓存后将不可见。</p></div></div></div>
       </div>
     </div>
   </article>
@@ -1298,7 +1302,7 @@ body.paged.view-chapter .pager{display:flex}
         <div class="panel" data-panel="zz"><p class="zz-head">朱子此章所注，首在：<span class="zz-ref">唯天下至诚，为能尽其性；能尽其性，则能尽人之性；能尽人之性，则能尽物之性；能尽物之性，则可以赞天地之化育；可以赞天地之化育，则可以与天地参矣。</span></p><p class="zz">此章承上而言「唯天下至诚，为能尽其性」，能尽人物之性，则可以赞天地之化育。</p></div>
         <div class="panel" data-panel="jiedu"><div class="jiedu"><p class="jhint">学派名称可点击，展开该学派的简介</p><div class="jrow"><button type="button" class="jlabel" aria-expanded="false">程朱理学</button><div class="jbody"><span class="jbasis">所本：《论语》·《易·系辞》·《中庸章句》</span><div class="jintro">北宋程颢、程颐奠基，南宋朱熹集大成的儒学流派，合称「程朱理学」。主张「性即理」，认为天理贯于万事万物，为学当「居敬穷理」——持敬存心、即物穷理，由格物致知步步贯通。元明以来长期为科举官学，深刻塑造了后世的教育与伦理。本书原文即用朱熹《中庸章句》的三十三章分章。</div><p>朱熹解“尽性”为圣人极吾性之全体，由己及人及物而无间，终“与天地同其功用”。其理本论下，人物之性同出于天理之诚，故至诚能“赞”天地之化而非“代”天地之化；“参”是辅相裁成，非僭越主宰，此即“理一而分殊”在诚体上的展开。</p></div></div><div class="jrow"><button type="button" class="jlabel" aria-expanded="false">陆王心学</button><div class="jbody"><span class="jbasis">所本：《孟子》·《传习录》</span><div class="jintro">南宋陆九渊开创、明代王守仁（阳明）发扬的心学一系，与程朱并称「陆王」。主张「心即理」，说「宇宙便是吾心」，为学重在发明本心、知行合一，晚年以「致良知」为宗旨；认为道理不假外求，反求诸身自能明觉。以此读《中庸》，尤其看重「慎独」与「诚」——把它们视作本心的直接呈现。</div><p>阳明以“万物一体之仁”会通本章：至诚尽己之性，即此心之仁体遍润万物，故能“尽物之性”。“与天地参”非在心外另立一境界，而是良知充周、上下与天地同流，所谓“仁者与天地万物为一体”是也。</p></div></div><div class="jrow"><button type="button" class="jlabel" aria-expanded="false">现代视界</button><div class="jbody"><span class="jbasis">所本：现代哲学·心理学（非古典）</span><div class="jintro">以近现代的眼光重看《中庸》：现代新儒家（如冯友兰、牟宗三等）的哲学阐释、道德心理学与教育学的研究视角等，把「中」「和」「诚」这些古典概念放进今天的生活与知识框架中理解。此栏目文字为本阅读器自撰的通识性说明，不摘引现代著作原文。</div><p>唐君毅、牟宗三以“尽性—参赞”为儒家“内在超越”的要义：人通过道德的无限开展，即在有限生命中通达无限的天道，既不外求人格神，也不陷于自然主义。当代环境哲学亦借“尽物之性”申论“尊重自然内在价值”，视其为非人类中心伦理的资源。</p></div></div><div class="jrow"><button type="button" class="jlabel" aria-expanded="false">生活启发</button><div class="jbody"><span class="jbasis">所本：日用践履</span><div class="jintro">落到日用常行：把该章义理转译成可操作的提醒与练习，重在「怎么做」。内容为本阅读器自撰，供共读时对照自身、在群内交流。</div><p>“尽其性”提醒我们：先把“自己这个人是谁、该活成什么样子”活明白，才有能力真正理解、成就身边的人；推而广之，对事对物也少些工具化，多些“让它成为它自己”的成全之心。帮别人、护环境，不是牺牲，而是把自己生命的格局撑大。</p></div></div></div></div>
         <div class="panel" data-panel="dao"><p>推“至诚尽性”之效，由己及人及物，终至于“与天地参”，示诚为参赞化育之本体。</p></div>
-        <div class="panel" data-panel="sheng"><div class="sheng-wrap"><ol class="sheng"><li>你觉得自己能「尽」的份额有多少？是否肯从当下做起？</li><li>你希望「参赞化育」的「化育」，先从自己的生活哪个角落开始？</li></ol><div class="sheng-note-box"><label class="sheng-lab">我的践行笔记 <span class="sheng-count" id="shengCount-22">0</span> 字</label><textarea class="sheng-note" id="shengNote-22" data-n="22" rows="3" disabled placeholder="把今天的体悟写下来：哪一句戳中你？你打算怎么用？登录后记录，跨设备同步。"></textarea><div class="sheng-lock" id="shengLock-22"><p>登录后记录，跨设备同步查看</p><button class="btn" id="shengLogin-22" type="button">登录后记录</button></div></div></div></div>
+        <div class="panel" data-panel="sheng"><div class="sheng-wrap"><ol class="sheng"><li>你觉得自己能「尽」的份额有多少？是否肯从当下做起？</li><li>你希望「参赞化育」的「化育」，先从自己的生活哪个角落开始？</li></ol><div class="sheng-note-box"><label class="sheng-lab">我的践行笔记 <span class="sheng-count" id="shengCount-22">0</span> 字</label><textarea class="sheng-note" id="shengNote-22" data-n="22" rows="3" placeholder="把今天的体悟写下来：哪一句戳中你？你打算怎么用？"></textarea><p class="sheng-hint">仅保存在本浏览器，不会上传；更换设备、清除缓存后将不可见。</p></div></div></div>
       </div>
     </div>
   </article>
@@ -1327,7 +1331,7 @@ body.paged.view-chapter .pager{display:flex}
         <div class="panel" data-panel="zz"><p class="zz-head">朱子此章所注，首在：<span class="zz-ref">其次致曲，曲能有诚，诚则形，形则著，著则明，明则动，动则变，变则化，唯天下至诚为能化。</span></p><p class="zz">此章承上「至诚」而言「其次致曲」，曲能有诚，诚则形、著、明、动、变、化，以至「唯天下至诚为能化」。</p></div>
         <div class="panel" data-panel="jiedu"><div class="jiedu"><p class="jhint">学派名称可点击，展开该学派的简介</p><div class="jrow"><button type="button" class="jlabel" aria-expanded="false">程朱理学</button><div class="jbody"><span class="jbasis">所本：《论语》·《易·系辞》·《中庸章句》</span><div class="jintro">北宋程颢、程颐奠基，南宋朱熹集大成的儒学流派，合称「程朱理学」。主张「性即理」，认为天理贯于万事万物，为学当「居敬穷理」——持敬存心、即物穷理，由格物致知步步贯通。元明以来长期为科举官学，深刻塑造了后世的教育与伦理。本书原文即用朱熹《中庸章句》的三十三章分章。</div><p>朱熹以“其次”为贤人，“致曲”即就气质、事为上之一偏推极其诚，久久不息，亦能“至于诚而化”。其“形著明动变化”七字，是“诚之不可掩”由微至著的实地功夫次第，与十六章“微之显”同一机轴，示下学之可造。</p></div></div><div class="jrow"><button type="button" class="jlabel" aria-expanded="false">陆王心学</button><div class="jbody"><span class="jbasis">所本：《孟子》·《传习录》</span><div class="jintro">南宋陆九渊开创、明代王守仁（阳明）发扬的心学一系，与程朱并称「陆王」。主张「心即理」，说「宇宙便是吾心」，为学重在发明本心、知行合一，晚年以「致良知」为宗旨；认为道理不假外求，反求诸身自能明觉。以此读《中庸》，尤其看重「慎独」与「诚」——把它们视作本心的直接呈现。</div><p>阳明以“致良知”说“致曲”：良知本具，但人多昏蔽，故须就一事一念上“致”其知，使偏处归全、暗处复明。其所谓“形著明动变化”，即良知推扩发见、默化风俗之效，非在心外别求一“化”也。</p></div></div><div class="jrow"><button type="button" class="jlabel" aria-expanded="false">现代视界</button><div class="jbody"><span class="jbasis">所本：现代哲学·心理学（非古典）</span><div class="jintro">以近现代的眼光重看《中庸》：现代新儒家（如冯友兰、牟宗三等）的哲学阐释、道德心理学与教育学的研究视角等，把「中」「和」「诚」这些古典概念放进今天的生活与知识框架中理解。此栏目文字为本阅读器自撰的通识性说明，不摘引现代著作原文。</div><p>现代学者常以“致曲”说明道德修养的“具体入手”原则：不必好高骛远求全体至诚，而可在最切近的一件小事（如诚实对待一次承诺）上用功，由点及面、由量变到质变。这种“从一处切实做起”的路径，与习惯养成、品格教育的现代理论相通。</p></div></div><div class="jrow"><button type="button" class="jlabel" aria-expanded="false">生活启发</button><div class="jbody"><span class="jbasis">所本：日用践履</span><div class="jintro">落到日用常行：把该章义理转译成可操作的提醒与练习，重在「怎么做」。内容为本阅读器自撰，供共读时对照自身、在群内交流。</div><p>觉得自己离“修养到家”太远时，不妨学“致曲”：挑一件最具体的小事（准时、不说谎、认真听完家人说话），把诚意推到尽头。日子久了，你会发现这一点诚实会自己“长”出来，带动整个人的气质，这就是“曲能有诚”。</p></div></div></div></div>
         <div class="panel" data-panel="dao"><p>言贤人虽未全体至诚，能于一事一物致其曲诚，亦可渐次贯通而至于化，示下学可造之路。</p></div>
-        <div class="panel" data-panel="sheng"><div class="sheng-wrap"><ol class="sheng"><li>小事上的诚实，能否成为你通天的起点？</li><li>你愿意在哪一件微不足道的事上，做到「诚之」而不自欺？</li></ol><div class="sheng-note-box"><label class="sheng-lab">我的践行笔记 <span class="sheng-count" id="shengCount-23">0</span> 字</label><textarea class="sheng-note" id="shengNote-23" data-n="23" rows="3" disabled placeholder="把今天的体悟写下来：哪一句戳中你？你打算怎么用？登录后记录，跨设备同步。"></textarea><div class="sheng-lock" id="shengLock-23"><p>登录后记录，跨设备同步查看</p><button class="btn" id="shengLogin-23" type="button">登录后记录</button></div></div></div></div>
+        <div class="panel" data-panel="sheng"><div class="sheng-wrap"><ol class="sheng"><li>小事上的诚实，能否成为你通天的起点？</li><li>你愿意在哪一件微不足道的事上，做到「诚之」而不自欺？</li></ol><div class="sheng-note-box"><label class="sheng-lab">我的践行笔记 <span class="sheng-count" id="shengCount-23">0</span> 字</label><textarea class="sheng-note" id="shengNote-23" data-n="23" rows="3" placeholder="把今天的体悟写下来：哪一句戳中你？你打算怎么用？"></textarea><p class="sheng-hint">仅保存在本浏览器，不会上传；更换设备、清除缓存后将不可见。</p></div></div></div>
       </div>
     </div>
   </article>
@@ -1356,7 +1360,7 @@ body.paged.view-chapter .pager{display:flex}
         <div class="panel" data-panel="zz"><p class="zz-head">朱子此章所注，首在：<span class="zz-ref">至诚之道，可以前知。</span></p><p class="zz">此章承上而言「至诚之道，可以前知」，见乎蓍龟、动乎四体，祸福将至可必。</p></div>
         <div class="panel" data-panel="jiedu"><div class="jiedu"><p class="jhint">学派名称可点击，展开该学派的简介</p><div class="jrow"><button type="button" class="jlabel" aria-expanded="false">程朱理学</button><div class="jbody"><span class="jbasis">所本：《论语》·《易·系辞》·《中庸章句》</span><div class="jintro">北宋程颢、程颐奠基，南宋朱熹集大成的儒学流派，合称「程朱理学」。主张「性即理」，认为天理贯于万事万物，为学当「居敬穷理」——持敬存心、即物穷理，由格物致知步步贯通。元明以来长期为科举官学，深刻塑造了后世的教育与伦理。本书原文即用朱熹《中庸章句》的三十三章分章。</div><p>朱熹明言“如神”非私智推测，乃“德盛而理明”，吉凶之几自然先睹。蓍龟四体只是征验之迹，非所恃之术；其根在十六章“诚不可掩”、二十三章“诚则形”之连续贯通，至诚则“几”微必照，此即“穷理尽性以至于命”之效。</p></div></div><div class="jrow"><button type="button" class="jlabel" aria-expanded="false">陆王心学</button><div class="jbody"><span class="jbasis">所本：《孟子》·《传习录》</span><div class="jintro">南宋陆九渊开创、明代王守仁（阳明）发扬的心学一系，与程朱并称「陆王」。主张「心即理」，说「宇宙便是吾心」，为学重在发明本心、知行合一，晚年以「致良知」为宗旨；认为道理不假外求，反求诸身自能明觉。以此读《中庸》，尤其看重「慎独」与「诚」——把它们视作本心的直接呈现。</div><p>阳明以良知之“明觉”说前知：良知本是天理之昭明灵觉，至诚则此觉无蔽，事物之几自然先应于心，非由卜筮外来。其“致良知”到极处，亦能有“不逆诈、不亿不信，而先觉”之明，与本章“如神”同一机括。</p></div></div><div class="jrow"><button type="button" class="jlabel" aria-expanded="false">现代视界</button><div class="jbody"><span class="jbasis">所本：现代哲学·心理学（非古典）</span><div class="jintro">以近现代的眼光重看《中庸》：现代新儒家（如冯友兰、牟宗三等）的哲学阐释、道德心理学与教育学的研究视角等，把「中」「和」「诚」这些古典概念放进今天的生活与知识框架中理解。此栏目文字为本阅读器自撰的通识性说明，不摘引现代著作原文。</div><p>现代解读多把“前知”去神秘化：至诚者因长期契合事理、体察人情，对趋势与危机有超常的敏锐（近于“实践智慧”）。它提示一种“见微知著”的洞察力，源于诚实地面对事实而非自欺；与占卜迷信须严加区分。</p></div></div><div class="jrow"><button type="button" class="jlabel" aria-expanded="false">生活启发</button><div class="jbody"><span class="jbasis">所本：日用践履</span><div class="jintro">落到日用常行：把该章义理转译成可操作的提醒与练习，重在「怎么做」。内容为本阅读器自撰，供共读时对照自身、在群内交流。</div><p>所谓“前知”，今天可理解为：当你诚实地积累对事理、对人心的了解，许多麻烦在苗头时就看得出来。少点自欺、多点正视，团队的矛盾、关系的裂痕往往早有征兆。与其求神问卜，不如修一份不欺的清醒。</p></div></div></div></div>
         <div class="panel" data-panel="dao"><p>言至诚能前知，非由术数，乃因诚则通于几微、与天地感应，进一步显“诚”之神用。</p></div>
-        <div class="panel" data-panel="sheng"><div class="sheng-wrap"><ol class="sheng"><li>你的至诚是否曾让你提前感知到事情的端倪？</li><li>当直觉与理性冲突时，你如何分辨？</li></ol><div class="sheng-note-box"><label class="sheng-lab">我的践行笔记 <span class="sheng-count" id="shengCount-24">0</span> 字</label><textarea class="sheng-note" id="shengNote-24" data-n="24" rows="3" disabled placeholder="把今天的体悟写下来：哪一句戳中你？你打算怎么用？登录后记录，跨设备同步。"></textarea><div class="sheng-lock" id="shengLock-24"><p>登录后记录，跨设备同步查看</p><button class="btn" id="shengLogin-24" type="button">登录后记录</button></div></div></div></div>
+        <div class="panel" data-panel="sheng"><div class="sheng-wrap"><ol class="sheng"><li>你的至诚是否曾让你提前感知到事情的端倪？</li><li>当直觉与理性冲突时，你如何分辨？</li></ol><div class="sheng-note-box"><label class="sheng-lab">我的践行笔记 <span class="sheng-count" id="shengCount-24">0</span> 字</label><textarea class="sheng-note" id="shengNote-24" data-n="24" rows="3" placeholder="把今天的体悟写下来：哪一句戳中你？你打算怎么用？"></textarea><p class="sheng-hint">仅保存在本浏览器，不会上传；更换设备、清除缓存后将不可见。</p></div></div></div>
       </div>
     </div>
   </article>
@@ -1385,7 +1389,7 @@ body.paged.view-chapter .pager{display:flex}
         <div class="panel" data-panel="zz"><p class="zz-head">朱子此章所注，首在：<span class="zz-ref">诚者自成也，而道自道也。</span></p><p class="zz">此章承上而言「诚」之「自成」「成物」：诚者物之终始，不诚无物；诚者非自成己而已。</p></div>
         <div class="panel" data-panel="jiedu"><div class="jiedu"><p class="jhint">学派名称可点击，展开该学派的简介</p><div class="jrow"><button type="button" class="jlabel" aria-expanded="false">程朱理学</button><div class="jbody"><span class="jbasis">所本：《论语》·《易·系辞》·《中庸章句》</span><div class="jintro">北宋程颢、程颐奠基，南宋朱熹集大成的儒学流派，合称「程朱理学」。主张「性即理」，认为天理贯于万事万物，为学当「居敬穷理」——持敬存心、即物穷理，由格物致知步步贯通。元明以来长期为科举官学，深刻塑造了后世的教育与伦理。本书原文即用朱熹《中庸章句》的三十三章分章。</div><p>朱熹以“诚者物之终始”为“实理”贯彻万有：物之成始成终皆此诚体在，离诚则“事不成、物不立”。又“成己仁、成物知”是“性之德合外内”，示诚非枯寂自守，而必推为成物之知；其“时措之宜”，即理之自然发用，与“居敬穷理”一贯。</p></div></div><div class="jrow"><button type="button" class="jlabel" aria-expanded="false">陆王心学</button><div class="jbody"><span class="jbasis">所本：《孟子》·《传习录》</span><div class="jintro">南宋陆九渊开创、明代王守仁（阳明）发扬的心学一系，与程朱并称「陆王」。主张「心即理」，说「宇宙便是吾心」，为学重在发明本心、知行合一，晚年以「致良知」为宗旨；认为道理不假外求，反求诸身自能明觉。以此读《中庸》，尤其看重「慎独」与「诚」——把它们视作本心的直接呈现。</div><p>阳明以“良知”即诚体：良知之“自成”是本心之自知自肯，“成物”是良知之发用万事。其“合外内之道”正破“内圣外王为二”之见——心外无物，成己即成物，故“时措之宜”只是良知随感而应，不假安排。</p></div></div><div class="jrow"><button type="button" class="jlabel" aria-expanded="false">现代视界</button><div class="jbody"><span class="jbasis">所本：现代哲学·心理学（非古典）</span><div class="jintro">以近现代的眼光重看《中庸》：现代新儒家（如冯友兰、牟宗三等）的哲学阐释、道德心理学与教育学的研究视角等，把「中」「和」「诚」这些古典概念放进今天的生活与知识框架中理解。此栏目文字为本阅读器自撰的通识性说明，不摘引现代著作原文。</div><p>牟宗三以“诚者自成”为“本体论的实践活动”：诚既是存在之真实，又是创生道德价值的活动。现代新儒家强调，此章把“自我实现”与“成就他者”统一于同一德性，避免了个人主义（只成己）与功利主义（只成物）的偏失，是“内圣外王”的精要表述。</p></div></div><div class="jrow"><button type="button" class="jlabel" aria-expanded="false">生活启发</button><div class="jbody"><span class="jbasis">所本：日用践履</span><div class="jintro">落到日用常行：把该章义理转译成可操作的提醒与练习，重在「怎么做」。内容为本阅读器自撰，供共读时对照自身、在群内交流。</div><p>做人别只盯着“把自己活好”就够——真正的诚，是既立得住自己，也成全身边的人与事。认真把工作做实在、把对他人的承诺兑现，这叫“成物”，也是“成己”。内外一致、言行相顾，你做的事自然处处得体（时措之宜）。</p></div></div></div></div>
         <div class="panel" data-panel="dao"><p>明“诚”非徒自了，乃仁智兼备、成己成物、合内外之道，收束“诚”之体用。</p></div>
-        <div class="panel" data-panel="sheng"><div class="sheng-wrap"><ol class="sheng"><li>一个不欺暗室的念头，如何让你变得更完整？</li><li>你最近是否对某人说了一个「不必要」的谎言？能否弥补？</li></ol><div class="sheng-note-box"><label class="sheng-lab">我的践行笔记 <span class="sheng-count" id="shengCount-25">0</span> 字</label><textarea class="sheng-note" id="shengNote-25" data-n="25" rows="3" disabled placeholder="把今天的体悟写下来：哪一句戳中你？你打算怎么用？登录后记录，跨设备同步。"></textarea><div class="sheng-lock" id="shengLock-25"><p>登录后记录，跨设备同步查看</p><button class="btn" id="shengLogin-25" type="button">登录后记录</button></div></div></div></div>
+        <div class="panel" data-panel="sheng"><div class="sheng-wrap"><ol class="sheng"><li>一个不欺暗室的念头，如何让你变得更完整？</li><li>你最近是否对某人说了一个「不必要」的谎言？能否弥补？</li></ol><div class="sheng-note-box"><label class="sheng-lab">我的践行笔记 <span class="sheng-count" id="shengCount-25">0</span> 字</label><textarea class="sheng-note" id="shengNote-25" data-n="25" rows="3" placeholder="把今天的体悟写下来：哪一句戳中你？你打算怎么用？"></textarea><p class="sheng-hint">仅保存在本浏览器，不会上传；更换设备、清除缓存后将不可见。</p></div></div></div>
       </div>
     </div>
   </article>
@@ -1414,7 +1418,7 @@ body.paged.view-chapter .pager{display:flex}
         <div class="panel" data-panel="zz"><p class="zz-head">朱子此章所注，首在：<span class="zz-ref">故至诚无息。</span></p><p class="zz">此章言「至诚无息」，久则征，征则悠远、博厚、高明，可以与天地参。</p></div>
         <div class="panel" data-panel="jiedu"><div class="jiedu"><p class="jhint">学派名称可点击，展开该学派的简介</p><div class="jrow"><button type="button" class="jlabel" aria-expanded="false">程朱理学</button><div class="jbody"><span class="jbasis">所本：《论语》·《易·系辞》·《中庸章句》</span><div class="jintro">北宋程颢、程颐奠基，南宋朱熹集大成的儒学流派，合称「程朱理学」。主张「性即理」，认为天理贯于万事万物，为学当「居敬穷理」——持敬存心、即物穷理，由格物致知步步贯通。元明以来长期为科举官学，深刻塑造了后世的教育与伦理。本书原文即用朱熹《中庸章句》的三十三章分章。</div><p>朱熹以“无息”尽诚体、“不贰”尽天道：天地生物只是“一理”专一，故“生物不测”；文王之“纯亦不已”即人道法天之不已。其以“一撮土、一勺水”之积喻学，正是“人一己百”功夫的宇宙论背书——诚与学皆由不息之积而成博厚高明。</p></div></div><div class="jrow"><button type="button" class="jlabel" aria-expanded="false">陆王心学</button><div class="jbody"><span class="jbasis">所本：《孟子》·《传习录》</span><div class="jintro">南宋陆九渊开创、明代王守仁（阳明）发扬的心学一系，与程朱并称「陆王」。主张「心即理」，说「宇宙便是吾心」，为学重在发明本心、知行合一，晚年以「致良知」为宗旨；认为道理不假外求，反求诸身自能明觉。以此读《中庸》，尤其看重「慎独」与「诚」——把它们视作本心的直接呈现。</div><p>阳明以“纯亦不已”说良知之常觉常照：良知本自“无息”，学者只须“勿忘勿助”以保养此体，自然“不见而章、不动而变”。其“一勺水”之积，即致良知于日用之纤微而不间断，久之与天地同其高明博厚。</p></div></div><div class="jrow"><button type="button" class="jlabel" aria-expanded="false">现代视界</button><div class="jbody"><span class="jbasis">所本：现代哲学·心理学（非古典）</span><div class="jintro">以近现代的眼光重看《中庸》：现代新儒家（如冯友兰、牟宗三等）的哲学阐释、道德心理学与教育学的研究视角等，把「中」「和」「诚」这些古典概念放进今天的生活与知识框架中理解。此栏目文字为本阅读器自撰的通识性说明，不摘引现代著作原文。</div><p>唐君毅以“不已”为儒家最深的“创造”义：真实无妄的德性持续展开，便是对世界的不息成全，非一次性的“完成”。现代学者亦借“积”喻说明人格与文化的长成皆赖恒久积累，“博厚高明配天地”可视为对“持久价值”的礼赞。</p></div></div><div class="jrow"><button type="button" class="jlabel" aria-expanded="false">生活启发</button><div class="jbody"><span class="jbasis">所本：日用践履</span><div class="jintro">落到日用常行：把该章义理转译成可操作的提醒与练习，重在「怎么做」。内容为本阅读器自撰，供共读时对照自身、在群内交流。</div><p>最打动人的是“积”：再了不起的成就，起头都只是“一勺水”“一撮土”。关键在“不息”——每天做一点点、不间断，比偶尔爆发有用得多。无论是读书、健身还是经营关系，守住“纯亦不已”四个字，时间会替你长成博厚高明。</p></div></div></div></div>
         <div class="panel" data-panel="dao"><p>以“至诚无息”推极其效，由久、征、悠远、博厚、高明，归到天地之不贰，并以文王之纯收束，示诚与天道同其不已。</p></div>
-        <div class="panel" data-panel="sheng"><div class="sheng-wrap"><ol class="sheng"><li>你的某种好品质，能否像不息的流水一样持续？</li><li>什么东西最容易让你半途而废？如何让它「无息」？</li></ol><div class="sheng-note-box"><label class="sheng-lab">我的践行笔记 <span class="sheng-count" id="shengCount-26">0</span> 字</label><textarea class="sheng-note" id="shengNote-26" data-n="26" rows="3" disabled placeholder="把今天的体悟写下来：哪一句戳中你？你打算怎么用？登录后记录，跨设备同步。"></textarea><div class="sheng-lock" id="shengLock-26"><p>登录后记录，跨设备同步查看</p><button class="btn" id="shengLogin-26" type="button">登录后记录</button></div></div></div></div>
+        <div class="panel" data-panel="sheng"><div class="sheng-wrap"><ol class="sheng"><li>你的某种好品质，能否像不息的流水一样持续？</li><li>什么东西最容易让你半途而废？如何让它「无息」？</li></ol><div class="sheng-note-box"><label class="sheng-lab">我的践行笔记 <span class="sheng-count" id="shengCount-26">0</span> 字</label><textarea class="sheng-note" id="shengNote-26" data-n="26" rows="3" placeholder="把今天的体悟写下来：哪一句戳中你？你打算怎么用？"></textarea><p class="sheng-hint">仅保存在本浏览器，不会上传；更换设备、清除缓存后将不可见。</p></div></div></div>
       </div>
     </div>
   </article>
@@ -1443,7 +1447,7 @@ body.paged.view-chapter .pager{display:flex}
         <div class="panel" data-panel="zz"><p class="zz-head">朱子此章所注，首在：<span class="zz-ref">大哉圣人之道！洋洋乎！发育万物，峻极于天。</span></p><p class="zz">此章言「大哉圣人之道」，洋洋发育万物、峻极于天，待其人而后行。</p></div>
         <div class="panel" data-panel="jiedu"><div class="jiedu"><p class="jhint">学派名称可点击，展开该学派的简介</p><div class="jrow"><button type="button" class="jlabel" aria-expanded="false">程朱理学</button><div class="jbody"><span class="jbasis">所本：《论语》·《易·系辞》·《中庸章句》</span><div class="jintro">北宋程颢、程颐奠基，南宋朱熹集大成的儒学流派，合称「程朱理学」。主张「性即理」，认为天理贯于万事万物，为学当「居敬穷理」——持敬存心、即物穷理，由格物致知步步贯通。元明以来长期为科举官学，深刻塑造了后世的教育与伦理。本书原文即用朱熹《中庸章句》的三十三章分章。</div><p>朱熹以本章“尊德性、道问学”一语开后来朱陆之争：朱子主张“道问学”为重，以居敬穷理、即物而穷其理来充实德性；而“致广大尽精微、极高明道中庸”正示学问须内外本末俱到。其释“尊德性”为“所以存心而极乎道体之大”，与“道问学”相资为用，非判为二。</p></div></div><div class="jrow"><button type="button" class="jlabel" aria-expanded="false">陆王心学</button><div class="jbody"><span class="jbasis">所本：《孟子》·《传习录》</span><div class="jintro">南宋陆九渊开创、明代王守仁（阳明）发扬的心学一系，与程朱并称「陆王」。主张「心即理」，说「宇宙便是吾心」，为学重在发明本心、知行合一，晚年以「致良知」为宗旨；认为道理不假外求，反求诸身自能明觉。以此读《中庸》，尤其看重「慎独」与「诚」——把它们视作本心的直接呈现。</div><p>陆九渊、王阳明皆重“尊德性”，以为德性本心具足，问学不过发明本心，反对朱子“支离”于外物。阳明以“知行合一”会通：德性问学原非两事，良知一觉即兼知行；“极高明而道中庸”正是良知之“即本体即功夫”，高明不离日用人伦。</p></div></div><div class="jrow"><button type="button" class="jlabel" aria-expanded="false">现代视界</button><div class="jbody"><span class="jbasis">所本：现代哲学·心理学（非古典）</span><div class="jintro">以近现代的眼光重看《中庸》：现代新儒家（如冯友兰、牟宗三等）的哲学阐释、道德心理学与教育学的研究视角等，把「中」「和」「诚」这些古典概念放进今天的生活与知识框架中理解。此栏目文字为本阅读器自撰的通识性说明，不摘引现代著作原文。</div><p>现代新儒家（如钱穆、牟宗三）多调和朱陆：钱穆强调“尊德性与道问学”本是一体两面的为学全幅，不可偏废；牟宗三则以“纵贯”之诚体摄“横摄”之知识，主张德性之智与知识之知各有分际而可统一。此章遂成讨论“价值与知识关系”的古典支点。</p></div></div><div class="jrow"><button type="button" class="jlabel" aria-expanded="false">生活启发</button><div class="jbody"><span class="jbasis">所本：日用践履</span><div class="jintro">落到日用常行：把该章义理转译成可操作的提醒与练习，重在「怎么做」。内容为本阅读器自撰，供共读时对照自身、在群内交流。</div><p>“尊德性而道问学”翻译成今天的话：既要守住内心的方向感与良知（别把自己活丢了），也要老老实实去学、去把事情搞懂（别空谈境界）。既要眼界大、想法高，也得把眼前具体的小事做细做扎实。空有情怀不落地，或只会钻细节没格局，都偏了。</p></div></div></div></div>
         <div class="panel" data-panel="dao"><p>盛赞圣人之道大而优优，提出“尊德性”与“道问学”并进、“致广大尽精微”“极高明道中庸”的为学纲领，为宋儒所重。</p></div>
-        <div class="panel" data-panel="sheng"><div class="sheng-wrap"><ol class="sheng"><li>你最近「尊德性」与「道问学」是否平衡？</li><li>你是读得多、想得少，还是做得多、省得少？</li></ol><div class="sheng-note-box"><label class="sheng-lab">我的践行笔记 <span class="sheng-count" id="shengCount-27">0</span> 字</label><textarea class="sheng-note" id="shengNote-27" data-n="27" rows="3" disabled placeholder="把今天的体悟写下来：哪一句戳中你？你打算怎么用？登录后记录，跨设备同步。"></textarea><div class="sheng-lock" id="shengLock-27"><p>登录后记录，跨设备同步查看</p><button class="btn" id="shengLogin-27" type="button">登录后记录</button></div></div></div></div>
+        <div class="panel" data-panel="sheng"><div class="sheng-wrap"><ol class="sheng"><li>你最近「尊德性」与「道问学」是否平衡？</li><li>你是读得多、想得少，还是做得多、省得少？</li></ol><div class="sheng-note-box"><label class="sheng-lab">我的践行笔记 <span class="sheng-count" id="shengCount-27">0</span> 字</label><textarea class="sheng-note" id="shengNote-27" data-n="27" rows="3" placeholder="把今天的体悟写下来：哪一句戳中你？你打算怎么用？"></textarea><p class="sheng-hint">仅保存在本浏览器，不会上传；更换设备、清除缓存后将不可见。</p></div></div></div>
       </div>
     </div>
   </article>
@@ -1472,7 +1476,7 @@ body.paged.view-chapter .pager{display:flex}
         <div class="panel" data-panel="zz"><p class="zz-head">朱子此章所注，首在：<span class="zz-ref">子曰：“愚而好自用，贱而好自专，生乎今之世，反古之道。</span></p><p class="zz">此章承上「圣人之道」而言「苟不至德，至道不凝」，故君子尊德性而道问学、致广大而尽精微。</p></div>
         <div class="panel" data-panel="jiedu"><div class="jiedu"><p class="jhint">学派名称可点击，展开该学派的简介</p><div class="jrow"><button type="button" class="jlabel" aria-expanded="false">程朱理学</button><div class="jbody"><span class="jbasis">所本：《论语》·《易·系辞》·《中庸章句》</span><div class="jintro">北宋程颢、程颐奠基，南宋朱熹集大成的儒学流派，合称「程朱理学」。主张「性即理」，认为天理贯于万事万物，为学当「居敬穷理」——持敬存心、即物穷理，由格物致知步步贯通。元明以来长期为科举官学，深刻塑造了后世的教育与伦理。本书原文即用朱熹《中庸章句》的三十三章分章。</div><p>朱熹于此强调“非天子不议礼”乃所以防僭越，制作礼乐必待德位兼隆，正与第27章“苟不至德，至道不凝”相承。未至德而妄作，是私意横行、失其中庸。孔子“从周”亦是“理”之当然：周文监于二代而大备，时措之宜也，非徇古而昧今。</p></div></div><div class="jrow"><button type="button" class="jlabel" aria-expanded="false">陆王心学</button><div class="jbody"><span class="jbasis">所本：《孟子》·《传习录》</span><div class="jintro">南宋陆九渊开创、明代王守仁（阳明）发扬的心学一系，与程朱并称「陆王」。主张「心即理」，说「宇宙便是吾心」，为学重在发明本心、知行合一，晚年以「致良知」为宗旨；认为道理不假外求，反求诸身自能明觉。以此读《中庸》，尤其看重「慎独」与「诚」——把它们视作本心的直接呈现。</div><p>阳明虽重心体良知，于此亦当肯“德位相须”——良知之发用须藉境遇权位方得措于事为。“自用、自专”正是“意必固我”之私，良知本然之公不容此妄。“从周”乃“循理”而非徇古，心即理故随时处中，非胶于一法。</p></div></div><div class="jrow"><button type="button" class="jlabel" aria-expanded="false">现代视界</button><div class="jbody"><span class="jbasis">所本：现代哲学·心理学（非古典）</span><div class="jintro">以近现代的眼光重看《中庸》：现代新儒家（如冯友兰、牟宗三等）的哲学阐释、道德心理学与教育学的研究视角等，把「中」「和」「诚」这些古典概念放进今天的生活与知识框架中理解。此栏目文字为本阅读器自撰的通识性说明，不摘引现代著作原文。</div><p>牟宗三等以“德位相须”可见儒家对“制度正当性”的审慎：制度非个人聪明可私造，须有德者乘其位、顺其势、合其宜。“从周”所体现的“损益”精神，是在历史中变通而不妄断的态度，对现代制度建构亦有借鉴。</p></div></div><div class="jrow"><button type="button" class="jlabel" aria-expanded="false">生活启发</button><div class="jbody"><span class="jbasis">所本：日用践履</span><div class="jintro">落到日用常行：把该章义理转译成可操作的提醒与练习，重在「怎么做」。内容为本阅读器自撰，供共读时对照自身、在群内交流。</div><p>今日虽无“天子”之位，而理相通：在自己职权与见识未足时，别急于推翻旧规、独断标新；先修己之德、认清所处之“位”与时机，顺势而为。改动团队或家庭的规则，要有权威、有德行、有共识，三者缺一便难推行。</p></div></div></div></div>
         <div class="panel" data-panel="dao"><p>戒妄作、明“德位相须”——制礼作乐必待德位兼隆，并以孔子“从周”示损益之道，反显中庸之笃实。</p></div>
-        <div class="panel" data-panel="sheng"><div class="sheng-wrap"><ol class="sheng"><li>在优势地位时，你能否避免骄、吝、暴、贼之病？</li><li>最近一次下属或家人顺从你时，你是否把顺应当成理所当然？</li></ol><div class="sheng-note-box"><label class="sheng-lab">我的践行笔记 <span class="sheng-count" id="shengCount-28">0</span> 字</label><textarea class="sheng-note" id="shengNote-28" data-n="28" rows="3" disabled placeholder="把今天的体悟写下来：哪一句戳中你？你打算怎么用？登录后记录，跨设备同步。"></textarea><div class="sheng-lock" id="shengLock-28"><p>登录后记录，跨设备同步查看</p><button class="btn" id="shengLogin-28" type="button">登录后记录</button></div></div></div></div>
+        <div class="panel" data-panel="sheng"><div class="sheng-wrap"><ol class="sheng"><li>在优势地位时，你能否避免骄、吝、暴、贼之病？</li><li>最近一次下属或家人顺从你时，你是否把顺应当成理所当然？</li></ol><div class="sheng-note-box"><label class="sheng-lab">我的践行笔记 <span class="sheng-count" id="shengCount-28">0</span> 字</label><textarea class="sheng-note" id="shengNote-28" data-n="28" rows="3" placeholder="把今天的体悟写下来：哪一句戳中你？你打算怎么用？"></textarea><p class="sheng-hint">仅保存在本浏览器，不会上传；更换设备、清除缓存后将不可见。</p></div></div></div>
       </div>
     </div>
   </article>
@@ -1501,7 +1505,7 @@ body.paged.view-chapter .pager{display:flex}
         <div class="panel" data-panel="zz"><p class="zz-head">朱子此章所注，首在：<span class="zz-ref">王天下有三重焉，其寡过矣乎！上焉者虽善无征，无征不信，不信民弗从；下焉者虽善不尊，不尊不信，不信民弗从。</span></p><p class="zz">此章承上而言「王天下」之「三无私」：巍巍荡荡，争光于日月，四时错行、日月代明。</p></div>
         <div class="panel" data-panel="jiedu"><div class="jiedu"><p class="jhint">学派名称可点击，展开该学派的简介</p><div class="jrow"><button type="button" class="jlabel" aria-expanded="false">程朱理学</button><div class="jbody"><span class="jbasis">所本：《论语》·《易·系辞》·《中庸章句》</span><div class="jintro">北宋程颢、程颐奠基，南宋朱熹集大成的儒学流派，合称「程朱理学」。主张「性即理」，认为天理贯于万事万物，为学当「居敬穷理」——持敬存心、即物穷理，由格物致知步步贯通。元明以来长期为科举官学，深刻塑造了后世的教育与伦理。本书原文即用朱熹《中庸章句》的三十三章分章。</div><p>朱子以“三重”即议礼、制度、考文，六证之中“知天知人”为要。“质诸鬼神而无疑”即理之通微、与天合德；“百世以俟圣人而不惑”是义理之公、人之所同然。君子之道所以为天下法则，正因其兼得天人之信，而非一己之私见。</p></div></div><div class="jrow"><button type="button" class="jlabel" aria-expanded="false">陆王心学</button><div class="jbody"><span class="jbasis">所本：《孟子》·《传习录》</span><div class="jintro">南宋陆九渊开创、明代王守仁（阳明）发扬的心学一系，与程朱并称「陆王」。主张「心即理」，说「宇宙便是吾心」，为学重在发明本心、知行合一，晚年以「致良知」为宗旨；认为道理不假外求，反求诸身自能明觉。以此读《中庸》，尤其看重「慎独」与「诚」——把它们视作本心的直接呈现。</div><p>阳明以“心即理”，六证可会通为一：本诸身即致良知于己，征诸庶民即良知之同然，考三王、建天地、质鬼神、俟圣人，无非良知天理之周流发见。动为道、行为法、言为则，正良知自然之条理，不假外求。</p></div></div><div class="jrow"><button type="button" class="jlabel" aria-expanded="false">现代视界</button><div class="jbody"><span class="jbasis">所本：现代哲学·心理学（非古典）</span><div class="jintro">以近现代的眼光重看《中庸》：现代新儒家（如冯友兰、牟宗三等）的哲学阐释、道德心理学与教育学的研究视角等，把「中」「和」「诚」这些古典概念放进今天的生活与知识框架中理解。此栏目文字为本阅读器自撰的通识性说明，不摘引现代著作原文。</div><p>钱穆等谓“三重”之说极重“历史经验”与“民意验证”：制度须经历史（三王）、自然（天地）、人心（庶民）多重检验方得持久。这是一种“非独断”的合法性观念，与今之“程序正当”“公共理性”可相参。</p></div></div><div class="jrow"><button type="button" class="jlabel" aria-expanded="false">生活启发</button><div class="jbody"><span class="jbasis">所本：日用践履</span><div class="jintro">落到日用常行：把该章义理转译成可操作的提醒与练习，重在「怎么做」。内容为本阅读器自撰，供共读时对照自身、在群内交流。</div><p>想推行一件事（如家庭新规、团队制度），不能只凭自己“觉得对”。先在自身做到（本诸身），看旁人是否真信服（征诸庶民），参考过往经验（考诸三王），合乎情理大势（建诸天地），经得起时间检验（俟圣人）。多方验证过的决定，推行才少阻力。</p></div></div></div></div>
         <div class="panel" data-panel="dao"><p>以“三重”言制作礼乐须德位兼隆、征验群伦天地鬼神百世而不疑不惑，归到君子言行可为天下法则，示中庸之“信”与“法”。</p></div>
-        <div class="panel" data-panel="sheng"><div class="sheng-wrap"><ol class="sheng"><li>在不利位置时，你能否不怨、不悖、不窃？</li><li>当别人看不见你的付出时，你还能安于本位吗？</li></ol><div class="sheng-note-box"><label class="sheng-lab">我的践行笔记 <span class="sheng-count" id="shengCount-29">0</span> 字</label><textarea class="sheng-note" id="shengNote-29" data-n="29" rows="3" disabled placeholder="把今天的体悟写下来：哪一句戳中你？你打算怎么用？登录后记录，跨设备同步。"></textarea><div class="sheng-lock" id="shengLock-29"><p>登录后记录，跨设备同步查看</p><button class="btn" id="shengLogin-29" type="button">登录后记录</button></div></div></div></div>
+        <div class="panel" data-panel="sheng"><div class="sheng-wrap"><ol class="sheng"><li>在不利位置时，你能否不怨、不悖、不窃？</li><li>当别人看不见你的付出时，你还能安于本位吗？</li></ol><div class="sheng-note-box"><label class="sheng-lab">我的践行笔记 <span class="sheng-count" id="shengCount-29">0</span> 字</label><textarea class="sheng-note" id="shengNote-29" data-n="29" rows="3" placeholder="把今天的体悟写下来：哪一句戳中你？你打算怎么用？"></textarea><p class="sheng-hint">仅保存在本浏览器，不会上传；更换设备、清除缓存后将不可见。</p></div></div></div>
       </div>
     </div>
   </article>
@@ -1530,7 +1534,7 @@ body.paged.view-chapter .pager{display:flex}
         <div class="panel" data-panel="zz"><p class="zz-head">朱子此章所注，首在：<span class="zz-ref">仲尼祖述尧舜，宪章文武；上律天时，下袭水土。</span></p><p class="zz">此章承上而言「仲尼祖述尧舜，宪章文武」，上律天时、下袭水土，如天地之无不持载、无不覆帱。</p></div>
         <div class="panel" data-panel="jiedu"><div class="jiedu"><p class="jhint">学派名称可点击，展开该学派的简介</p><div class="jrow"><button type="button" class="jlabel" aria-expanded="false">程朱理学</button><div class="jbody"><span class="jbasis">所本：《论语》·《易·系辞》·《中庸章句》</span><div class="jintro">北宋程颢、程颐奠基，南宋朱熹集大成的儒学流派，合称「程朱理学」。主张「性即理」，认为天理贯于万事万物，为学当「居敬穷理」——持敬存心、即物穷理，由格物致知步步贯通。元明以来长期为科举官学，深刻塑造了后世的教育与伦理。本书原文即用朱熹《中庸章句》的三十三章分章。</div><p>朱子以“祖述宪章”见孔子述而不作；“小德川流”言道之用，“大德敦化”言道之体，体用一源。万物并育并行不相害悖，乃天理自然之公，圣人能体此而配天地。此章正显“和”为天理之全，非勉强调和。</p></div></div><div class="jrow"><button type="button" class="jlabel" aria-expanded="false">陆王心学</button><div class="jbody"><span class="jbasis">所本：《孟子》·《传习录》</span><div class="jintro">南宋陆九渊开创、明代王守仁（阳明）发扬的心学一系，与程朱并称「陆王」。主张「心即理」，说「宇宙便是吾心」，为学重在发明本心、知行合一，晚年以「致良知」为宗旨；认为道理不假外求，反求诸身自能明觉。以此读《中庸》，尤其看重「慎独」与「诚」——把它们视作本心的直接呈现。</div><p>阳明以“万物一体之仁”会通此章：并育不相害即良知之公、气化之流行无一物不得其所；心外无物，则万物各正性命皆是心体之发用。川流敦化，即良知之妙用与其本体，本无二致。</p></div></div><div class="jrow"><button type="button" class="jlabel" aria-expanded="false">现代视界</button><div class="jbody"><span class="jbasis">所本：现代哲学·心理学（非古典）</span><div class="jintro">以近现代的眼光重看《中庸》：现代新儒家（如冯友兰、牟宗三等）的哲学阐释、道德心理学与教育学的研究视角等，把「中」「和」「诚」这些古典概念放进今天的生活与知识框架中理解。此栏目文字为本阅读器自撰的通识性说明，不摘引现代著作原文。</div><p>唐君毅等以“万物并育而不相害”为儒家“多元一体”“和而不同”之极致表述，可与会通中西哲学、文明对话相接。它既不主霸权同化，亦不主相对主义，而是差异中的共生，对当代多元社会极具启发性。</p></div></div><div class="jrow"><button type="button" class="jlabel" aria-expanded="false">生活启发</button><div class="jbody"><span class="jbasis">所本：日用践履</span><div class="jintro">落到日用常行：把该章义理转译成可操作的提醒与练习，重在「怎么做」。内容为本阅读器自撰，供共读时对照自身、在群内交流。</div><p>与人相处、带团队，不必强求众人都一样。各人各有性情才干（小德川流），只要大方向、核心价值观一致（大德敦化），便能让每个人各得其所、互不掣肘。容得下差异，团队与个人才能一同生长。</p></div></div></div></div>
         <div class="panel" data-panel="dao"><p>以孔子“祖述宪章”为典范，揭“万物并育不相害、道并行不相悖”的太和之境，是“和”的最高写照。</p></div>
-        <div class="panel" data-panel="sheng"><div class="sheng-wrap"><ol class="sheng"><li>你做事是否既有传统根基，又有时代因应？</li><li>你尊敬的传统中，有哪些值得在今天的处境里重新活化？</li></ol><div class="sheng-note-box"><label class="sheng-lab">我的践行笔记 <span class="sheng-count" id="shengCount-30">0</span> 字</label><textarea class="sheng-note" id="shengNote-30" data-n="30" rows="3" disabled placeholder="把今天的体悟写下来：哪一句戳中你？你打算怎么用？登录后记录，跨设备同步。"></textarea><div class="sheng-lock" id="shengLock-30"><p>登录后记录，跨设备同步查看</p><button class="btn" id="shengLogin-30" type="button">登录后记录</button></div></div></div></div>
+        <div class="panel" data-panel="sheng"><div class="sheng-wrap"><ol class="sheng"><li>你做事是否既有传统根基，又有时代因应？</li><li>你尊敬的传统中，有哪些值得在今天的处境里重新活化？</li></ol><div class="sheng-note-box"><label class="sheng-lab">我的践行笔记 <span class="sheng-count" id="shengCount-30">0</span> 字</label><textarea class="sheng-note" id="shengNote-30" data-n="30" rows="3" placeholder="把今天的体悟写下来：哪一句戳中你？你打算怎么用？"></textarea><p class="sheng-hint">仅保存在本浏览器，不会上传；更换设备、清除缓存后将不可见。</p></div></div></div>
       </div>
     </div>
   </article>
@@ -1559,7 +1563,7 @@ body.paged.view-chapter .pager{display:flex}
         <div class="panel" data-panel="zz"><p class="zz-head">朱子此章所注，首在：<span class="zz-ref">唯天下至圣，为能聪明睿知，足以有临也；宽裕温柔，足以有容也；发强刚毅，足以有执也；齐庄中正，足以有敬也；文理密察，足以有别也。</span></p><p class="zz">此章承上「祖述」「宪章」而言「至圣」「至诚」之德：聪明睿知、溥博渊泉，舟车所至、人力所通，莫不尊亲。</p></div>
         <div class="panel" data-panel="jiedu"><div class="jiedu"><p class="jhint">学派名称可点击，展开该学派的简介</p><div class="jrow"><button type="button" class="jlabel" aria-expanded="false">程朱理学</button><div class="jbody"><span class="jbasis">所本：《论语》·《易·系辞》·《中庸章句》</span><div class="jintro">北宋程颢、程颐奠基，南宋朱熹集大成的儒学流派，合称「程朱理学」。主张「性即理」，认为天理贯于万事万物，为学当「居敬穷理」——持敬存心、即物穷理，由格物致知步步贯通。元明以来长期为科举官学，深刻塑造了后世的教育与伦理。本书原文即用朱熹《中庸章句》的三十三章分章。</div><p>朱子谓五德“聪明睿知”等为圣人之德容，总之皆“诚”之发见；溥博渊泉言其蓄积深广，时出言其应物自然。民莫不敬信悦，是德盛而民自化，故配天。此章示学者“希圣”之准的，而未至者当由诚以入。</p></div></div><div class="jrow"><button type="button" class="jlabel" aria-expanded="false">陆王心学</button><div class="jbody"><span class="jbasis">所本：《孟子》·《传习录》</span><div class="jintro">南宋陆九渊开创、明代王守仁（阳明）发扬的心学一系，与程朱并称「陆王」。主张「心即理」，说「宇宙便是吾心」，为学重在发明本心、知行合一，晚年以「致良知」为宗旨；认为道理不假外求，反求诸身自能明觉。以此读《中庸》，尤其看重「慎独」与「诚」——把它们视作本心的直接呈现。</div><p>阳明以五德即良知之全体大用：聪明睿知是良知之明觉，宽裕温柔是良知之恻隐，刚毅中正是良知之坚定，密察是良知之精别。溥博渊泉即良知之湛寂而流行，不假安排，自然感通天下。</p></div></div><div class="jrow"><button type="button" class="jlabel" aria-expanded="false">现代视界</button><div class="jbody"><span class="jbasis">所本：现代哲学·心理学（非古典）</span><div class="jintro">以近现代的眼光重看《中庸》：现代新儒家（如冯友兰、牟宗三等）的哲学阐释、道德心理学与教育学的研究视角等，把「中」「和」「诚」这些古典概念放进今天的生活与知识框架中理解。此栏目文字为本阅读器自撰的通识性说明，不摘引现代著作原文。</div><p>牟宗三以“至圣”五德可视作理想人格（圣贤型领袖）的完整描述：兼具洞察、包容、坚毅、庄敬、明辨，是现代“转化型领导”的古典原型。“配天”非神秘，而是人格境界之无限涵量。</p></div></div><div class="jrow"><button type="button" class="jlabel" aria-expanded="false">生活启发</button><div class="jbody"><span class="jbasis">所本：日用践履</span><div class="jintro">落到日用常行：把该章义理转译成可操作的提醒与练习，重在「怎么做」。内容为本阅读器自撰，供共读时对照自身、在群内交流。</div><p>一个真正让人信服的人，不是靠职位压人，而是智（看得清）、仁（容得下）、勇（守得住）、敬（庄重）、察（分得明）俱足。可从小处修养：多听多看以增明察，待人宽厚以广包容，遇重要原则刚毅不移。</p></div></div></div></div>
         <div class="panel" data-panel="dao"><p>极写“至圣”之德容：聪明、宽裕、刚毅、中正、密察五者兼备，溥博如天、渊泉如渊，民莫不尊亲而配天。</p></div>
-        <div class="panel" data-panel="sheng"><div class="sheng-wrap"><ol class="sheng"><li>你眼中的「大德」之人，有哪些具体表现？</li><li>你见过谁像水一样无声地影响了周围的人？</li></ol><div class="sheng-note-box"><label class="sheng-lab">我的践行笔记 <span class="sheng-count" id="shengCount-31">0</span> 字</label><textarea class="sheng-note" id="shengNote-31" data-n="31" rows="3" disabled placeholder="把今天的体悟写下来：哪一句戳中你？你打算怎么用？登录后记录，跨设备同步。"></textarea><div class="sheng-lock" id="shengLock-31"><p>登录后记录，跨设备同步查看</p><button class="btn" id="shengLogin-31" type="button">登录后记录</button></div></div></div></div>
+        <div class="panel" data-panel="sheng"><div class="sheng-wrap"><ol class="sheng"><li>你眼中的「大德」之人，有哪些具体表现？</li><li>你见过谁像水一样无声地影响了周围的人？</li></ol><div class="sheng-note-box"><label class="sheng-lab">我的践行笔记 <span class="sheng-count" id="shengCount-31">0</span> 字</label><textarea class="sheng-note" id="shengNote-31" data-n="31" rows="3" placeholder="把今天的体悟写下来：哪一句戳中你？你打算怎么用？"></textarea><p class="sheng-hint">仅保存在本浏览器，不会上传；更换设备、清除缓存后将不可见。</p></div></div></div>
       </div>
     </div>
   </article>
@@ -1588,7 +1592,7 @@ body.paged.view-chapter .pager{display:flex}
         <div class="panel" data-panel="zz"><p class="zz-head">朱子此章所注，首在：<span class="zz-ref">唯天下至诚，为能经纶天下之大经，立天下之大本，知天地之化育。</span></p><p class="zz">此章承上而言「唯天下至诚，为能经纶天下之大经，立天下之大本」，知天地之化育。</p></div>
         <div class="panel" data-panel="jiedu"><div class="jiedu"><p class="jhint">学派名称可点击，展开该学派的简介</p><div class="jrow"><button type="button" class="jlabel" aria-expanded="false">程朱理学</button><div class="jbody"><span class="jbasis">所本：《论语》·《易·系辞》·《中庸章句》</span><div class="jintro">北宋程颢、程颐奠基，南宋朱熹集大成的儒学流派，合称「程朱理学」。主张「性即理」，认为天理贯于万事万物，为学当「居敬穷理」——持敬存心、即物穷理，由格物致知步步贯通。元明以来长期为科举官学，深刻塑造了后世的教育与伦理。本书原文即用朱熹《中庸章句》的三十三章分章。</div><p>朱子以“经纶大经”为五品之常，“立大本”为天命之性，“知化育”为赞天道；“无所倚”言诚者自然、不假外助。肫肫渊渊浩浩，形容诚之恳深大，皆天德之流行。非达天德者不能知，见诚之微妙难名。</p></div></div><div class="jrow"><button type="button" class="jlabel" aria-expanded="false">陆王心学</button><div class="jbody"><span class="jbasis">所本：《孟子》·《传习录》</span><div class="jintro">南宋陆九渊开创、明代王守仁（阳明）发扬的心学一系，与程朱并称「陆王」。主张「心即理」，说「宇宙便是吾心」，为学重在发明本心、知行合一，晚年以「致良知」为宗旨；认为道理不假外求，反求诸身自能明觉。以此读《中庸》，尤其看重「慎独」与「诚」——把它们视作本心的直接呈现。</div><p>阳明以“立大本”即立良知之本体，“经纶大经”即良知之条理于事，“知化育”即良知与天地同体。“无所倚”者，良知本自具足、不藉见闻；肫肫渊渊浩浩，即良知之仁渊天，当下便是，原无阶层。</p></div></div><div class="jrow"><button type="button" class="jlabel" aria-expanded="false">现代视界</button><div class="jbody"><span class="jbasis">所本：现代哲学·心理学（非古典）</span><div class="jintro">以近现代的眼光重看《中庸》：现代新儒家（如冯友兰、牟宗三等）的哲学阐释、道德心理学与教育学的研究视角等，把「中」「和」「诚」这些古典概念放进今天的生活与知识框架中理解。此栏目文字为本阅读器自撰的通识性说明，不摘引现代著作原文。</div><p>唐君毅以本章为“内圣通外王”之确解：至诚立本而后能经纶天下，外王建基于内圣之诚。现代意义在提醒：任何公共秩序的建立，须有真诚的人格根基，否则制度终成虚文。“无所倚”亦示道德主体之自由自律。</p></div></div><div class="jrow"><button type="button" class="jlabel" aria-expanded="false">生活启发</button><div class="jbody"><span class="jbasis">所本：日用践履</span><div class="jintro">落到日用常行：把该章义理转译成可操作的提醒与练习，重在「怎么做」。内容为本阅读器自撰，供共读时对照自身、在群内交流。</div><p>想把一件事（家庭、事业、关系）真正安顿好，根子在“立本”——先把内心最看重的原则（大本）立稳、真诚以待，外头的事务自然有条理。不靠运气、不靠外人，自本自根地去做，反而最稳。</p></div></div></div></div>
         <div class="panel" data-panel="dao"><p>以“至诚”能经纶大经、立大本、知化育，归到“肫肫其仁、渊渊其渊、浩浩其天”的无倚之诚，为诚论之极峰。</p></div>
-        <div class="panel" data-panel="sheng"><div class="sheng-wrap"><ol class="sheng"><li>你的日常处事是否也能「从容中道」？</li><li>当事情繁杂时，你如何保持不慌不忙？</li></ol><div class="sheng-note-box"><label class="sheng-lab">我的践行笔记 <span class="sheng-count" id="shengCount-32">0</span> 字</label><textarea class="sheng-note" id="shengNote-32" data-n="32" rows="3" disabled placeholder="把今天的体悟写下来：哪一句戳中你？你打算怎么用？登录后记录，跨设备同步。"></textarea><div class="sheng-lock" id="shengLock-32"><p>登录后记录，跨设备同步查看</p><button class="btn" id="shengLogin-32" type="button">登录后记录</button></div></div></div></div>
+        <div class="panel" data-panel="sheng"><div class="sheng-wrap"><ol class="sheng"><li>你的日常处事是否也能「从容中道」？</li><li>当事情繁杂时，你如何保持不慌不忙？</li></ol><div class="sheng-note-box"><label class="sheng-lab">我的践行笔记 <span class="sheng-count" id="shengCount-32">0</span> 字</label><textarea class="sheng-note" id="shengNote-32" data-n="32" rows="3" placeholder="把今天的体悟写下来：哪一句戳中你？你打算怎么用？"></textarea><p class="sheng-hint">仅保存在本浏览器，不会上传；更换设备、清除缓存后将不可见。</p></div></div></div>
       </div>
     </div>
   </article>
@@ -1617,7 +1621,7 @@ body.paged.view-chapter .pager{display:flex}
         <div class="panel" data-panel="zz"><p class="zz-head">朱子此章所注，首在：<span class="zz-ref">《诗》曰“衣锦尚䌹”，恶其文之著也。</span></p><p class="zz">此章（「诗曰衣锦尚䌹」至「无声无臭至矣」）言「天道」「人道」之极，由「暗然日章」以至于「上天之载，无声无臭」，而「中庸」之「至」于是乎尽。</p></div>
         <div class="panel" data-panel="jiedu"><div class="jiedu"><p class="jhint">学派名称可点击，展开该学派的简介</p><div class="jrow"><button type="button" class="jlabel" aria-expanded="false">程朱理学</button><div class="jbody"><span class="jbasis">所本：《论语》·《易·系辞》·《中庸章句》</span><div class="jintro">北宋程颢、程颐奠基，南宋朱熹集大成的儒学流派，合称「程朱理学」。主张「性即理」，认为天理贯于万事万物，为学当「居敬穷理」——持敬存心、即物穷理，由格物致知步步贯通。元明以来长期为科举官学，深刻塑造了后世的教育与伦理。本书原文即用朱熹《中庸章句》的三十三章分章。</div><p>朱子以七《诗》层层收束，至“无声无臭”而极。暗然日章即首章“莫见乎隐莫显乎微”之效，的然日亡是虚伪外露之必败。无声无臭非虚无，乃天德之妙、至简至神，中庸之境与天道同其不可名。此章正与首章“天命”相首尾。</p></div></div><div class="jrow"><button type="button" class="jlabel" aria-expanded="false">陆王心学</button><div class="jbody"><span class="jbasis">所本：《孟子》·《传习录》</span><div class="jintro">南宋陆九渊开创、明代王守仁（阳明）发扬的心学一系，与程朱并称「陆王」。主张「心即理」，说「宇宙便是吾心」，为学重在发明本心、知行合一，晚年以「致良知」为宗旨；认为道理不假外求，反求诸身自能明觉。以此读《中庸》，尤其看重「慎独」与「诚」——把它们视作本心的直接呈现。</div><p>阳明以“暗然日章”即良知之自然发见，“人所不见”处用功即致良知于独知。无声无臭是良知本体之虚明寂然、万化由之，原无声臭可执。笃恭而天下平，即良知一念之诚通于天下。</p></div></div><div class="jrow"><button type="button" class="jlabel" aria-expanded="false">现代视界</button><div class="jbody"><span class="jbasis">所本：现代哲学·心理学（非古典）</span><div class="jintro">以近现代的眼光重看《中庸》：现代新儒家（如冯友兰、牟宗三等）的哲学阐释、道德心理学与教育学的研究视角等，把「中」「和」「诚」这些古典概念放进今天的生活与知识框架中理解。此栏目文字为本阅读器自撰的通识性说明，不摘引现代著作原文。</div><p>钱穆等以“无声无臭”为儒家“超越而内在”之境的极致：天道在人伦日用中自然流行，不假声色威权。现代意义在于：真正的教化与影响，靠的是人格的暗然之光，而非外在的强制与喧哗，对教育、领导皆有深意。</p></div></div><div class="jrow"><button type="button" class="jlabel" aria-expanded="false">生活启发</button><div class="jbody"><span class="jbasis">所本：日用践履</span><div class="jintro">落到日用常行：把该章义理转译成可操作的提醒与练习，重在「怎么做」。内容为本阅读器自撰，供共读时对照自身、在群内交流。</div><p>真正长久的修养与影响，是“暗然”的——不必时时彰显、急于表现。把该做的默默做好（内省不疚、不动而敬），信任会自然建立，影响会自然扩散。少喊口号、少用声色压人，以笃实温和待人，反而最能安顿关系、平和局面。</p></div></div></div></div>
         <div class="panel" data-panel="dao"><p>全篇之结。以“衣锦尚䌹”起，反复借《诗》言君子暗然日章、内省不疚、不动而敬、笃恭而天下平，终归“无声无臭”之天载，示中庸之极境即“上天之载”。</p></div>
-        <div class="panel" data-panel="sheng"><div class="sheng-wrap"><ol class="sheng"><li>你能否接受「暗然而日章」，不急于彰显？</li><li>如果一辈子都没有被看见，你仍愿意这样诚实地活吗？</li></ol><div class="sheng-note-box"><label class="sheng-lab">我的践行笔记 <span class="sheng-count" id="shengCount-33">0</span> 字</label><textarea class="sheng-note" id="shengNote-33" data-n="33" rows="3" disabled placeholder="把今天的体悟写下来：哪一句戳中你？你打算怎么用？登录后记录，跨设备同步。"></textarea><div class="sheng-lock" id="shengLock-33"><p>登录后记录，跨设备同步查看</p><button class="btn" id="shengLogin-33" type="button">登录后记录</button></div></div></div></div>
+        <div class="panel" data-panel="sheng"><div class="sheng-wrap"><ol class="sheng"><li>你能否接受「暗然而日章」，不急于彰显？</li><li>如果一辈子都没有被看见，你仍愿意这样诚实地活吗？</li></ol><div class="sheng-note-box"><label class="sheng-lab">我的践行笔记 <span class="sheng-count" id="shengCount-33">0</span> 字</label><textarea class="sheng-note" id="shengNote-33" data-n="33" rows="3" placeholder="把今天的体悟写下来：哪一句戳中你？你打算怎么用？"></textarea><p class="sheng-hint">仅保存在本浏览器，不会上传；更换设备、清除缓存后将不可见。</p></div></div></div>
       </div>
     </div>
   </article>
@@ -1645,7 +1649,7 @@ body.paged.view-chapter .pager{display:flex}
   <button class="bn-item act-study">研读</button>
   <button class="bn-item act-today">今日</button>
   <button class="bn-item act-toc">目录</button>
-  <button class="bn-item act-tools" id="toolsBtnBottom">工具</button>
+  <button class="bn-item act-tools" id="toolsBtnBottom">工具箱</button>
 </nav>
 <button class="backtop" id="backTop" title="回到顶部">顶</button>
 <div class="toast" id="toast"></div>
@@ -1770,18 +1774,7 @@ function loadShengNotes(){
     if (cnt) { cnt.textContent = v.length; }
   }
 }
-/* 云端拉取后回填：优先以云端为准，并写回本机缓存 */
-function applyCloudNotes(map){
-  if (!map || typeof map !== 'object') { return; }
-  for (var n in map) {
-    if (!map.hasOwnProperty(n)) { continue; }
-    var ta = document.getElementById('shengNote-' + n);
-    if (ta) { ta.value = map[n]; }
-    var cnt = document.getElementById('shengCount-' + n);
-    if (cnt) { cnt.textContent = (map[n] || '').length; }
-    try { window.localStorage.setItem(shengKey(n), map[n]); } catch (e) {}
-  }
-}
+
 function bindShengNotes(){
   document.addEventListener('input', function(e){
     var ta = e.target;
@@ -1790,36 +1783,11 @@ function bindShengNotes(){
     try { window.localStorage.setItem(shengKey(n), ta.value); } catch (err) {}
     var cnt = document.getElementById('shengCount-' + n);
     if (cnt) { cnt.textContent = ta.value.length; }
-    if (window.WB_CLOUD && window.WB_CLOUD.signedIn && typeof window.wbSaveNotes === 'function') { window.wbSaveNotes(n); }
-  });
-  /* 笔记登录浮层中的「登录」按钮 */
-  document.addEventListener('click', function(e){
-    var b = e.target.closest ? e.target.closest('[id^="shengLogin-"]') : null;
-    if (b && typeof window.openWbLogin === 'function') { window.openWbLogin(); }
   });
 }
-/* 笔记登录门控：未登录禁用并展示浮层，已登录启用 */
-function refreshNotesGate(){
-  var signedIn = !!(window.WB_CLOUD && window.WB_CLOUD.signedIn);
-  var tas = document.querySelectorAll('.sheng-note');
-  for (var i = 0; i < tas.length; i++) {
-    var n = tas[i].getAttribute('data-n');
-    tas[i].disabled = !signedIn;
-    var lock = document.getElementById('shengLock-' + n);
-    if (lock) { lock.style.display = signedIn ? 'none' : 'block'; }
-  }
-  var st = document.getElementById('cloudStatus');
-  if (st) { st.textContent = signedIn ? '已登录 · 云端同步中' : '未登录'; st.classList.toggle('ok', signedIn); }
-  var ex = document.getElementById('exportSheng');
-  if (ex) { ex.disabled = !signedIn; ex.title = signedIn ? '' : '登录后可导出云端笔记'; }
-}
+
 function exportSheng(){
   var tip = document.getElementById('exportTip');
-  if (!(window.WB_CLOUD && window.WB_CLOUD.signedIn)) {
-    toast('登录后可导出云端笔记');
-    if (typeof window.openWbLogin === 'function') { window.openWbLogin(); }
-    return;
-  }
   var lines = ['《中庸》我的 33 天自省', '（生成于 ' + dateStr(new Date()) + '）', ''];
   for (var n = 1; n <= TOTAL; n++) {
     var qs = (SHENGQ[String(n)] || []);
@@ -1839,9 +1807,9 @@ function exportSheng(){
     a.href = url; a.download = '中庸_我的33天自省.txt';
     document.body.appendChild(a); a.click(); document.body.removeChild(a);
     setTimeout(function(){ try { URL.revokeObjectURL(url); } catch (e) {} }, 1000);
-    if (tip) { tip.textContent = '已导出 ' + (lines.length) + ' 行（仅含你写的内容）'; }
+    if (tip) { tip.textContent = '已导出本机笔记备份（仅含你写的内容）'; }
   } catch (e) {
-    if (tip) { tip.textContent = '当前环境不支持下载，已复制到剪贴板'; }
+    if (tip) { tip.textContent = '当前环境不支持下载，已复制到剪贴板（仅本机内容）'; }
     copyText(text);
   }
 }
@@ -1927,7 +1895,7 @@ function toast(msg, ms){
    （显示“安全限制”），而 workbuddy.cn/space/d 查看器又需登录——两者都不适合作为分享链接。
    故固定输出公开站点地址 SHARE_BASE：书友免登录、点开即直达本章。
    若将来更换/下线了公开站点，改这里即可；留空则回退为当前页面地址。 */
-var SHARE_BASE = 'https://zhongyong-gongdu.app.workbuddy.host/';
+var SHARE_BASE = '';
 function shareChapter(n){
   n = Math.max(1, Math.min(TOTAL, n));
   var base = SHARE_BASE || ((location.origin || '') + (location.pathname || ''));
@@ -2286,7 +2254,7 @@ window.addEventListener('hashchange', function(){
   if (h === '#cover') { showCover(); return; }
 });
 
-/* 工具箱面板：统一收纳系统功能（阅读设置 / 我的云端 / 分享） */
+/* 工具箱面板：统一收纳系统功能（阅读设置 / 共读设置 / 分享） */
 function openTools(){ var p = $('#toolsPanel'), m = $('#toolsMask'); if (p) p.classList.add('open'); if (m) m.classList.add('open'); }
 function closeTools(){ var p = $('#toolsPanel'), m = $('#toolsMask'); if (p) p.classList.remove('open'); if (m) m.classList.remove('open'); }
 try {
@@ -2303,7 +2271,7 @@ try { updateToday(); } catch (e) {}
 try { markReadToc(); } catch (e) {}
 try { loadShengNotes(); } catch (e) {}
 try { bindShengNotes(); } catch (e) {}
-try { refreshNotesGate(); } catch (e) {}
+
 try { $('#exportSheng').addEventListener('click', exportSheng); } catch (e) {}
 try { $('#anshenShare').addEventListener('click', shareAnshen); } catch (e) {}
 document.body.classList.add('paged');   /* 默认分页阅读 */
@@ -2328,323 +2296,6 @@ try {
     }
   } catch (e) {}
 })();
-(function () {
-  // 云端功能仅在发布域名下启用：本地 / 测试中（file://、localhost）不加载 SDK、不展示登录，
-  // 阅读进度自动降级为浏览器本地存储，且不产生跨域请求。
-  // 云端功能在 https 发布域名下启用（含 workbuddy.host 与 Vercel 等任意 https 部署）；
-  // 本地 / 测试中（file://、localhost、127.0.0.1）不加载 SDK、不展示登录，进度降级为浏览器本地存储。
-  var onCloudDomain = location.protocol === 'https:' &&
-    !/^(localhost|127\.0\.0\.1)$/.test(location.hostname);
-  if (!onCloudDomain) { return; }
-
-  // 公开配置：仅可安全置于前端的值（来自 workbuddy_cloud_service 激活结果）
-  var PC = {
-    endpoint: 'https://zhongyong-gongdu.app.workbuddy.host',
-    oauthRelayBaseUrl: 'https://www.workbuddy.cn/v2/as/genie-baas/oauth',
-    publishableKey: 'wbpk_P11WjGxxiVMLy26yVBpEKc_uNrqhIR4ws4q4g0Fb80tLN5ajm1lcFcB'
-  };
-  var SDK_URL = 'https://cdn.jsdelivr.net/npm/@tencent-ai/workbuddy-cloud-sdk@dev/lib/index.global.js';
-
-  // 动态加载 SDK（不阻塞页面 load），加载完成后再初始化
-  function loadSdk(cb) {
-    if (typeof WorkBuddyCloud !== 'undefined') { cb(); return; }
-    var s = document.createElement('script');
-    s.src = SDK_URL;
-    s.async = true;
-    s.onload = function () { cb(); };
-    s.onerror = function () { console.warn('[云同步] SDK 加载失败，已降级为本地存储。'); };
-    document.head.appendChild(s);
-  }
-
-  function boot() {
-    if (typeof WorkBuddyCloud === 'undefined') {
-      console.warn('[云同步] SDK 未加载，登录与跨设备同步不可用，已降级为本地存储。');
-      return;
-    }
-    var cloud;
-    try {
-      cloud = WorkBuddyCloud.createWorkBuddyCloud({
-        endpoint: PC.endpoint,
-        oauthRelayBaseUrl: PC.oauthRelayBaseUrl,
-        publishableKey: PC.publishableKey
-      });
-    } catch (e) {
-      console.warn('[云同步] 初始化失败：', e);
-      return;
-    }
-
-    var state = { user: null, syncing: false, syncingNotes: false };
-    window.WB_CLOUD = { signedIn: false };  // 供主脚本判断登录态（践行笔记门控）
-
-    function esc(s) {
-      return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) {
-        return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
-      });
-    }
-
-    /* ---------- 注入样式 ---------- */
-    var style = document.createElement('style');
-    style.textContent = [
-      '.cloud-user{display:inline-flex;align-items:center;gap:6px;margin-left:8px}',
-      '.cloud-user .cbtn{font-size:14px;padding:6px 14px;line-height:1.6;border-radius:6px;border:1px solid var(--line,#e3dccb);background:transparent;color:var(--soft,#7a7263);cursor:pointer;transition:.15s;font-family:inherit}',
-      '.cloud-user .cbtn:hover{border-color:var(--soft,#7a7263);background:var(--soft,#7a7263);color:#fff}',
-      '.cloud-user .cavatar{width:24px;height:24px;border-radius:50%;background:#8a6d3b;color:#fff;display:inline-flex;align-items:center;justify-content:center;font-size:13px}',
-      '.cloud-user .cname{max-width:84px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:13px;color:#6b5b3e}',
-      '.cloud-mask{position:fixed;inset:0;background:rgba(40,32,18,.45);display:flex;align-items:center;justify-content:center;z-index:1200}',
-      '.cloud-modal{position:relative;width:min(92vw,360px);background:#fffdf8;border-radius:14px;padding:22px;box-shadow:0 12px 40px rgba(0,0,0,.2);font-family:inherit}',
-      '.cloud-modal h3{margin:0 0 4px;font-size:17px;color:#3a2f1c}',
-      '.cloud-modal .sub{margin:0 0 16px;font-size:13px;color:#9a8a6a}',
-      '.cloud-sep{display:flex;align-items:center;gap:10px;color:#b3a688;font-size:12px;margin:14px 0}',
-      '.cloud-sep::before,.cloud-sep::after{content:"";flex:1;height:1px;background:#ece4d3}',
-      '.cloud-field{display:flex;gap:8px;margin-top:8px}',
-      '.cloud-field input{flex:1;padding:9px 10px;border:1px solid #e3dccb;border-radius:8px;font-size:14px;font-family:inherit}',
-      '.cloud-btn{display:block;width:100%;padding:11px;border:0;border-radius:9px;background:#8a6d3b;color:#fff;font-size:15px;cursor:pointer;margin-top:6px}',
-      '.cloud-btn:disabled{opacity:.6;cursor:default}',
-      '.cloud-btn.ghost{background:#f3ede0;color:#6b5b3e}',
-      '.cloud-msg{font-size:12px;min-height:16px;margin-top:8px;color:#c0392b}',
-      '.cloud-close{position:absolute;top:10px;right:14px;font-size:20px;color:#b3a688;background:none;border:0;cursor:pointer}'
-    ].join('');
-    document.head.appendChild(style);
-
-    /* ---------- 顶部用户区 ---------- */
-    var bar = document.createElement('div');
-    bar.className = 'cloud-user';
-    bar.id = 'cloudUser';
-    var topActions = document.querySelector('.top-actions');
-    if (topActions) { topActions.appendChild(bar); }
-    else { document.body.appendChild(bar); }
-
-    function renderUser() {
-      if (state.user) {
-        var name = state.user.name || '书友';
-        bar.innerHTML =
-          '<span class="cavatar">' + esc(name.slice(0, 1)) + '</span>' +
-          '<span class="cname" title="' + esc(name) + '">' + esc(name) + '</span>' +
-          '<button class="cbtn" id="wbLogout">退出</button>';
-        var lo = document.getElementById('wbLogout');
-        if (lo) lo.addEventListener('click', function () {
-          cloud.auth.signOut().then(function () {
-            state.user = null; renderUser(); toast('已退出，进度仅保存在本机');
-          }).catch(function (e) { toast('退出失败：' + (e && e.message || '未知错误')); });
-        });
-      } else {
-        bar.innerHTML = '<button class="cbtn" id="wbLogin">登录同步</button>';
-        var lb = document.getElementById('wbLogin');
-        if (lb) lb.addEventListener('click', openModal);
-      }
-    }
-
-    /* ---------- 登录弹窗 ---------- */
-    function openModal() {
-      closeModal();
-      var mask = document.createElement('div');
-      mask.className = 'cloud-mask';
-      mask.id = 'wbMask';
-      mask.innerHTML =
-        '<div class="cloud-modal">' +
-        '<button class="cloud-close" id="wbClose">×</button>' +
-        '<h3>登录以云端同步</h3>' +
-        '<p class="sub">登录后，阅读进度与开始日期将在你的设备间自动同步。</p>' +
-        '<div class="cloud-field"><input id="wbPhone" type="tel" inputmode="numeric" maxlength="11" placeholder="手机号"></div>' +
-        '<button class="cloud-btn" id="wbSend">获取验证码并登录</button>' +
-        '<div class="cloud-field" id="wbCodeWrap" style="display:none"><input id="wbCode" type="text" inputmode="numeric" maxlength="6" placeholder="6 位验证码"></div>' +
-        '<button class="cloud-btn" id="wbVerify" style="display:none">输入验证码完成登录</button>' +
-        '<div class="cloud-sep">或</div>' +
-        '<button class="cloud-btn ghost" id="wbWbLogin">使用微信 / WorkBuddy 登录</button>' +
-        '<p class="sub" style="margin-top:8px">微信登录需在本页于「微信内」打开时才能回跳完成；若已在外部浏览器，请用上方手机号验证码。</p>' +
-        '<div class="cloud-msg" id="wbMsg"></div>' +
-        '</div>';
-      document.body.appendChild(mask);
-      mask.addEventListener('click', function (e) { if (e.target === mask) closeModal(); });
-      document.getElementById('wbClose').addEventListener('click', closeModal);
-      document.getElementById('wbWbLogin').addEventListener('click', wbLogin);
-      document.getElementById('wbSend').addEventListener('click', sendCode);
-      document.getElementById('wbVerify').addEventListener('click', verifyCode);
-    }
-    function closeModal() {
-      var m = document.getElementById('wbMask');
-      if (m) m.remove();
-    }
-    function setMsg(s) {
-      var el = document.getElementById('wbMsg');
-      if (el) el.textContent = s || '';
-    }
-
-    /* WorkBuddy 账号登录 */
-    function wbLogin() {
-      var back = location.origin + '/';
-      cloud.auth.signInWithOAuth({ provider: 'workbuddy', redirectTo: back }).then(function (r) {
-        if (r.error) { toast('登录发起失败：' + r.error.message); return; }
-        if (r.data && r.data.url) { location.assign(r.data.url); }
-        else { toast('未获取到登录地址'); }
-      }).catch(function (e) { toast('登录发起失败：' + (e && e.message || '未知错误')); });
-    }
-
-    /* 手机号验证码 */
-    var pendingOtp = null;
-    function sendCode() {
-      var phone = (document.getElementById('wbPhone').value || '').trim();
-      if (!/^1\d{10}$/.test(phone)) { setMsg('请输入正确的 11 位手机号'); return; }
-      setMsg('');
-      var btn = document.getElementById('wbSend');
-      btn.disabled = true;
-      cloud.auth.sendOtp({ phone: phone }).then(function (r) {
-        if (r.error) { setMsg(r.error.message || '发送失败'); btn.disabled = false; return; }
-        pendingOtp = { phone: phone, verificationId: r.data.verificationId, isExistingUser: r.data.isExistingUser };
-        document.getElementById('wbCodeWrap').style.display = 'flex';
-        document.getElementById('wbVerify').style.display = 'block';
-        setMsg('验证码已发送，请查收短信');
-      }).catch(function (e) { setMsg('发送失败：' + (e && e.message || '未知错误')); btn.disabled = false; });
-    }
-    function verifyCode() {
-      if (!pendingOtp) { setMsg('请先获取验证码'); return; }
-      var code = (document.getElementById('wbCode').value || '').trim();
-      if (!/^\d{4,6}$/.test(code)) { setMsg('请输入验证码'); return; }
-      setMsg('');
-      var btn = document.getElementById('wbVerify');
-      btn.disabled = true;
-      cloud.auth.verifyOtp({
-        phone: pendingOtp.phone,
-        verificationId: pendingOtp.verificationId,
-        isExistingUser: pendingOtp.isExistingUser,
-        token: code
-      }).then(function (r) {
-        if (r.error) { setMsg(r.error.message || '验证失败'); btn.disabled = false; return; }
-        closeModal();
-        onSignedIn(r.data);
-      }).catch(function (e) { setMsg('验证失败：' + (e && e.message || '未知错误')); btn.disabled = false; });
-    }
-
-    /* ---------- 会话：回调 / 恢复 / 变更 ---------- */
-    function clearAuthParams() {
-      var u = new URL(location.href);
-      ['code', 'state', 'provider'].forEach(function (k) { u.searchParams.delete(k); });
-      history.replaceState(null, '', u.pathname + u.search + u.hash);
-    }
-    function handleCallback() {
-      var u = new URL(location.href);
-      if (!u.searchParams.has('code')) { restoreSession(); return; }
-      var provider = u.searchParams.get('provider');
-      if (provider !== 'workbuddy' && provider !== 'wechat') { restoreSession(); return; }
-      var handler = provider === 'workbuddy' ? cloud.auth.handleWorkBuddyCallback : cloud.auth.handleWechatWebCallback;
-      if (typeof handler !== 'function') { restoreSession(); return; }
-      handler.call(cloud.auth).then(function (r) {
-        clearAuthParams();
-        if (r && r.data) { onSignedIn(r.data); }
-        else if (r && r.error) { toast('登录失败：' + r.error.message); }
-        else { restoreSession(); }
-      }).catch(function (e) { clearAuthParams(); toast('登录失败：' + (e && e.message || '未知错误')); });
-    }
-    function restoreSession() {
-      cloud.auth.getSession().then(function (r) {
-        if (r && r.data) { onSignedIn(r.data); }
-      }).catch(function () {});
-    }
-
-    function onSignedIn(session) {
-      state.user = (session && session.user) || null;
-      window.WB_CLOUD.signedIn = true;
-      renderUser();
-      wbLoadProgress();
-      if (typeof window.refreshNotesGate === 'function') { window.refreshNotesGate(); }
-    }
-
-    /* ---------- 阅读进度云端读写 ---------- */
-    function wbLoadProgress() {
-      if (!state.user) return;
-      cloud.database.from('reading_progress').select('*').maybeSingle().then(function (r) {
-        if (r.error) { console.warn('[云同步] 读取进度失败', r.error); return; }
-        var row = r.data;
-        if (!row) return;
-        var changed = false;
-        if (row.last_chapter && row.last_chapter > 0 && row.last_chapter > (lastRead || 0)) {
-          lastRead = row.last_chapter; lsSet(LAST_KEY, String(row.last_chapter)); markReadToc(); changed = true;
-        }
-        if (row.start_date) {
-          lsSet(LS_KEY, row.start_date); startDate = row.start_date;
-          if (typeof refreshTocDates === 'function') refreshTocDates();
-          if (typeof updateToday === 'function') updateToday();
-          if (typeof jumpToday === 'function') jumpToday();
-          changed = true;
-        }
-        if (changed) toast('已从云端同步阅读进度');
-        if (row.notes) {
-          try { var nm = JSON.parse(row.notes || '{}'); if (typeof window.applyCloudNotes === 'function') { window.applyCloudNotes(nm); } } catch (e) {}
-        }
-      }).catch(function () {});
-    }
-    /* 保存某章笔记到云端：读取现有 notes(JSON 映射) → 覆盖该章 → 写回 reading_progress.notes */
-    function wbSaveNotes(ch) {
-      if (!state.user || state.syncingNotes) return;
-      state.syncingNotes = true;
-      cloud.database.from('reading_progress').select('id,notes').maybeSingle().then(function (r) {
-        var cur = (r.data && r.data.notes) ? JSON.parse(r.data.notes || '{}') : {};
-        var ta = document.getElementById('shengNote-' + ch);
-        if (ta && ta.value.trim()) { cur[ch] = ta.value; } else { delete cur[ch]; }
-        var payload = { notes: JSON.stringify(cur) };
-        var op = (r.data && r.data.id)
-          ? cloud.database.from('reading_progress').update(payload).eq('id', r.data.id)
-          : cloud.database.from('reading_progress').insert(payload);
-        return op.then(function (res) {
-          state.syncingNotes = false;
-          if (res.error) { console.warn('[云同步] 笔记保存失败', res.error); }
-        });
-      }).catch(function () { state.syncingNotes = false; });
-    }
-    window.wbSaveNotes = wbSaveNotes;  // 供主脚本在笔记输入后调用
-    function wbSaveProgress() {
-      if (!state.user || state.syncing) return;
-      state.syncing = true;
-      var payload = { last_chapter: lastRead || 1, start_date: startDate || null };
-      if (state.user && state.user.name) payload.owner_name = state.user.name;
-      cloud.database.from('reading_progress').select('id').maybeSingle().then(function (r) {
-        var op;
-        if (r.data && r.data.id) {
-          op = cloud.database.from('reading_progress').update(payload).eq('id', r.data.id).select();
-        } else {
-          op = cloud.database.from('reading_progress').insert(payload).select();
-        }
-        return op.then(function (res) {
-          state.syncing = false;
-          if (res.error) { console.warn('[云同步] 保存进度失败', res.error); }
-        });
-      }).catch(function () { state.syncing = false; });
-    }
-
-    /* ---------- 挂钩现有进度函数（仅当用户已登录时才真正写云） ---------- */
-    if (typeof showChapter === 'function') {
-      var _sc = showChapter;
-      showChapter = function (n, keepHash) {
-        var rv = _sc.apply(this, arguments);
-        wbSaveProgress();
-        return rv;
-      };
-    }
-    if (typeof onStartChange === 'function') {
-      var _os = onStartChange;
-      onStartChange = function () {
-        var rv = _os.apply(this, arguments);
-        wbSaveProgress();
-        return rv;
-      };
-    }
-
-    /* ---------- 启动 ---------- */
-    if (typeof cloud.auth.onAuthStateChange === 'function') {
-      cloud.auth.onAuthStateChange(function (event, session) {
-        if (event === 'SIGNED_OUT') { state.user = null; window.WB_CLOUD.signedIn = false; renderUser(); if (typeof window.refreshNotesGate === 'function') { window.refreshNotesGate(); } }
-        else if (session) { onSignedIn(session); }
-      });
-    }
-    handleCallback();
-    renderUser();
-    window.openWbLogin = openModal;  // 供主脚本「践行笔记」登录浮层调用
-  }
-
-  loadSdk(boot);
-})();
-
-
 </script>
 </body>
 </html>

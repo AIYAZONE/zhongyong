@@ -1,0 +1,1450 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<link rel="icon" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2NCA2NCI+PGRlZnM+PGxpbmVhckdyYWRpZW50IGlkPSJnIiB4MT0iMCIgeTE9IjAiIHgyPSIxIiB5Mj0iMSI+PHN0b3Agb2Zmc2V0PSIwIiBzdG9wLWNvbG9yPSIjYjIzMDJiIi8+PHN0b3Agb2Zmc2V0PSIxIiBzdG9wLWNvbG9yPSIjOGExZjFmIi8+PC9saW5lYXJHcmFkaWVudD48L2RlZnM+PHJlY3QgeD0iNCIgeT0iNCIgd2lkdGg9IjU2IiBoZWlnaHQ9IjU2IiByeD0iMTIiIGZpbGw9InVybCgjZykiLz48cmVjdCB4PSI5IiB5PSI5IiB3aWR0aD0iNDYiIGhlaWdodD0iNDYiIHJ4PSI4IiBmaWxsPSJub25lIiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS1vcGFjaXR5PSIwLjU1IiBzdHJva2Utd2lkdGg9IjEuNSIvPjx0ZXh0IHg9IjMyIiB5PSI0NCIgZm9udC1zaXplPSIzOCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZmlsbD0iI2ZmZmZmZiIgZm9udC1mYW1pbHk9IlNUU29uZywgU2ltU3VuLCBzZXJpZiI+5q2iPC90ZXh0Pjwvc3ZnPg==" />
+<meta name="theme-color" content="#2d5016" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="light">
+<title>止学 · 十天共读</title>
+<style>
+:root{
+  --paper:#f6f1e6; --card:#fffdf7; --ink:#2e2a22; --soft:#71695a;
+  --accent:#a02c2c; --accent-deep:#8a1f1f; --accent-bg:#f7e9e4; --line:#e4dac4;
+  --sidebar-w:300px;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  background:var(--paper);
+  background-image:radial-gradient(rgba(160,44,44,.03) 1px, transparent 1px);
+  background-size:22px 22px;
+  color:var(--ink);
+  font-family:"Songti SC","STSong","Noto Serif SC","Source Han Serif SC","SimSun",serif;
+  font-size:17px;line-height:2;-webkit-font-smoothing:antialiased;
+}
+button{font-family:inherit}
+.btn{font-size:14px;padding:6px 14px;border:1px solid var(--accent);background:transparent;color:var(--accent);border-radius:6px;cursor:pointer;line-height:1.6;transition:.15s}
+.btn:hover{background:var(--accent);color:#fff}
+.btn.ghost{border-color:var(--line);color:var(--soft)}
+.btn.ghost:hover{border-color:var(--soft);background:var(--soft);color:#fff}
+
+/* ========== 布局：窄屏（移动优先）——侧栏为抽屉 ========== */
+.layout{display:block}
+.sidebar{position:fixed;top:0;left:0;bottom:0;width:84%;max-width:340px;z-index:200;background:var(--paper);border-right:1px solid var(--line);transform:translateX(-100%);transition:transform .25s ease;box-shadow:2px 0 16px rgba(0,0,0,.14);overflow-y:auto;overscroll-behavior:contain}
+body.toc-open .sidebar{transform:none}
+#tocBackdrop{position:fixed;inset:0;background:rgba(46,42,34,.38);z-index:150;opacity:0;visibility:hidden;transition:opacity .2s}
+body.toc-open #tocBackdrop{opacity:1;visibility:visible}
+.sidebar-head{display:block;padding:15px 18px 12px;border-bottom:1px solid var(--line);background:var(--paper)}
+.sidebar-foot{display:block;padding:12px 18px 22px;border-top:1px solid var(--line);font-size:12px;color:var(--soft);line-height:1.9}
+.toc-details{border-top:none}
+.toc-details summary{display:none}
+.toc-details summary::-webkit-details-marker{display:none}
+.sidebar .toc{padding:6px 12px 18px}
+.toc ol{list-style:none;display:block;gap:8px}
+.toc li{margin-bottom:8px}
+.toc a{display:flex;align-items:center;gap:10px;padding:9px 12px;background:var(--paper);border:1px solid var(--line);border-radius:8px;text-decoration:none;color:var(--ink);font-size:14px;transition:.15s}
+.toc a:hover{border-color:var(--accent);background:#fff}
+.toc a.active{border-color:var(--accent);background:var(--accent-bg)}
+.toc a.today .d::after{content:" · 今日";color:var(--accent);font-weight:600}
+.seal{flex:none;min-width:26px;height:26px;padding:0 5px;background:var(--accent);color:#fff;font-family:"STKaiti","KaiTi",serif;font-size:14px;display:flex;align-items:center;justify-content:center;border-radius:5px}
+.toc .t{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.toc .d{font-size:11px;color:var(--soft);white-space:nowrap}
+
+/* 顶栏 */
+.topbar{position:sticky;top:0;z-index:50;background:rgba(246,241,230,.93);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+.topbar-inner{max-width:780px;margin:0 auto;padding:0 18px;height:54px;display:flex;align-items:center;justify-content:space-between}
+.brand{font-family:"STKaiti","KaiTi","Kaiti SC",serif;font-size:22px;letter-spacing:2px;white-space:nowrap;flex:none}
+.brand small{font-size:12px;letter-spacing:3px;color:var(--soft);margin-left:6px}
+.top-actions{display:flex;gap:8px;align-items:center;flex:1;min-width:0}
+.top-spacer{flex:1}
+/* 顶栏导航「当前页」选中态 */
+.nav-btn.active{background:var(--accent)!important;color:#fff!important;border-color:var(--accent)!important}
+
+/* ========== 底部导航（移动端 tab 栏） ========== */
+.bottom-nav{display:none;position:fixed;left:0;right:0;bottom:0;z-index:80;background:rgba(246,241,230,.97);backdrop-filter:blur(8px);border-top:1px solid var(--line);padding:8px 4px calc(8px + env(safe-area-inset-bottom))}
+.bn-item{flex:1;border:none;background:transparent;color:var(--soft);font-size:14.5px;padding:8px 0 13px;cursor:pointer;line-height:1.35;font-family:inherit;text-align:center;position:relative;transition:color .15s}
+.bn-item.active{color:var(--accent);font-weight:700}
+.bn-item.active:after{content:"";position:absolute;left:50%;bottom:6px;transform:translateX(-50%);width:28px;height:4px;border-radius:3px;background:var(--accent)}
+.bn-item:active{opacity:.6}
+
+.wrap{max-width:780px;margin:0 auto;padding:0 18px}
+
+.hero{text-align:center;padding:52px 0 8px}
+.hero h1{font-family:"STKaiti","KaiTi","Kaiti SC",serif;font-size:56px;letter-spacing:14px;text-indent:14px;font-weight:600}
+.hero .sub{margin-top:10px;color:var(--soft);font-size:13px;letter-spacing:2px}
+.hero .rule{width:64px;height:2px;background:var(--accent);margin:20px auto 0;opacity:.7}
+.intro{margin:26px 0 0;padding:18px 20px;background:var(--card);border:1px solid var(--line);border-radius:10px;font-size:15px;color:#4a4438;text-align:justify}
+
+.plan{margin:26px 0;background:var(--card);border:1px solid var(--line);border-left:4px solid var(--accent);border-radius:10px;padding:18px 20px}
+.plan-head{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.plan-head h2{font-size:18px;letter-spacing:2px;font-weight:600}
+.chip{background:var(--accent-bg);color:var(--accent-deep);border:1px solid #e8c9c2;font-size:13px;padding:3px 12px;border-radius:999px;white-space:nowrap}
+.plan-body{margin-top:12px}
+.today-line{font-size:20px;font-family:"STKaiti","KaiTi",serif;letter-spacing:1px}
+.progress{height:8px;background:#efe7d5;border-radius:999px;margin:14px 0;overflow:hidden}
+.progress i{display:block;height:100%;width:0;background:linear-gradient(90deg,#c05a4a,var(--accent));border-radius:999px;transition:width .4s}
+.plan-actions{display:flex;align-items:center;gap:10px;flex-wrap:wrap;font-size:13px;color:var(--soft)}
+.plan-actions input{font-family:inherit;font-size:13px;padding:5px 8px;border:1px solid var(--line);border-radius:6px;background:#fff;color:var(--ink)}
+.plan-actions .spacer{flex:1}
+.plan-actions .hint{font-size:12px;color:var(--soft)}
+.plan-date{font-size:13px;color:var(--ink)}
+.plan-date b{color:var(--accent-deep);font-weight:600}
+.tp-date{font-family:inherit;font-size:14px;padding:5px 8px;border:1px solid var(--line);border-radius:6px;background:#fff;color:var(--ink)}
+.tp-anshen{font-family:"STKaiti","KaiTi",serif;font-size:16px;line-height:1.7;color:var(--ink);text-align:justify;background:linear-gradient(135deg,var(--accent-bg),#fdf3ee);border:1px solid #eccfc6;border-radius:10px;padding:10px 12px;margin:2px 0 4px}
+.noscript-tip{display:none;margin-top:10px;font-size:12px;color:var(--soft)}
+
+.chapter{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:26px 26px 20px;margin:22px 0;scroll-margin-top:70px}
+.ch-head{display:flex;align-items:flex-start;gap:14px;flex-wrap:wrap;padding-bottom:14px;border-bottom:1px dashed var(--line);margin-bottom:16px}
+.seal-lg{min-width:40px;height:40px;padding:0 8px;font-size:20px;border-radius:8px}
+.ch-head h2{font-size:20px;letter-spacing:3px;font-weight:600;line-height:1.5}
+.ch-head .lab{font-size:13px;color:var(--soft);letter-spacing:1px;margin-top:2px}
+.ch-head .spacer{flex:1}
+.share-btn{flex:none;font-size:12px;padding:4px 10px}
+.ch-text p{text-align:justify;margin:0 0 4px}
+.ch-text p:last-child{margin-bottom:0}
+.ch-foot{margin-top:16px;text-align:right}
+.ch-foot a{font-size:12px;color:var(--soft);text-decoration:none;border-bottom:1px dotted var(--soft)}
+.det{margin-top:18px;border-top:1px dashed var(--line);padding-top:14px}
+.det-label{font-size:12px;color:var(--soft);letter-spacing:3px;margin-bottom:10px}
+.tabs{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:12px}
+.tab-btn{font-size:13px;padding:6px 15px;border:1px solid var(--line);background:var(--paper);color:var(--soft);border-radius:999px;cursor:pointer;transition:.15s;line-height:1.5}
+.tab-btn:hover{border-color:var(--accent);color:var(--accent)}
+.tab-btn.active{background:var(--accent);color:#fff;border-color:var(--accent)}
+.panels{background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:18px 20px}
+.panel{display:none}
+.panel.active{display:block;animation:fade .2s}
+@keyframes fade{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
+.panel p{text-align:justify;text-indent:2em;margin:0 0 14px;line-height:2;font-size:15.5px}
+.panel p:last-child{margin-bottom:0}
+.zhu{list-style:none;margin:0;padding:0}
+.zhu li{margin:0 0 10px;padding-left:1.4em;text-indent:-1.4em;line-height:1.9;font-size:15px}
+.zhu b{color:var(--accent-deep);font-weight:600;margin-right:4px}
+.jie{list-style:none;margin:0;padding:0}
+.jie li{margin:0 0 12px;padding-left:1.6em;text-indent:-1.6em;line-height:1.95;font-size:15px}
+.jie .src{display:inline-block;font-weight:600;color:var(--accent-deep);margin-right:7px;font-size:13px;letter-spacing:1px}
+.jiedu{display:flex;flex-direction:column;gap:2px}
+.jrow{display:flex;gap:12px;align-items:flex-start;padding:14px 0;border-bottom:1px dashed var(--line)}
+.jrow:last-child{border-bottom:none}
+.jlabel{flex:none;min-width:62px;text-align:center;background:var(--accent-bg);color:var(--accent-deep);border:1px solid #e8c9c2;font-size:12px;padding:3px 8px;border-radius:6px;line-height:1.4;font-weight:600;font-family:inherit;cursor:pointer;appearance:none;-webkit-appearance:none}
+.jlabel:after{content:"？";margin-left:3px;font-weight:400;opacity:.55}
+.jhint{margin:0 0 2px;font-size:12px;color:var(--soft);letter-spacing:.5px;text-indent:0}
+.jintro{display:none;margin:0 0 10px;font-size:13px;line-height:1.85;color:#4a4438;background:var(--accent-bg);border:1px dashed #e8c9c2;border-radius:8px;padding:9px 12px;text-align:justify}
+.jrow.jopen .jintro{display:block}
+.jrow.jopen .jlabel:after{content:"？";opacity:.3}
+.jrow p{margin:0;line-height:1.9;font-size:15px;text-align:justify;text-indent:2em}
+.nodata{color:var(--soft);font-size:13px}
+
+/* 注音 ruby + 通假虚线 */
+ruby{ruby-position:over}
+ruby rt{font-size:.58em;color:var(--accent-deep);font-family:"Songti SC","STSong",serif;user-select:none;line-height:1;font-weight:400}
+ruby.tj{border-bottom:1px dashed var(--accent);cursor:pointer}
+body.no-py ruby rt{display:none}
+.py-toggle.on{background:var(--accent);color:#fff;border-color:var(--accent)}
+.flash{animation:flash 1.8s}
+@keyframes flash{0%,60%{box-shadow:0 0 0 3px var(--accent-bg)}100%{box-shadow:0 0 0 0 transparent}}
+
+.backtop{position:fixed;right:18px;bottom:22px;z-index:60;width:42px;height:42px;border-radius:50%;border:1px solid var(--accent);background:var(--card);color:var(--accent);font-size:15px;cursor:pointer;display:none;align-items:center;justify-content:center;box-shadow:0 2px 10px rgba(0,0,0,.08)}
+.backtop.show{display:flex}
+.toast{position:fixed;left:50%;bottom:80px;transform:translateX(-50%);z-index:70;background:rgba(46,42,34,.92);color:#fff;font-size:13px;padding:8px 18px;border-radius:999px;opacity:0;pointer-events:none;transition:.25s}
+.toast.show{opacity:1}
+footer{padding:34px 0 46px;text-align:center;color:var(--soft);font-size:12px;line-height:2}
+
+@media (max-width:640px){
+  .toc ol{grid-template-columns:1fr}
+  .hero h1{font-size:44px;letter-spacing:10px;text-indent:10px}
+  .chapter{padding:20px 18px 16px}
+  body{font-size:16.5px}
+  .topbar-inner{height:50px;padding:0 12px;gap:8px}
+  .topbar .brand{font-size:19px;letter-spacing:1px}
+  .topbar .brand small{display:none}
+  .top-actions{gap:6px;justify-content:flex-end;flex:1;min-width:0}
+  .top-actions .btn{padding:6px 10px;font-size:13px;white-space:nowrap}
+  .tlong{display:none}
+  .study{padding:20px 16px 16px}
+  .pager{padding:10px 12px}
+  .pager .btn{padding:8px 12px}
+  .pager .pager-info{font-size:12px;letter-spacing:0;line-height:1.6}
+  .pager .plabel{display:none}
+}
+/* 窄屏（含平板）：顶栏导航（首页/研读/今日/目录）移到底部 tab 栏，顶栏只留设置按钮；底部导航常驻 */
+@media (max-width:1023px){
+  .desk-only{display:none}
+  .top-actions .nav-btn{display:none}
+  .bottom-nav{display:flex}
+  /* 顶栏在移动端不吸顶：随正文滚动消失，最大化正文可视面积；主导航已由底部固定 tab 栏承载 */
+  .topbar{position:static;backdrop-filter:none;border-bottom:none}
+  /* 跳转锚点时不再为吸顶顶栏预留空间 */
+  .chapter,.study{scroll-margin-top:12px}
+  /* 目录抽屉：章号 / 标题 / 共读日期 两行展示，日期常显 */
+  .sidebar .toc a{display:grid;grid-template-columns:auto 1fr;column-gap:10px;row-gap:3px;align-items:center;padding:11px 14px;margin-bottom:4px}
+  .sidebar .toc .seal{grid-row:span 2}
+  .sidebar .toc .t{grid-column:2;font-size:15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .sidebar .toc .d{grid-column:2;font-size:11px;color:var(--soft);white-space:nowrap}
+  .content{padding-bottom:82px}
+  .backtop{bottom:92px}
+  /* 移动端顶栏仅作品牌条，工具入口统一走底部导航，避免与底栏重复 */
+  #toolsBtn{display:none}
+}
+
+/* 目录已读进度标记 */
+.toc a.read .seal{background:#b3a48e}
+.toc a.read .t{color:#7a7263}
+
+/* ========== 宽屏：左侧目录栏 + 右侧正文（PDF 阅读器式） ========== */
+@media (min-width:1024px){
+  .layout{display:flex;align-items:flex-start;max-width:1320px;margin:0 auto}
+  /* 内容列必须撑满剩余宽度：flex 项默认按内容收缩，短章节会把整列拉窄 */
+  .content{flex:1 1 auto;min-width:0}
+  .wrap{max-width:920px}
+  .topbar-inner{max-width:920px}
+  .plan{position:sticky;top:60px;z-index:5}
+  .sidebar{
+    flex:0 0 var(--sidebar-w);width:var(--sidebar-w);
+    position:sticky;top:0;height:100vh;
+    transform:none; /* 宽屏为常驻左栏，必须撤销移动端抽屉的 off-screen 位移 */
+    overflow-y:auto;overscroll-behavior:contain;
+    border-bottom:none;border-right:1px solid var(--line);
+  }
+  .sidebar-head{display:block;position:sticky;top:0;z-index:2;background:var(--card);padding:14px 18px 12px;border-bottom:1px solid var(--line)}
+  .sidebar-head .brand{font-size:22px}
+  .sidebar-sub{margin-top:4px;font-size:12px;color:var(--soft);letter-spacing:2px}
+  .toc-details{border-top:none;display:block}
+  .toc-details summary{display:none}
+  .sidebar .toc{padding:10px 12px 16px}
+  .sidebar .toc ol{display:block}
+  .sidebar .toc a{display:grid;grid-template-columns:auto 1fr;column-gap:10px;row-gap:0;align-items:center;padding:8px 10px;margin-bottom:2px}
+  .sidebar .toc .seal{grid-row:span 2}
+  .sidebar .toc .t{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:14px}
+  .sidebar .toc .d{grid-column:2;font-size:11px}
+  .sidebar-foot{display:block;padding:10px 18px;border-top:1px solid var(--line);font-size:11px;color:var(--soft);line-height:1.8}
+  .topbar .brand{display:none}
+}
+/* 细滚动条 */
+.sidebar::-webkit-scrollbar{width:6px}
+.sidebar::-webkit-scrollbar-thumb{background:#d8cdb4;border-radius:3px}
+
+@media print{
+  .sidebar,.topbar,.backtop,.plan-actions,.share-btn,.ch-foot,.det,.pager{display:none}
+  .layout{display:block}
+  body{background:#fff}
+  .chapter,.plan,.intro{break-inside:avoid-page;border-color:#ccc}
+  .study,.study-nav{display:none}
+  body.paged .view{display:block !important}
+  body.paged .view.active-view{display:block !important}
+}
+
+/* ========== 研读 hub ========== */
+.study{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:26px 26px 22px;margin:22px 0;scroll-margin-top:70px}
+.study-head{text-align:center;margin-bottom:18px}
+.study-head h2{font-family:"STKaiti","KaiTi",serif;font-size:28px;letter-spacing:10px;text-indent:10px;font-weight:600}
+.study-sub{margin-top:8px;color:var(--soft);font-size:13px;letter-spacing:1px}
+.study-block{margin-top:22px}
+.blk-title{font-size:17px;letter-spacing:2px;font-weight:600;border-left:4px solid var(--accent);padding-left:10px;margin-bottom:14px}
+.smap{display:flex;flex-direction:column}
+.snode{display:flex;gap:14px;padding-bottom:16px;position:relative}
+.snode:last-child{padding-bottom:0}
+.snum{flex:none;width:30px;height:30px;border-radius:50%;background:var(--accent);color:#fff;font-family:"STKaiti",serif;font-size:15px;display:flex;align-items:center;justify-content:center}
+.sbody{flex:1;background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:12px 16px}
+.sname{font-size:16px;font-weight:600;letter-spacing:1px}
+.srange{font-size:12px;color:var(--accent-deep);background:var(--accent-bg);border:1px solid #e8c9c2;padding:1px 8px;border-radius:999px;margin-left:8px;white-space:nowrap}
+.sdesc{font-size:14.5px;line-height:1.95;color:#4a4438;text-align:justify;margin-top:6px}
+.skey{font-size:13px;color:var(--soft);margin-top:6px;line-height:1.8}
+.skey b{color:var(--accent-deep)}
+.cgrid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+.concept{background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:12px 14px}
+.cterm{font-size:16px;font-weight:600;font-family:"STKaiti","KaiTi",serif;letter-spacing:1px}
+.cpy{font-size:12px;color:var(--accent-deep);font-family:"Songti SC",serif;margin-left:6px;font-weight:400}
+.cdef{font-size:14px;line-height:1.85;color:#4a4438;text-align:justify;margin-top:5px}
+.cchap{font-size:12px;color:var(--soft);margin-top:7px}
+.citem{color:var(--accent);text-decoration:none;border-bottom:1px dotted var(--accent);font-size:12px;margin-right:4px}
+.citem:hover{background:var(--accent-bg)}
+.qlist{list-style:none;margin:0;padding:0;columns:2;column-gap:24px}
+.qlist li{break-inside:avoid;margin-bottom:12px;font-size:15px;line-height:1.9;color:var(--ink);font-family:"STKaiti","KaiTi",serif}
+.qtext{color:var(--ink)}
+.qchap{font-size:12px;color:var(--soft);text-decoration:none;font-family:"Songti SC",serif}
+.qchap:hover{color:var(--accent);border-bottom:1px dotted var(--accent)}
+.study-nav{display:block;margin:10px 14px 4px;padding:9px 12px;background:var(--accent-bg);border:1px solid #e8c9c2;color:var(--accent-deep);text-decoration:none;border-radius:8px;font-size:13px;letter-spacing:1px;text-align:center}
+.study-nav:hover{background:#f2ddd6}
+
+/* 逐句对照（译文标签） */
+.sentences{display:flex;flex-direction:column}
+.srow{padding:10px 0;border-bottom:1px dashed var(--line)}
+.srow:last-child{border-bottom:none}
+.srow .src{font-size:16px;line-height:1.9;color:var(--ink);margin-bottom:4px}
+.srow .src ruby{font-weight:600}
+.srow .tr{font-size:14.5px;line-height:1.9;color:#4a4438;text-align:justify;text-indent:2em}
+
+/* ========== 分页阅读 ========== */
+.pager{display:none;flex-direction:column;align-items:center;justify-content:center;gap:10px;margin:24px 0 8px;padding:14px;background:var(--card);border:1px solid var(--line);border-radius:12px}
+.pager-row{display:flex;align-items:center;justify-content:space-between;gap:12px;width:100%}
+.pager .pager-info{flex:1;min-width:0;font-size:15px;font-family:"STKaiti","KaiTi",serif;letter-spacing:1px;color:var(--ink);text-align:center}
+.pager .btn{padding:8px 18px}
+.pager .btn:disabled{opacity:.4;cursor:not-allowed;border-color:var(--line);color:var(--soft);background:transparent}
+.cover{ }
+/* 分页：默认只显示当前视图，其余隐藏（无 JS 时 body 无 .paged，全部照常显示 = 连续单页） */
+body.paged .view{display:none}
+body.paged .view.active-view{display:block;animation:fade .25s}
+body.paged.view-chapter .pager{display:flex}
+@media (min-width:1024px){
+  body.paged .chapter.active-view{max-width:920px;margin-left:auto;margin-right:auto}
+}
+
+/* ========== 省察提问（章末） ========== */
+.sheng{margin:0;padding:0;list-style:none;counter-reset:sheng}
+.sheng li{position:relative;padding:10px 12px 10px 40px;margin:0 0 10px;background:var(--card);border:1px solid var(--line);border-radius:10px;line-height:1.85;color:var(--ink)}
+.sheng li:before{counter-increment:sheng;content:"省"counter(sheng);position:absolute;left:10px;top:10px;width:24px;height:24px;line-height:24px;text-align:center;font-size:12px;font-family:"STKaiti","KaiTi",serif;color:#fff;background:var(--accent);border-radius:50%}
+.sheng li:last-child{margin-bottom:0}
+
+/* ========== 参考书目 ========== */
+.bib{margin:0;padding:0;list-style:none}
+.bib li{padding:12px 14px;margin:0 0 12px;background:var(--card);border:1px solid var(--line);border-left:3px solid var(--accent);border-radius:8px}
+.bib .bname{display:block;font-size:16px;font-weight:600;color:var(--ink);margin-bottom:4px;font-family:"STKaiti","KaiTi",serif}
+.bib li p{margin:0;font-size:14px;line-height:1.75;color:#4a4438;text-align:justify}
+
+/* ========== 人物小传 ========== */
+.figrid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+.fig{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:14px}
+.fig .fname{font-size:16px;font-weight:600;color:var(--ink);font-family:"STKaiti","KaiTi",serif}
+.fig .ftitle{font-size:13px;color:var(--accent);margin:2px 0 8px;font-weight:600}
+.fig p{margin:0;font-size:13.5px;line-height:1.7;color:#4a4438;text-align:justify}
+
+/* ========== 章间呼应表 ========== */
+.ech-wrap{overflow-x:auto}
+.ech{width:100%;border-collapse:collapse;font-size:14px;background:var(--card)}
+.ech caption{caption-side:top;text-align:left;font-size:13px;color:var(--soft);padding:0 0 8px}
+.ech th,.ech td{border:1px solid var(--line);padding:8px 10px;text-align:left;vertical-align:top;line-height:1.6}
+.ech th{background:#f3ece0;color:var(--ink);font-weight:600;font-family:"STKaiti","KaiTi",serif;white-space:nowrap}
+.ech td.ck{white-space:nowrap;color:var(--accent);font-weight:600}
+.ech .citem{color:var(--accent);font-weight:600;text-decoration:none}
+.ech .citem:hover{text-decoration:underline}
+.ech .desc{color:#4a4438}
+
+@media (max-width:640px){
+  .ech{font-size:12.5px}
+  .ech th,.ech td{padding:6px 7px}
+}
+
+/* ========== 朱注（朱熹章句摘录，章末标签） ========== */
+.zz{margin:0;text-align:justify;text-indent:2em;line-height:2;font-size:15.5px;color:#3a342a}
+.zz:before{content:"朱子曰：";color:var(--accent-deep);font-weight:600}
+
+/* ========== 四书互参 ========== */
+.ssgrid{display:grid;grid-template-columns:1fr;gap:14px}
+.sscard{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:14px 16px}
+.sshead{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;margin-bottom:10px;padding-bottom:8px;border-bottom:1px dashed var(--line)}
+.sszh{font-family:"STKaiti","KaiTi",serif;font-size:15px;font-weight:600;color:var(--accent)}
+.sstheme{font-size:13px;color:var(--soft)}
+.ssrefs{margin:0;padding:0;list-style:none}
+.ssrefs li{margin:0 0 10px;padding:8px 10px;background:var(--paper);border:1px solid var(--line);border-radius:8px;line-height:1.7}
+.ssrefs li:last-child{margin-bottom:0}
+.sbook{display:inline-block;font-size:12px;font-weight:600;color:#fff;background:var(--accent-deep);border-radius:5px;padding:1px 8px;margin-right:8px;vertical-align:middle}
+.spass{display:block;font-size:14.5px;color:var(--ink);font-family:"STKaiti","KaiTi",serif;margin:2px 0 3px}
+.snote{display:block;font-size:13px;color:#4a4438;text-align:justify}
+
+/* ========== 经证链（串讲内，以经典解经典） ========== */
+.jzchain{margin-top:14px;border:1px dashed var(--accent);border-radius:10px;background:var(--accent-bg);padding:10px 14px}
+.jzhead{font-size:13px;font-weight:600;color:var(--accent-deep);letter-spacing:1px;margin-bottom:8px}
+.jzlist{margin:0;padding:0;list-style:none}
+.jzlist li{margin:0 0 8px;line-height:1.65}
+.jzlist li:last-child{margin-bottom:0}
+.jzbook{display:inline-block;font-size:12px;font-weight:600;color:#fff;background:var(--accent-deep);border-radius:5px;padding:1px 8px;margin-right:8px;vertical-align:middle}
+.jzpass{display:block;font-size:14.5px;color:var(--ink);font-family:"STKaiti","KaiTi",serif;margin:2px 0 3px}
+.jznote{display:block;font-size:13px;color:#4a4438;text-align:justify}
+
+/* ========== 解读：所本经典（小字置于正文首行，随文换行） ========== */
+.jbody{flex:1;min-width:0}
+.jbasis{display:block;font-size:12px;color:var(--accent-deep);opacity:.75;letter-spacing:.5px;line-height:1.6;margin-bottom:4px}
+.jbasis:before{content:"";display:inline-block;width:14px;height:1px;background:var(--accent);vertical-align:middle;margin-right:7px;opacity:.6}
+
+/* ========== 朱注：章首句引标 ========== */
+.zz-head{font-size:13px;color:var(--soft);margin-bottom:6px;line-height:1.7}
+.zz-ref{color:var(--accent-deep);font-family:"STKaiti","KaiTi",serif}
+
+/* ========== 概念词典：经典互见 ========== */
+.occ{margin-top:8px;border-top:1px dashed var(--line);padding-top:8px}
+.occ-head{font-size:12px;font-weight:600;color:var(--accent-deep);letter-spacing:1px;margin-bottom:5px}
+.occlist{margin:0;padding:0;list-style:none}
+.occlist li{margin:0 0 6px;line-height:1.6}
+.osent{display:block;font-size:13px;color:#4a4438;text-align:justify;font-family:"STKaiti","KaiTi",serif;margin-top:1px}
+
+/* ========== 名句：语境还原 ========== */
+.qctx{font-size:12.5px;color:var(--soft);line-height:1.7;text-align:justify;margin-top:4px;padding-left:10px;border-left:2px solid var(--line)}
+
+/* ========== 义理脊柱 ========== */
+.spine{display:flex;flex-direction:column;gap:10px;margin-bottom:18px}
+.spnode{display:flex;gap:12px;align-items:flex-start;background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:12px 16px}
+.spname{flex:none;font-size:15px;font-weight:700;color:#fff;background:var(--accent);border-radius:8px;padding:5px 12px;font-family:"STKaiti","KaiTi",serif;white-space:nowrap;line-height:1.5}
+.sprange{font-size:12px;color:var(--accent-deep);background:var(--accent-bg);border:1px solid #e8c9c2;border-radius:999px;padding:2px 10px;white-space:nowrap;align-self:center;margin-left:auto}
+.spdesc{font-size:14px;line-height:1.85;color:#4a4438;text-align:justify;margin:0;flex:1;min-width:0}
+.seg{display:inline-block;font-size:11px;font-weight:600;color:#fff!important;background:var(--accent-deep);border-radius:5px;padding:2px 8px;margin-right:6px;vertical-align:middle}
+
+/* ========== 四书互参：逐章索引 ========== */
+.ssidx{background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:10px 14px;margin-bottom:14px}
+.ssidx-head{font-size:13px;font-weight:600;color:var(--accent-deep);letter-spacing:1px;margin-bottom:6px}
+.ssidxlist{margin:0;padding:0;list-style:none;columns:2;column-gap:20px}
+.ssidxlist li{break-inside:avoid;margin:0 0 5px;font-size:13.5px;line-height:1.6}
+.idxch{font-weight:600;color:var(--accent);margin-right:6px;font-family:"STKaiti","KaiTi",serif}
+
+/* ========== 以经解经专题 ========== */
+.topicgrid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
+.topic{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:14px 16px}
+.tname{font-size:17px;font-weight:700;color:var(--accent-deep);font-family:"STKaiti","KaiTi",serif;letter-spacing:1px;border-bottom:2px solid var(--accent);display:inline-block;padding-bottom:3px;margin-bottom:8px}
+.tdesc{font-size:13.5px;line-height:1.8;color:#4a4438;text-align:justify;margin:0 0 10px}
+.tlist{margin:0;padding:0;list-style:none}
+.tlist li{margin:0 0 9px;padding:7px 10px;background:var(--paper);border:1px solid var(--line);border-radius:8px;line-height:1.6}
+.tlist li:last-child{margin-bottom:0}
+.tsent{display:block;font-size:14px;color:var(--ink);font-family:"STKaiti","KaiTi",serif;margin:2px 0 3px}
+.tnote{display:block;font-size:12.5px;color:#4a4438;text-align:justify}
+
+/* ========== 引用与出处说明 ========== */
+.citebox{background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:14px 16px}
+.citebox p{margin:0 0 8px;font-size:14px;line-height:1.9;color:#4a4438;text-align:justify;text-indent:0}
+.citebox p:last-child{margin-bottom:0}
+.citebox ul{margin:0 0 8px;padding-left:20px}
+.citebox li{font-size:13.5px;line-height:1.9;color:#4a4438;margin-bottom:6px;text-align:justify}
+.citebox li:last-child{margin-bottom:0}
+
+/* ========== 我的践行笔记（省察面板） ========== */
+.sheng-wrap{margin:0}
+.sheng-note-box{margin-top:12px;padding-top:12px;border-top:1px dashed var(--line)}
+.sheng-lab{display:block;font-size:13px;color:var(--accent-deep);font-weight:600;letter-spacing:.5px;margin-bottom:6px}
+.sheng-count{display:inline-block;min-width:18px;color:var(--soft);font-weight:400}
+.sheng-note{width:100%;box-sizing:border-box;font:inherit;font-size:14.5px;line-height:1.8;color:var(--ink);
+  background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:10px 12px;resize:vertical;min-height:64px}
+.sheng-note:focus{outline:none;border-color:var(--accent)}
+
+/* ========== 今日安心签 ========== */
+.anshen-card{margin-top:14px;background:linear-gradient(135deg,var(--accent-bg),#fdf3ee);border:1px solid #eccfc6;border-radius:12px;padding:14px 16px;display:flex;flex-direction:column;align-items:flex-start;gap:8px}
+.anshen-label{font-size:12px;letter-spacing:2px;color:var(--accent-deep);font-weight:600}
+.anshen-text{font-family:"STKaiti","KaiTi",serif;font-size:19px;line-height:1.7;color:var(--ink);text-align:justify}
+.anshen-share{margin-top:2px}
+
+/* ========== 止学与当代焦虑 ========== */
+.mxgrid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
+.mxcard{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:12px 14px}
+.mxhead{margin-bottom:8px}
+.mxseg{display:inline-block;font-size:13px;font-weight:700;color:#fff;background:var(--accent);border-radius:6px;padding:2px 10px;font-family:"STKaiti","KaiTi",serif}
+.mxstress{margin:0 0 7px;font-size:13.5px;line-height:1.8;color:#4a4438;text-align:justify}
+.mxstress b{color:var(--accent-deep)}
+.mxremedy{margin:0 0 9px;font-size:14px;line-height:1.9;color:var(--ink);text-align:justify}
+.mxquote{margin:0;padding:8px 12px;border-left:3px solid var(--accent);background:var(--accent-bg);border-radius:0 8px 8px 0;
+  font-family:"STKaiti","KaiTi",serif;font-size:14.5px;color:var(--accent-deep);line-height:1.7}
+.study-foot{margin-top:18px;text-align:center}
+.study-foot .hint{margin-left:10px;font-size:12px;color:var(--soft)}
+
+/* ========== 工具箱面板（统一收纳系统功能） ========== */
+.tools-mask{position:fixed;inset:0;background:rgba(40,32,18,.4);z-index:300;display:none}
+.tools-mask.open{display:block}
+.tools-panel{position:fixed;z-index:310;background:var(--card);border:1px solid var(--line);border-radius:16px 16px 0 0;box-shadow:0 -8px 30px rgba(0,0,0,.18);
+  left:0;right:0;bottom:0;max-width:520px;margin:0 auto;padding:0 16px calc(16px + env(safe-area-inset-bottom));display:none;flex-direction:column;gap:6px;
+  max-height:calc(100vh - 24px);overflow-y:auto;-webkit-overflow-scrolling:touch}
+.tools-panel.open{display:flex}
+.tp-head{position:sticky;top:0;z-index:2;background:var(--card);display:flex;align-items:center;justify-content:space-between;padding:13px 2px 10px;border-bottom:1px solid var(--line);font-family:"STKaiti","KaiTi",serif;font-size:18px;color:var(--accent-deep);letter-spacing:2px}
+.tp-close{flex:none;width:34px;height:34px;margin:-4px -6px 0 0;background:none;border:0;font-size:24px;color:var(--soft);cursor:pointer;line-height:1;border-radius:50%}
+.tp-close:active{background:var(--accent-bg)}
+.tp-sec{margin-top:6px}
+.tp-sec-t{font-size:13px;font-weight:700;color:var(--ink);margin:8px 0 6px;letter-spacing:.5px}
+.tp-row{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:9px 2px;font-size:14.5px;color:var(--ink)}
+.tp-row .hint{font-size:12px;color:var(--soft)}
+.tp-status{font-size:13px;color:var(--soft);padding:2px 0 6px}
+.tp-status.ok{color:var(--accent-deep)}
+.tp-note{font-size:12px;color:var(--soft);line-height:1.6;margin-top:8px}
+.btn.block{display:block;width:100%;margin-top:8px;text-align:center}
+.btn:disabled, .btn.block:disabled{opacity:.5;cursor:not-allowed;background:#efe7d5;color:var(--soft);border-color:var(--line)}
+.btn.block:disabled:hover{background:#efe7d5}
+/* PC（≥1024px）：工具箱改为右上角下拉面板 */
+@media (min-width:1024px){
+  .tools-panel{left:auto;right:14px;bottom:auto;top:64px;width:300px;max-width:300px;margin:0;border-radius:16px;box-shadow:0 10px 36px rgba(0,0,0,.18)}
+}
+/* 践行笔记：纯本机存储，无需登录 */
+
+/* ========== 响应式收尾（必须位于基础规则之后，否则同优先级会被覆盖） ========== */
+/* 研读页双栏内容：小于 880px 一律单列（覆盖手机 / 平板 / 分屏预览等中间宽度） */
+@media (max-width:880px){
+  .cgrid{grid-template-columns:1fr}
+  .qlist{columns:1}
+  .figrid{grid-template-columns:1fr}
+  .ssidxlist{columns:1}
+  .topicgrid{grid-template-columns:1fr}
+  .mxgrid{grid-template-columns:1fr}
+  /* 义理脊柱卡片：移动端纵向堆叠 + 名称/范围同行 */
+  .spnode{flex-direction:column;gap:8px;padding:12px 14px}
+  .spname{align-self:flex-start;margin:0}
+  .sprange{align-self:flex-start;margin-left:0}
+  .spdesc{border-top:1px dashed var(--line);padding-top:8px}
+  /* 呼应表：让表格在小屏下可横向滚动而非直接转卡片（保留表格可读性） */
+  .ech{font-size:13px}
+  .ech th,.ech td{padding:7px 8px}
+}
+/* 解读面板：窄屏改为上下堆叠，学派名在上方，不再让左侧标签列挤占正文宽度 */
+@media (max-width:640px){
+  .jrow{flex-direction:column;gap:6px;padding:12px 0}
+  .jlabel{align-self:flex-start;min-width:0;padding:4px 10px;font-size:12.5px}
+  .jrow p{font-size:14.5px;line-height:1.85}
+  .jintro{margin-bottom:8px}
+  /* 章间呼应表：640px 以下转卡片布局 */
+  .ech thead{display:none}
+  .ech tbody,.ech tr,.ech td{display:block}
+  .ech tr{border:1px solid var(--line);border-radius:10px;padding:12px 14px;margin-bottom:14px;background:var(--paper)}
+  .ech td{border:none;padding:3px 0;line-height:1.65;color:#3a3428}
+  .ech td:first-child{font-weight:700;color:var(--accent-deep);font-size:15px;font-family:"STKaiti","KaiTi",serif;margin-bottom:2px}
+  .ech td:before{display:inline-block;font-weight:600;font-size:11px;color:var(--soft);margin-right:5px;min-width:30px}
+  .ech td:nth-child(2):before{content:"主旨: "}
+  .ech td:nth-child(3):before{content:"呼应: "}
+  .ech td:nth-child(4):before{content:"说明: "}
+  /* 链接在卡片中用深色保证可读 */
+  .ech .citem{font-size:13px;color:var(--accent-deep);font-weight:600;border-bottom:none}
+  /* seg 徽章在卡片中保持深底白字 */
+  .ech .seg{display:inline-block;font-size:11px;font-weight:600;color:#fff!important;background:var(--accent-deep);border-radius:5px;padding:1px 7px;margin-right:6px;vertical-align:middle}
+}
+/* PC（≥1024px）左侧常驻目录栏，顶栏不再显示「目录」按钮（移动端保留，用于开抽屉） */
+@media (min-width:1024px){
+  .topbar .desk-hide{display:none}
+}
+</style>
+</head>
+<body>
+<div class="layout">
+  <aside class="sidebar">
+    <div class="sidebar-head">
+      <div class="brand">止学<small>共读</small></div>
+      <div class="sidebar-sub">目 录 · 十章</div>
+    </div>
+    <a href="#study" class="study-nav">研读 · 脉络 / 概念 / 名句</a>
+    <details class="toc-details" id="tocDetails" open>
+      <summary>目 录 · 十章</summary>
+      <nav class="toc" id="toc">
+        <ol id="tocList">
+      <li><a href="#ch-1" data-n="1"><span class="seal">一</span><span class="t">智卷一</span><span class="d">第1天 · 10月21日</span></a></li>
+      <li><a href="#ch-2" data-n="2"><span class="seal">二</span><span class="t">用势卷二</span><span class="d">第2天 · 10月22日</span></a></li>
+      <li><a href="#ch-3" data-n="3"><span class="seal">三</span><span class="t">利卷三</span><span class="d">第3天 · 10月23日</span></a></li>
+      <li><a href="#ch-4" data-n="4"><span class="seal">四</span><span class="t">辩卷四</span><span class="d">第4天 · 10月24日</span></a></li>
+      <li><a href="#ch-5" data-n="5"><span class="seal">五</span><span class="t">誉卷五</span><span class="d">第5天 · 10月25日</span></a></li>
+      <li><a href="#ch-6" data-n="6"><span class="seal">六</span><span class="t">情卷六</span><span class="d">第6天 · 10月26日</span></a></li>
+      <li><a href="#ch-7" data-n="7"><span class="seal">七</span><span class="t">蹇卷七</span><span class="d">第7天 · 10月27日</span></a></li>
+      <li><a href="#ch-8" data-n="8"><span class="seal">八</span><span class="t">释怨卷八</span><span class="d">第8天 · 10月28日</span></a></li>
+      <li><a href="#ch-9" data-n="9"><span class="seal">九</span><span class="t">心卷九</span><span class="d">第9天 · 10月29日</span></a></li>
+      <li><a href="#ch-10" data-n="10"><span class="seal">十</span><span class="t">修身卷十</span><span class="d">第10天 · 10月30日</span></a></li>
+        </ol>
+      </nav>
+    </details>
+    <div class="sidebar-foot">一天一章 · 十天<br>文本依据：ctext.org 公开底本<br>虚线标注的字为通假／异读，点按可看说明</div>
+  </aside>
+
+  <div class="content">
+    <header class="topbar">
+      <div class="topbar-inner">
+        <div class="brand">止学<small>共读</small></div>
+        <div class="top-actions">
+          <button class="btn ghost nav-btn act-home" id="homeBtn" title="回到首页 / 封面">首页</button>
+          <button class="btn ghost nav-btn act-study" id="studyBtn" title="研读专区">研读</button>
+          <button class="btn nav-btn act-today" id="todayBtn" title="跳到今日共读章节">今日<span class="tlong">共读</span></button>
+          <button class="btn ghost nav-btn act-toc desk-hide" id="tocBtn">目录</button>
+          <span class="top-spacer"></span>
+          <button class="btn ghost" id="toolsBtn" title="工具箱：阅读设置 / 共读设置 / 分享">工具箱</button>
+        </div>
+      </div>
+
+    </header>
+
+    <div class="tools-mask" id="toolsMask"></div>
+    <div class="tools-panel" id="toolsPanel" role="dialog" aria-label="工具箱">
+      <div class="tp-head"><span>工具箱</span><button class="tp-close" id="toolsClose" type="button" aria-label="关闭">×</button></div>
+
+      <div class="tp-sec">
+        <div class="tp-sec-t">我的践行笔记</div>
+        <button class="btn block" id="exportSheng" type="button">导出我的 10 天自省</button>
+        <div class="tp-note">笔记与导出都只保存在当前浏览器，不会上传云端。清除缓存、更换设备或浏览器后将不可见，建议定期导出备份。</div>
+        <div class="tp-note" id="exportTip"></div>
+      </div>
+
+      <div class="tp-sec">
+        <div class="tp-sec-t">阅读设置</div>
+        <div class="tp-row"><span>疑难字注音</span><button class="btn ghost on py-toggle" id="pyBtn" type="button">开</button></div>
+        <div class="tp-row"><span id="modeState">分页阅读</span><button class="btn ghost mode-toggle" id="modeBtn" type="button">切换为连续阅读</button></div>
+      </div>
+
+      <div class="tp-sec">
+        <div class="tp-sec-t">共读设置</div>
+        <div class="tp-row"><span>开始日期</span><input type="date" id="startDate" class="tp-date"></div>
+        <div class="tp-note">改日期自动跳到对应章节</div>
+      </div>
+
+      <div class="tp-sec">
+        <div class="tp-sec-t">今日安心签</div>
+        <div class="tp-anshen" id="tpAnshenText"></div>
+        <button class="btn block ghost" id="shareAnshen" type="button">分享这句</button>
+      </div>
+    </div>
+
+    <div class="wrap">
+      <section class="cover view" data-view="cover" id="cover">
+      <section class="hero">
+        <h1>止学</h1>
+        <p class="sub">隋·王通（文中子）· 道家处世绝学</p>
+        <div class="rule"></div>
+        <p class="intro">《止学》是隋代大儒王通（号文中子）所著的一部处世奇书，以道家思想论人生之道。全书分智、用势、利、辩、誉、情、蹇、释怨、心、修身共十卷，核心一字曰「止」——大智知止，小智惟谋。王通门下弟子有魏征、房玄龄、李靖等，后来成为唐太宗开国元勋。其孙王勃为初唐四杰之一。</p>
+      </section>
+
+      <section class="plan">
+        <div class="plan-head">
+          <h2>今日共读</h2>
+          <span class="chip" id="dayChip">第 1 / 33 天</span>
+        </div>
+        <div class="plan-body">
+          <p class="today-line" id="todayLine">第一章 · 天命之谓性</p>
+          <div class="progress"><i id="progressBar"></i></div>
+          <div class="plan-actions">
+            <span class="plan-date">开始日期：<b id="planDateLabel"></b></span>
+            <span class="hint">在「工具箱 · 共读设置」中修改</span>
+            <span class="spacer"></span>
+            <button class="btn" id="resumeBtn" hidden>继续阅读</button>
+            <button class="btn" id="jumpBtn">跳到本章</button>
+          </div>
+          <div class="anshen-card" id="anshenCard">
+            <div class="anshen-label">今日安心签</div>
+            <div class="anshen-text" id="anshenText"></div>
+            <button class="btn ghost anshen-share" id="anshenShare" type="button">分享这句</button>
+          </div>
+          <noscript><p class="noscript-tip" style="display:block">当前环境未启用脚本：目录跳转与全文阅读可正常使用，「今日共读」定位与「分享本章」链接不可用。</p></noscript>
+        </div>
+      </section>
+      </section>
+
+  <section class="study view" id="study" data-view="study">
+    <div class="study-head"><h2>研 读</h2>
+      <p class="study-sub">结构脉络 · 核心概念 · 名句摘录 · 省察与呼应 · 经典互参 · 以经解经专题——先立其大，再入章句</p></div>
+    <div class="study-block">
+      <h3 class="blk-title">一、全书结构脉络</h3>
+      <div class="smap"><div class="snode"><div class="snum">1</div><div class="sbody"><div class="sname">一、智 <span class="srange">第1章</span></div><p class="sdesc">大智知止，小智惟谋。全书开篇立「止」之宗旨。</p><p class="skey"><b>重点：</b>知止</p></div></div><div class="snode"><div class="snum">2</div><div class="sbody"><div class="sname">二、用势 <span class="srange">第2章</span></div><p class="sdesc">权势无常不可恃，势伏凶险宜慎。</p><p class="skey"><b>重点：</b>不恃势</p></div></div><div class="snode"><div class="snum">3</div><div class="sbody"><div class="sname">三、利 <span class="srange">第3章</span></div><p class="sdesc">利益蛊惑人心，君子重义轻利。</p><p class="skey"><b>重点：</b>重义轻利</p></div></div><div class="snode"><div class="snum">4</div><div class="sbody"><div class="sname">四、辩 <span class="srange">第4章</span></div><p class="sdesc">物朴乃存，讷言惑敌。强者不辩。</p><p class="skey"><b>重点：</b>讷言</p></div></div><div class="snode"><div class="snum">5</div><div class="sbody"><div class="sname">五、誉 <span class="srange">第5章</span></div><p class="sdesc">好誉多辱，受誉知辞。</p><p class="skey"><b>重点：</b>知辞</p></div></div><div class="snode"><div class="snum">6</div><div class="sbody"><div class="sname">六、情 <span class="srange">第6章</span></div><p class="sdesc">情滥无行，其色如一。</p><p class="skey"><b>重点：</b>敛情</p></div></div><div class="snode"><div class="snum">7</div><div class="sbody"><div class="sname">七、蹇 <span class="srange">第7章</span></div><p class="sdesc">人困乃正，以蹇为乐。止为枢也。</p><p class="skey"><b>重点：</b>以蹇为乐</p></div></div><div class="snode"><div class="snum">8</div><div class="sbody"><div class="sname">八、释怨 <span class="srange">第8章</span></div><p class="sdesc">不念旧恶，和而弗争。</p><p class="skey"><b>重点：</b>释怨</p></div></div><div class="snode"><div class="snum">9</div><div class="sbody"><div class="sname">九、心 <span class="srange">第9章</span></div><p class="sdesc">苦乐成于心，智者示愚。</p><p class="skey"><b>重点：</b>制心</p></div></div><div class="snode"><div class="snum">10</div><div class="sbody"><div class="sname">十、修身 <span class="srange">第10章</span></div><p class="sdesc">服人者德，德之不修其才必曲。</p><p class="skey"><b>重点：</b>修身</p></div></div></div>
+    </div>
+    <div class="study-block">
+      <h3 class="blk-title">二、核心概念词典</h3>
+      <div class="cgrid"><div class="concept"><div class="cterm">止</div><p class="cdef">适可而止。全书核心字——在合适的地方停下来，不是消极退避，而是积极的自知与自制。</p><div class="cchap">出处：<a class="citem" href="#ch-1">第一章</a> · <a class="citem" href="#ch-7">第七章</a> · <a class="citem" href="#ch-9">第九章</a> · <a class="citem" href="#ch-10">第十章</a></div><div class="occ"><div class="occ-head">经典互见</div><ul class="occlist"><li><a class="citem" href="#ch-1">第一章</a><span class="osent">大智知止，小智惟谋。</span></li><li><a class="citem" href="#ch-7">第七章</a><span class="osent">以正化奇，止为枢也。</span></li><li><a class="citem" href="#ch-9">第九章</a><span class="osent">欲无止也，其心堪制。</span></li></ul></div></div><div class="concept"><div class="cterm">知止</div><p class="cdef">懂得适可而止。大智与小的根本区别——大智知止，小智惟谋。</p><div class="cchap">出处：<a class="citem" href="#ch-1">第一章</a></div><div class="occ"><div class="occ-head">经典互见</div><ul class="occlist"><li><a class="citem" href="#ch-1">第一章</a><span class="osent">大智知止，小智惟谋，智有穷而道无尽哉。</span></li></ul></div></div><div class="concept"><div class="cterm">智极则愚</div><p class="cdef">智巧到了极点就变成愚蠢。物极必反的道理在智慧领域的体现。</p><div class="cchap">出处：<a class="citem" href="#ch-1">第一章</a></div><div class="occ"><div class="occ-head">经典互见</div><ul class="occlist"><li><a class="citem" href="#ch-1">第一章</a><span class="osent">智极则愚也。圣人不患智寡，患德有失焉。</span></li></ul></div></div><div class="concept"><div class="cterm">势无常</div><p class="cdef">权势不是恒定的，是变化无常的。仁者不倚仗权势。</p><div class="cchap">出处：<a class="citem" href="#ch-2">第二章</a></div><div class="occ"><div class="occ-head">经典互见</div><ul class="occlist"><li><a class="citem" href="#ch-2">第二章</a><span class="osent">势无常也，仁者勿恃。势伏凶也，智者不矜。</span></li></ul></div></div><div class="concept"><div class="cterm">重义轻利</div><p class="cdef">君子重视道义轻视利益。利益可以驱使小人却不能驱使君子。</p><div class="cchap">出处：<a class="citem" href="#ch-3">第三章</a></div><div class="occ"><div class="occ-head">经典互见</div><ul class="occlist"><li><a class="citem" href="#ch-3">第三章</a><span class="osent">君子重义轻利，小人嗜利远信，利御小人而莫御君子矣。</span></li></ul></div></div><div class="concept"><div class="cterm">讷言</div><p class="cdef">言语迟钝。智者讷言，反能迷惑对手。</p><div class="cchap">出处：<a class="citem" href="#ch-4">第四章</a></div><div class="occ"><div class="occ-head">经典互见</div><ul class="occlist"><li><a class="citem" href="#ch-4">第四章</a><span class="osent">智者讷言，讷则惑敌焉。</span></li></ul></div></div><div class="concept"><div class="cterm">受誉知辞</div><p class="cdef">受到赞誉时懂得辞让。辞让则德行显明。</p><div class="cchap">出处：<a class="citem" href="#ch-5">第五章</a></div><div class="occ"><div class="occ-head">经典互见</div><ul class="occlist"><li><a class="citem" href="#ch-5">第五章</a><span class="osent">受誉知辞，辞则德显，显则释疑也。</span></li></ul></div></div><div class="concept"><div class="cterm">其色如一</div><p class="cdef">喜怒不形于色如同始终如一。鬼神莫测其心。</p><div class="cchap">出处：<a class="citem" href="#ch-6">第六章</a></div><div class="occ"><div class="occ-head">经典互见</div><ul class="occlist"><li><a class="citem" href="#ch-6">第六章</a><span class="osent">其色如一，鬼神莫测。</span></li></ul></div></div><div class="concept"><div class="cterm">以蹇为乐</div><p class="cdef">把困境当作快乐。困境就不再是困境——止学精神最高体现。</p><div class="cchap">出处：<a class="citem" href="#ch-7">第七章</a></div><div class="occ"><div class="occ-head">经典互见</div><ul class="occlist"><li><a class="citem" href="#ch-7">第七章</a><span class="osent">患以心生，以蹇为乐，蹇不为蹇矣。</span></li></ul></div></div><div class="concept"><div class="cterm">和而弗争</div><p class="cdef">和睦而不争斗，是谋划的首要原则。</p><div class="cchap">出处：<a class="citem" href="#ch-8">第八章</a></div><div class="occ"><div class="occ-head">经典互见</div><ul class="occlist"><li><a class="citem" href="#ch-8">第八章</a><span class="osent">和而弗争，谋之首也。</span></li></ul></div></div><div class="concept"><div class="cterm">苦乐成于心</div><p class="cdef">苦乐本无形体，全在于心。</p><div class="cchap">出处：<a class="citem" href="#ch-9">第九章</a></div><div class="occ"><div class="occ-head">经典互见</div><ul class="occlist"><li><a class="citem" href="#ch-9">第九章</a><span class="osent">苦乐无形，成于心焉。</span></li></ul></div></div><div class="concept"><div class="cterm">服人者德</div><p class="cdef">让人信服的是德行，不是权势才智。</p><div class="cchap">出处：<a class="citem" href="#ch-10">第十章</a></div><div class="occ"><div class="occ-head">经典互见</div><ul class="occlist"><li><a class="citem" href="#ch-10">第十章</a><span class="osent">服人者德也。德之不修，其才必曲，其人非善矣。</span></li></ul></div></div></div>
+    </div>
+    <div class="study-block">
+      <h3 class="blk-title">三、名句摘录</h3>
+      <ul class="qlist"><li><span class="qtext">大智知止，小智惟谋，智有穷而道无尽哉。</span> <a class="qchap" href="#ch-1">— 第一章</a><div class="qctx">全书核心命题——大智与小智的根本区别。</div></li><li><span class="qtext">谋人者成于智，亦丧于智也。</span> <a class="qchap" href="#ch-1">— 第一章</a><div class="qctx">算计别人终被算计反噬。</div></li><li><span class="qtext">势无常也，仁者勿恃。</span> <a class="qchap" href="#ch-2">— 第二章</a><div class="qctx">权势无常不可倚仗。</div></li><li><span class="qtext">众见其利者，非利也。众见其害者，或利也。</span> <a class="qchap" href="#ch-3">— 第三章</a><div class="qctx">众人追逐的往往不是真利，众人回避的或许藏着利益。</div></li><li><span class="qtext">物朴乃存，器工招损。</span> <a class="qchap" href="#ch-4">— 第四章</a><div class="qctx">朴素得以保存，精巧反易招损。</div></li><li><span class="qtext">好誉者多辱也。</span> <a class="qchap" href="#ch-5">— 第五章</a><div class="qctx">追求名誉反遭屈辱。</div></li><li><span class="qtext">其色如一，鬼神莫测。</span> <a class="qchap" href="#ch-6">— 第六章</a><div class="qctx">喜怒不形于色，深不可测。</div></li><li><span class="qtext">人困乃正，命顺乃奇。以正化奇，止为枢也。</span> <a class="qchap" href="#ch-7">— 第七章</a><div class="qctx">困境是常态，「止」是化解的关键。</div></li><li><span class="qtext">君子不念旧恶，旧恶害德也。</span> <a class="qchap" href="#ch-8">— 第八章</a><div class="qctx">不计较旧恶因为旧恶损害德行。</div></li><li><span class="qtext">苦乐无形，成于心焉。</span> <a class="qchap" href="#ch-9">— 第九章</a><div class="qctx">苦乐全在于心。</div></li><li><span class="qtext">服人者德也。</span> <a class="qchap" href="#ch-10">— 第十章</a><div class="qctx">让人信服的是德行。</div></li><li><span class="qtext">以智止智，智也。</span> <a class="qchap" href="#ch-1">— 第一章</a><div class="qctx">用智慧来收敛智巧——这才是真正的智慧。</div></li></ul>
+    </div>
+    <div class="study-block">
+      <h3 class="blk-title">四、参考书目</h3>
+      <ol class="bib"><li><span class="bname">《中说》</span><p>王通（隋）著，记述王通言论的语录体著作，与《止学》互为表里。</p></li><li><span class="bname">《文中子中说》</span><p>中华书局点校本，研究王通思想的基本文献。</p></li><li><span class="bname">《止学》白话译注</span><p>多个网络公开版本，译文仅供参考。</p></li><li><span class="bname">《隋书·王通传》</span><p>正史中的王通传记，了解作者生平的基本资料。</p></li></ol>
+    </div>
+    <div class="study-block">
+      <h3 class="blk-title">五、人物小传</h3>
+      <div class="figrid"><div class="fig"><div class="fname">王通 <span class="ftitle">wáng tōng</span></div><p>（584？—617？）字仲淹，号文中子，隋代大儒。门下弟子有魏征、李靖、徐世绩、房玄龄等——他们后来成为唐太宗的开国元勋。王通之孙为王勃（初唐四杰之一）。《止学》以道家思想论处世之道，主张「大智知止」。</p></div><div class="fig"><div class="fname">文中子 <span class="ftitle">wén zhōng zǐ</span></div><p>王通的号。后世多以「文中子」称之，其门人记录的语录集即《文中子中说》。</p></div><div class="fig"><div class="fname">王勃 <span class="ftitle">wáng bó</span></div><p>（650—676）字子安，初唐四杰之一。王通之孙。六岁能文，少有奇才。代表作《滕王阁序》。王通的学术与文学传统通过王勃得以延续。</p></div></div>
+    </div>
+    <div class="study-block">
+      <h3 class="blk-title">六、章间呼应 · 义理脊柱</h3>
+      <div class="spine"><div class="spnode"><div class="spname">智与止</div><div class="sprange">第1章</div><p class="spdesc">全书以「大智知止」开篇，立「止」为全书之纲。</p></div><div class="spnode"><div class="spname">势与德</div><div class="sprange">第2章</div><p class="spdesc">权势无常，唯德可恃。</p></div><div class="spnode"><div class="spname">义与利</div><div class="sprange">第3章</div><p class="spdesc">君子重义轻利，利御小人而莫御君子。</p></div><div class="spnode"><div class="spname">辩与讷</div><div class="sprange">第4章</div><p class="spdesc">强者不辩，智者讷言。</p></div><div class="spnode"><div class="spname">誉与辞</div><div class="sprange">第5章</div><p class="spdesc">好誉多辱，受誉知辞。</p></div><div class="spnode"><div class="spname">情与度</div><div class="sprange">第6章</div><p class="spdesc">情滥无行，其色如一。</p></div><div class="spnode"><div class="spname">蹇与乐</div><div class="sprange">第7章</div><p class="spdesc">人困乃正，以蹇为乐——止学精神最高体现。</p></div><div class="spnode"><div class="spname">怨与和</div><div class="sprange">第8章</div><p class="spdesc">不念旧恶，和而弗争。</p></div><div class="spnode"><div class="spname">心与制</div><div class="sprange">第9章</div><p class="spdesc">苦乐成于心，智者示愚。</p></div><div class="spnode"><div class="spname">德与修</div><div class="sprange">第10章</div><p class="spdesc">服人者德，修身为本。</p></div></div><div class="ech-wrap"><table class="ech"><thead><tr><th>章</th><th>要旨</th><th>呼应章</th><th>说明</th></tr></thead><tbody><tr><td><a class="citem" href="#ch-1">第一章</a></td><td><span class="seg">智与止</span>全书总纲：大智知止</td><td><a class="citem" href="#ch-7">第七章</a> · <a class="citem" href="#ch-9">第九章</a> · <a class="citem" href="#ch-10">第十章</a></td><td>「止」之宗旨在第1章立，第7章以蹇为乐展开，第9章制心，第10章修身——一以贯之。</td></tr><tr><td><a class="citem" href="#ch-1">第一章</a></td><td><span class="seg">智与止</span>智与德的对照</td><td><a class="citem" href="#ch-10">第十章</a></td><td>第1章「圣人不患智寡，患德有失」，第10章「服人者德也」——德为本，智为末。</td></tr><tr><td><a class="citem" href="#ch-2">第二章</a></td><td><span class="seg">外物</span>势与德的对照</td><td><a class="citem" href="#ch-10">第十章</a></td><td>第2章「势莫加君子」，第10章「德之厚也」——权势不能凌驾于德行之上。</td></tr><tr><td><a class="citem" href="#ch-3">第三章</a></td><td><span class="seg">外物</span>利与义的对照</td><td><a class="citem" href="#ch-3">第三章</a></td><td>第3章自洽：君子重义轻利，利御小人而莫御君子。</td></tr><tr><td><a class="citem" href="#ch-4">第四章</a></td><td><span class="seg">外物</span>辩与讷的对照</td><td><a class="citem" href="#ch-4">第四章</a></td><td>第4章自洽：物朴乃存，智者讷言。收敛锋芒。</td></tr><tr><td><a class="citem" href="#ch-7">第七章</a></td><td><span class="seg">内境</span>蹇与止的枢纽</td><td><a class="citem" href="#ch-1">第一章</a> · <a class="citem" href="#ch-7">第七章</a></td><td>第1章立「止」之纲，第7章以蹇为乐具体展开「止」的实践。</td></tr><tr><td><a class="citem" href="#ch-9">第九章</a></td><td><span class="seg">修身</span>心与止的内化</td><td><a class="citem" href="#ch-1">第一章</a> · <a class="citem" href="#ch-9">第九章</a></td><td>第1章大智知止（行为层面），第9章其心堪制（内心层面）——由外而内。</td></tr><tr><td><a class="citem" href="#ch-10">第十章</a></td><td><span class="seg">修身</span>修身总收</td><td><a class="citem" href="#ch-1">第一章</a> · <a class="citem" href="#ch-10">第十章</a></td><td>第1章患德有失，第10章德之不修其才必曲——全书以德收束。</td></tr></tbody></table></div>
+    </div>
+    <div class="study-block">
+      <h3 class="blk-title">九、经典义理与现代处境</h3>
+      <div class="mxgrid"><div class="mxcard"><div class="mxhead"><span class="mxseg">智巧焦虑</span></div><p class="mxstress"><b>现代处境</b>　总觉得不够聪明，不停谋划、不停算计，停不下来。</p><p class="mxremedy">大智知止。智巧有穷而道无尽——真正的智慧是知道该在什么地方停下来。谋人者成于智亦丧于智，算计别人终被算计反噬。</p><blockquote class="mxquote">大智知止，小智惟谋，智有穷而道无尽哉。</blockquote></div><div class="mxcard"><div class="mxhead"><span class="mxseg">权势焦虑</span></div><p class="mxstress"><b>现代处境</b>　追逐地位、攀附权贵，患得患失。</p><p class="mxremedy">势无常也，仁者勿恃。权势不是恒定的，其中潜伏凶险。君子势不于力——以德服人，不靠蛮力。势固灭之，人固死之——不自骄的人能惠及后代。</p><blockquote class="mxquote">势无常也，仁者勿恃。势伏凶也，智者不矜。</blockquote></div><div class="mxcard"><div class="mxhead"><span class="mxseg">利益焦虑</span></div><p class="mxstress"><b>现代处境</b>　什么都想抓、什么都不够，被利益绑架。</p><p class="mxremedy">众见其利者，非利也。众人都追逐的利益往往不是真正的利益。利大伤身，利小惠人——选择应当慎重。利无独据，运有兴衰，心中要存敬畏。</p><blockquote class="mxquote">众见其利者，非利也。众见其害者，或利也。</blockquote></div><div class="mxcard"><div class="mxhead"><span class="mxseg">表达焦虑</span></div><p class="mxstress"><b>现代处境</b>　总想证明自己，不停争辩、不停炫耀。</p><p class="mxremedy">物朴乃存，器工招损。言拙意隐，辞尽锋出。王者不辩，辩则少威。智者讷言——言语迟钝反而能迷惑对手。这不是狡猾，是收敛锋芒。</p><blockquote class="mxquote">物朴乃存，器工招损。言拙意隐，辞尽锋出。</blockquote></div><div class="mxcard"><div class="mxhead"><span class="mxseg">名誉焦虑</span></div><p class="mxstress"><b>现代处境</b>　太在意别人的评价，为名声焦虑不安。</p><p class="mxremedy">好誉者多辱。追求名誉反而遭受更多屈辱。誉满主惊——声誉太满让上位者惊惧。受誉知辞——受到赞誉时懂得辞让，辞让则德行显明。</p><blockquote class="mxquote">好誉者多辱也。誉满主惊，名高众之所忌焉。</blockquote></div><div class="mxcard"><div class="mxhead"><span class="mxseg">情感焦虑</span></div><p class="mxstress"><b>现代处境</b>　情绪失控、欲望太多，失去分寸。</p><p class="mxremedy">情滥无行，欲多失矩。其色如一，鬼神莫测——喜怒不形于色，深不可测。多情者多艰，寡情者少艰——情感不加收敛，运气就不会好。</p><blockquote class="mxquote">情滥无行，欲多失矩。其色如一，鬼神莫测。</blockquote></div><div class="mxcard"><div class="mxhead"><span class="mxseg">困境焦虑</span></div><p class="mxstress"><b>现代处境</b>　遇到困难就崩溃，觉得命运不公。</p><p class="mxremedy">人困乃正，命顺乃奇。以正化奇，止为枢也——困境是常态，「止」是化解的关键。以蹇为乐，蹇不为蹇——把困境当作快乐，困境就不再是困境。</p><blockquote class="mxquote">人困乃正，命顺乃奇。以正化奇，止为枢也。</blockquote></div></div>
+    </div>
+    <div class="study-block">
+      <h3 class="blk-title">十、引用与出处说明</h3>
+      <div class="citebox"><p>本阅读器中《止学》原文依据中国哲学书电子化计划（ctext.org）及多个公开底本交叉校对，属公有领域古籍。译文、串讲、解读、当代焦虑专栏等说明文字均为编者自撰，仅供参考。</p></div>
+    </div>
+  </section>
+
+      <section id="chapters">
+  <article class="chapter view" id="ch-1" data-chapter="1" data-view="ch">
+    <div class="ch-head"><span class="seal seal-lg">一</span>
+      <div><h2>第一章</h2><p class="lab">智卷一</p></div>
+      <span class="spacer"></span>
+      <button class="btn ghost share-btn" data-n="1" title="复制本章链接，分享给书友即可直达本章">分享本章</button></div>
+    <div class="ch-text"><p>智极则愚也。圣人不患智寡，患德有失焉。才高非智，智者<ruby>弗<rt>fú</rt></ruby>显也。位尊实危，智者不就也。大智<ruby class="tj" title="懂得适可而止。全书核心概念。">知止<rt>zhī zhǐ</rt></ruby>，小智惟谋，智有穷而道无尽哉。谋人者成于智，亦丧于智也。谋身者<ruby>恃<rt>shì</rt></ruby>其智，亦舍其智也。智有所缺，深存其敌，慎之少祸焉。智不及而谋大者毁，智无歇而谋远者逆。智者言智，愚者言愚，以愚饰智，以智止智，智也。</p></div>
+    <div class="ch-foot"><a href="#toc">回到目录</a></div>
+    <div class="det">
+      <div class="det-label">本章详解</div>
+      <div class="tabs" role="tablist"><button class="tab-btn active" data-tab="yi">译文</button><button class="tab-btn" data-tab="chuan">串讲</button><button class="tab-btn" data-tab="jiedu">解读</button><button class="tab-btn" data-tab="dao">导读</button><button class="tab-btn" data-tab="sheng">省察</button></div>
+      <div class="panels"><div class="panel active" data-panel="yi"><div class="sentences"><div class="srow"><div class="src">智极则愚也。</div><div class="tr">智巧到了极点就会变成愚蠢。</div></div><div class="srow"><div class="src">圣人不患智寡，患德有失焉。</div><div class="tr">圣人不担心自己智慧不够，而担心品德有所缺失。</div></div><div class="srow"><div class="src">才高非智，智者<ruby>弗<rt>fú</rt></ruby>显也。</div><div class="tr">才能出众不算真智慧，真正有智慧的人不会炫耀。</div></div><div class="srow"><div class="src">位尊实危，智者不就也。</div><div class="tr">地位尊贵其实暗藏危险，有智慧的人不会趋附。</div></div><div class="srow"><div class="src">大智<ruby class="tj" title="懂得适可而止。全书核心概念。">知止<rt>zhī zhǐ</rt></ruby>，小智惟谋，智有穷而道无尽哉。</div><div class="tr">大智慧懂得适可而止，小聪明只知一味谋划。智巧终有穷尽，而大道永不穷尽。</div></div><div class="srow"><div class="src">谋人者成于智，亦丧于智也。</div><div class="tr">用智谋算计别人的人，因智谋而成功，也会因智谋而败亡。</div></div><div class="srow"><div class="src">谋身者<ruby>恃<rt>shì</rt></ruby>其智，亦舍其智也。</div><div class="tr">为自己谋划时依靠智巧，有时也要放下智巧。</div></div><div class="srow"><div class="src">智有所缺，深存其敌，慎之少祸焉。</div><div class="tr">智巧有不足之处，其中暗藏对手，谨慎才能减少祸患。</div></div><div class="srow"><div class="src">智不及而谋大者毁，智无歇而谋远者逆。</div><div class="tr">智慧不够却要谋划大事，必定失败；智巧不停歇地谋划太远的事，必定碰壁。</div></div><div class="srow"><div class="src">智者言智，愚者言愚，以愚饰智，以智止智，智也。</div><div class="tr">智者说智巧之事，愚人说愚笨之事。用愚笨来掩饰智巧，用智巧来收敛智巧——这才是真正的智慧。</div></div></div></div><div class="panel" data-panel="chuan"><p>本卷主题：智。</p><p>智慧的真谛不在谋算而在知止</p><p>关键句解读：「大智知止，小智惟谋」——全书的核心命题。王通认为智巧有穷而道无尽，真正的智慧是懂得在合适的地方停下来。</p><p>现代映照：谋人者成于智亦丧于智——算计别人终被算计反噬。以智止智，用智慧来收敛自己的智巧，才是大智。</p></div><div class="panel" data-panel="jiedu"><div class="jiedu"><p class="jhint">学派/视角名称可点击，展开简介</p><div class="jrow"><button type="button" class="jlabel" aria-expanded="false">生活启发</button><div class="jbody"><span class="jbasis">所本：日用践履</span><div class="jintro">《止学》讲的是「在什么地方该停下来」的学问。每一卷都是告诉你：在某个领域——智、势、利、辩、誉、情、蹇、怨、心、身——该在什么地方适可而止。</div><p>「大智知止，小智惟谋」——全书的核心命题。王通认为智巧有穷而道无尽，真正的智慧是懂得在合适的地方停下来。 谋人者成于智亦丧于智——算计别人终被算计反噬。以智止智，用智慧来收敛自己的智巧，才是大智。</p></div></div></div></div><div class="panel" data-panel="dao"><p>本章核心在于「智」二字。读时注意王通如何将「止」的哲学贯穿于具体的人生处境——每一卷都是在告诉你：在某个领域，该在什么地方停下来。</p></div><div class="panel" data-panel="sheng"><div class="sheng-wrap"><ol class="sheng"><li>你是否在某个方面「智极则愚」——太聪明反而成了愚蠢？</li><li>你今天有没有「以智止智」——用智慧来收敛自己的智巧？</li></ol><div class="sheng-note-box"><label class="sheng-lab">我的践行笔记 <span class="sheng-count" id="shengCount-1">0</span> 字</label><textarea class="sheng-note" id="shengNote-1" data-n="1" rows="3" placeholder="把今天的体悟写下来：哪一句戳中你？你打算怎么用？"></textarea></div></div></div></div>
+    </div>
+  </article>
+  <article class="chapter view" id="ch-2" data-chapter="2" data-view="ch">
+    <div class="ch-head"><span class="seal seal-lg">二</span>
+      <div><h2>第二章</h2><p class="lab">用势卷二</p></div>
+      <span class="spacer"></span>
+      <button class="btn ghost share-btn" data-n="2" title="复制本章链接，分享给书友即可直达本章">分享本章</button></div>
+    <div class="ch-text"><p>势无常也，仁者勿<ruby>恃<rt>shì</rt></ruby>。势伏凶也，智者不<ruby>矜<rt>jīn</rt></ruby>。势莫加君子，德休与小人。君子势不于力也，力尽而势亡焉。小人势不惠人也，趋之必祸焉。众成其势，一人堪毁。强者凌弱，人怨乃弃。势极无让者疑，位尊<ruby>弗<rt>fú</rt></ruby>恭者忌。势或失之，名或<ruby>谤<rt>bàng</rt></ruby>之，少怨者再得也。势固灭之，人固死之，无骄者惠嗣焉。</p></div>
+    <div class="ch-foot"><a href="#toc">回到目录</a></div>
+    <div class="det">
+      <div class="det-label">本章详解</div>
+      <div class="tabs" role="tablist"><button class="tab-btn active" data-tab="yi">译文</button><button class="tab-btn" data-tab="chuan">串讲</button><button class="tab-btn" data-tab="jiedu">解读</button><button class="tab-btn" data-tab="dao">导读</button><button class="tab-btn" data-tab="sheng">省察</button></div>
+      <div class="panels"><div class="panel active" data-panel="yi"><div class="sentences"><div class="srow"><div class="src">势无常也，仁者勿<ruby>恃<rt>shì</rt></ruby>。</div><div class="tr">权势是无常的，仁德的人不要倚仗它。</div></div><div class="srow"><div class="src">势伏凶也，智者不<ruby>矜<rt>jīn</rt></ruby>。</div><div class="tr">权势中潜伏着凶险，有智慧的人不因此自傲。</div></div><div class="srow"><div class="src">势莫加君子，德休与小人。</div><div class="tr">权势不能凌驾于君子之上，而恩德不可施予小人。</div></div><div class="srow"><div class="src">君子势不于力也，力尽而势亡焉。</div><div class="tr">君子的权势不靠蛮力，蛮力用尽权势就消亡了。</div></div><div class="srow"><div class="src">小人势不惠人也，趋之必祸焉。</div><div class="tr">小人的权势不会给他人带来好处，趋附他必定招祸。</div></div><div class="srow"><div class="src">众成其势，一人堪毁。</div><div class="tr">众人的力量成就了权势，一个人就可以将它毁掉。</div></div><div class="srow"><div class="src">强者凌弱，人怨乃弃。</div><div class="tr">强者欺凌弱者，人们心生怨恨便会离弃他。</div></div><div class="srow"><div class="src">势极无让者疑，位尊<ruby>弗<rt>fú</rt></ruby>恭者忌。</div><div class="tr">权势到极点还不谦让的人会被人猜疑，地位尊贵却不恭敬的人会遭人嫉恨。</div></div><div class="srow"><div class="src">势或失之，名或<ruby>谤<rt>bàng</rt></ruby>之，少怨者再得也。</div><div class="tr">权势或许会失去，名声或许会遭毁谤，少发怨言的人终能重新获得。</div></div><div class="srow"><div class="src">势固灭之，人固死之，无骄者惠嗣焉。</div><div class="tr">权势终会消亡，人也终会死去，不自骄的人能惠及后代。</div></div></div></div><div class="panel" data-panel="chuan"><p>本卷主题：用势。</p><p>权势无常，不可倚仗</p><p>关键句解读：势无常也，势伏凶也——权势不是恒定的，其中潜伏着危险。君子不靠蛮力获取权势，而是以德服人。</p><p>现代映照：势固灭之，人固死之——权势终会消亡。不自骄的人能惠及后代，因为不骄就不会招忌。</p></div><div class="panel" data-panel="jiedu"><div class="jiedu"><p class="jhint">学派/视角名称可点击，展开简介</p><div class="jrow"><button type="button" class="jlabel" aria-expanded="false">生活启发</button><div class="jbody"><span class="jbasis">所本：日用践履</span><div class="jintro">《止学》讲的是「在什么地方该停下来」的学问。每一卷都是告诉你：在某个领域——智、势、利、辩、誉、情、蹇、怨、心、身——该在什么地方适可而止。</div><p>势无常也，势伏凶也——权势不是恒定的，其中潜伏着危险。君子不靠蛮力获取权势，而是以德服人。 势固灭之，人固死之——权势终会消亡。不自骄的人能惠及后代，因为不骄就不会招忌。</p></div></div></div></div><div class="panel" data-panel="dao"><p>本章核心在于「用势」二字。读时注意王通如何将「止」的哲学贯穿于具体的人生处境——每一卷都是在告诉你：在某个领域，该在什么地方停下来。</p></div><div class="panel" data-panel="sheng"><div class="sheng-wrap"><ol class="sheng"><li>你倚仗的权势或地位，是否也在消亡？</li><li>你有没有「势莫加君子」——不让权势凌驾于自己之上？</li></ol><div class="sheng-note-box"><label class="sheng-lab">我的践行笔记 <span class="sheng-count" id="shengCount-2">0</span> 字</label><textarea class="sheng-note" id="shengNote-2" data-n="2" rows="3" placeholder="把今天的体悟写下来：哪一句戳中你？你打算怎么用？"></textarea></div></div></div></div>
+    </div>
+  </article>
+  <article class="chapter view" id="ch-3" data-chapter="3" data-view="ch">
+    <div class="ch-head"><span class="seal seal-lg">三</span>
+      <div><h2>第三章</h2><p class="lab">利卷三</p></div>
+      <span class="spacer"></span>
+      <button class="btn ghost share-btn" data-n="3" title="复制本章链接，分享给书友即可直达本章">分享本章</button></div>
+    <div class="ch-text"><p>惑人者无<ruby>逾<rt>yú</rt></ruby>利也。利无求<ruby>弗<rt>fú</rt></ruby>获，德无施不积。众逐利而富寡，贤让<ruby class="tj" title="此处「器工招损」中「工」通「功」，精巧之意。">功</ruby>而名高。利大伤身，利小惠人，择之宜慎也。天贵于时，人贵于明，动之有戒也。众见其利者，非利也。众见其害者，或利也。君子重义轻利，小人<ruby>嗜<rt>shì</rt></ruby>利远信，利<ruby>御<rt>yù</rt></ruby>小人而莫<ruby>御<rt>yù</rt></ruby>君子矣。利无尽处，命有尽时，不怠可焉。利无独据，运有兴衰，存畏警焉。</p></div>
+    <div class="ch-foot"><a href="#toc">回到目录</a></div>
+    <div class="det">
+      <div class="det-label">本章详解</div>
+      <div class="tabs" role="tablist"><button class="tab-btn active" data-tab="yi">译文</button><button class="tab-btn" data-tab="chuan">串讲</button><button class="tab-btn" data-tab="jiedu">解读</button><button class="tab-btn" data-tab="dao">导读</button><button class="tab-btn" data-tab="sheng">省察</button></div>
+      <div class="panels"><div class="panel active" data-panel="yi"><div class="sentences"><div class="srow"><div class="src">惑人者无<ruby>逾<rt>yú</rt></ruby>利也。</div><div class="tr">蛊惑人心的，没有超过利益的。</div></div><div class="srow"><div class="src">利无求<ruby>弗<rt>fú</rt></ruby>获，德无施不积。</div><div class="tr">利益不去追求就无法获得，德行不去施予就无法积累。</div></div><div class="srow"><div class="src">众逐利而富寡，贤让<ruby class="tj" title="此处「器工招损」中「工」通「功」，精巧之意。">功</ruby>而名高。</div><div class="tr">众人追逐利益，富有的却很少；贤者让出功劳，名声却很高。</div></div><div class="srow"><div class="src">利大伤身，利小惠人，择之宜慎也。</div><div class="tr">大的利益伤害自身，小的利益惠及他人，选择应当慎重。</div></div><div class="srow"><div class="src">天贵于时，人贵于明，动之有戒也。</div><div class="tr">天以时为贵，人以明智为贵，行动要有警戒。</div></div><div class="srow"><div class="src">众见其利者，非利也。</div><div class="tr">众人都看得到的利益，往往不是真正的利益。</div></div><div class="srow"><div class="src">众见其害者，或利也。</div><div class="tr">众人都看得到的危害中，或许隐藏着利益。</div></div><div class="srow"><div class="src">君子重义轻利，小人<ruby>嗜<rt>shì</rt></ruby>利远信，利<ruby>御<rt>yù</rt></ruby>小人而莫<ruby>御<rt>yù</rt></ruby>君子矣。</div><div class="tr">君子重视道义轻视利益，小人嗜好利益远离信义。利益可以驱使小人，却无法驱使君子。</div></div><div class="srow"><div class="src">利无尽处，命有尽时，不怠可焉。</div><div class="tr">利益没有尽头，生命却有穷尽，不懈怠就可以了。</div></div><div class="srow"><div class="src">利无独据，运有兴衰，存畏警焉。</div><div class="tr">利益不能独占，运势有兴有衰，心中要存敬畏和警戒。</div></div></div></div><div class="panel" data-panel="chuan"><p>本卷主题：利。</p><p>利益是蛊惑人心的利器</p><p>关键句解读：「众见其利者，非利也」——众人都追逐的利益往往不是真正的利益。真正的利益藏在众人回避的「害」中。</p><p>现代映照：利无独据，运有兴衰——利益不能独占，运势有兴有衰，心中要存敬畏。</p></div><div class="panel" data-panel="jiedu"><div class="jiedu"><p class="jhint">学派/视角名称可点击，展开简介</p><div class="jrow"><button type="button" class="jlabel" aria-expanded="false">生活启发</button><div class="jbody"><span class="jbasis">所本：日用践履</span><div class="jintro">《止学》讲的是「在什么地方该停下来」的学问。每一卷都是告诉你：在某个领域——智、势、利、辩、誉、情、蹇、怨、心、身——该在什么地方适可而止。</div><p>「众见其利者，非利也」——众人都追逐的利益往往不是真正的利益。真正的利益藏在众人回避的「害」中。 利无独据，运有兴衰——利益不能独占，运势有兴有衰，心中要存敬畏。</p></div></div></div></div><div class="panel" data-panel="dao"><p>本章核心在于「利」二字。读时注意王通如何将「止」的哲学贯穿于具体的人生处境——每一卷都是在告诉你：在某个领域，该在什么地方停下来。</p></div><div class="panel" data-panel="sheng"><div class="sheng-wrap"><ol class="sheng"><li>你追逐的利益是「众见其利」还是「众见其害」？</li><li>你有没有「利无独据」——利益不能独占的意识？</li></ol><div class="sheng-note-box"><label class="sheng-lab">我的践行笔记 <span class="sheng-count" id="shengCount-3">0</span> 字</label><textarea class="sheng-note" id="shengNote-3" data-n="3" rows="3" placeholder="把今天的体悟写下来：哪一句戳中你？你打算怎么用？"></textarea></div></div></div></div>
+    </div>
+  </article>
+  <article class="chapter view" id="ch-4" data-chapter="4" data-view="ch">
+    <div class="ch-head"><span class="seal seal-lg">四</span>
+      <div><h2>第四章</h2><p class="lab">辩卷四</p></div>
+      <span class="spacer"></span>
+      <button class="btn ghost share-btn" data-n="4" title="复制本章链接，分享给书友即可直达本章">分享本章</button></div>
+    <div class="ch-text"><p>物朴乃存，器工招损。言拙意隐，辞尽锋出。识不<ruby>逾<rt>yú</rt></ruby>人者，莫言断也。势不及人者，休言讳也。力不胜人者，勿言强也。王者不辩，辩则少威焉。智者<ruby>讷<rt>nè</rt></ruby>言，<ruby>讷<rt>nè</rt></ruby>则惑敌焉。勇者无语，语则怯行焉。忠臣不表其<ruby class="tj" title="此处「器工招损」中「工」通「功」，精巧之意。">功</ruby>，窃<ruby class="tj" title="此处「器工招损」中「工」通「功」，精巧之意。">功</ruby>者必奸也。君子堪隐人恶，<ruby>谤<rt>bàng</rt></ruby>贤者固小人也矣。</p></div>
+    <div class="ch-foot"><a href="#toc">回到目录</a></div>
+    <div class="det">
+      <div class="det-label">本章详解</div>
+      <div class="tabs" role="tablist"><button class="tab-btn active" data-tab="yi">译文</button><button class="tab-btn" data-tab="chuan">串讲</button><button class="tab-btn" data-tab="jiedu">解读</button><button class="tab-btn" data-tab="dao">导读</button><button class="tab-btn" data-tab="sheng">省察</button></div>
+      <div class="panels"><div class="panel active" data-panel="yi"><div class="sentences"><div class="srow"><div class="src">物朴乃存，器工招损。</div><div class="tr">事物朴素才能保存，器物精巧反易招损。</div></div><div class="srow"><div class="src">言拙意隐，辞尽锋出。</div><div class="tr">言语笨拙意旨就隐藏，言辞说尽锋芒就显露。</div></div><div class="srow"><div class="src">识不<ruby>逾<rt>yú</rt></ruby>人者，莫言断也。</div><div class="tr">见识不超过别人的人，不要妄下断语。</div></div><div class="srow"><div class="src">势不及人者，休言讳也。</div><div class="tr">权势不如别人的人，不要说触犯忌讳的话。</div></div><div class="srow"><div class="src">力不胜人者，勿言强也。</div><div class="tr">力量不如别人的人，不要逞强。</div></div><div class="srow"><div class="src">王者不辩，辩则少威焉。</div><div class="tr">王者不与人争辩，争辩就少了威严。</div></div><div class="srow"><div class="src">智者<ruby>讷<rt>nè</rt></ruby>言，<ruby>讷<rt>nè</rt></ruby>则惑敌焉。</div><div class="tr">智者言语迟钝，迟钝反而能迷惑对手。</div></div><div class="srow"><div class="src">勇者无语，语则怯行焉。</div><div class="tr">勇者不多说话，话多了行动就显怯懦。</div></div><div class="srow"><div class="src">忠臣不表其<ruby class="tj" title="此处「器工招损」中「工」通「功」，精巧之意。">功</ruby>，窃<ruby class="tj" title="此处「器工招损」中「工」通「功」，精巧之意。">功</ruby>者必奸也。</div><div class="tr">忠臣不炫耀自己的功劳，窃取功劳的人必定是奸人。</div></div><div class="srow"><div class="src">君子堪隐人恶，<ruby>谤<rt>bàng</rt></ruby>贤者固小人也矣。</div><div class="tr">君子能容忍别人的过失，毁谤贤人的终究是小人。</div></div></div></div><div class="panel" data-panel="chuan"><p>本卷主题：辩。</p><p>真正的强者不与人争辩</p><p>关键句解读：「物朴乃存，器工招损」——朴素得以保存，精巧反易招损。言语亦然：言拙意隐，辞尽锋出。</p><p>现代映照：智者讷言——言语迟钝反而能迷惑对手。这不是狡猾，而是懂得收敛锋芒。</p></div><div class="panel" data-panel="jiedu"><div class="jiedu"><p class="jhint">学派/视角名称可点击，展开简介</p><div class="jrow"><button type="button" class="jlabel" aria-expanded="false">生活启发</button><div class="jbody"><span class="jbasis">所本：日用践履</span><div class="jintro">《止学》讲的是「在什么地方该停下来」的学问。每一卷都是告诉你：在某个领域——智、势、利、辩、誉、情、蹇、怨、心、身——该在什么地方适可而止。</div><p>「物朴乃存，器工招损」——朴素得以保存，精巧反易招损。言语亦然：言拙意隐，辞尽锋出。 智者讷言——言语迟钝反而能迷惑对手。这不是狡猾，而是懂得收敛锋芒。</p></div></div></div></div><div class="panel" data-panel="dao"><p>本章核心在于「辩」二字。读时注意王通如何将「止」的哲学贯穿于具体的人生处境——每一卷都是在告诉你：在某个领域，该在什么地方停下来。</p></div><div class="panel" data-panel="sheng"><div class="sheng-wrap"><ol class="sheng"><li>你有没有在不需要争辩的时候选择了沉默？</li><li>你的言语是「言拙意隐」还是「辞尽锋出」？</li></ol><div class="sheng-note-box"><label class="sheng-lab">我的践行笔记 <span class="sheng-count" id="shengCount-4">0</span> 字</label><textarea class="sheng-note" id="shengNote-4" data-n="4" rows="3" placeholder="把今天的体悟写下来：哪一句戳中你？你打算怎么用？"></textarea></div></div></div></div>
+    </div>
+  </article>
+  <article class="chapter view" id="ch-5" data-chapter="5" data-view="ch">
+    <div class="ch-head"><span class="seal seal-lg">五</span>
+      <div><h2>第五章</h2><p class="lab">誉卷五</p></div>
+      <span class="spacer"></span>
+      <button class="btn ghost share-btn" data-n="5" title="复制本章链接，分享给书友即可直达本章">分享本章</button></div>
+    <div class="ch-text"><p>好誉者多辱也。誉满主惊，名高众之所忌焉。誉存其伪，<ruby>谄<rt>chǎn</rt></ruby>者以誉欺人。名不由己，明者言不自赞。贪巧之<ruby class="tj" title="此处「器工招损」中「工」通「功」，精巧之意。">功</ruby>，天不佑也。赏誉勿轻，轻则誉贱，誉贱则无<ruby class="tj" title="此处「器工招损」中「工」通「功」，精巧之意。">功</ruby>也。受誉知辞，辞则德显，显则释疑也。上下无争，誉之不废焉。人无誉堪存，誉非正当灭。求誉不得，或为福也。</p></div>
+    <div class="ch-foot"><a href="#toc">回到目录</a></div>
+    <div class="det">
+      <div class="det-label">本章详解</div>
+      <div class="tabs" role="tablist"><button class="tab-btn active" data-tab="yi">译文</button><button class="tab-btn" data-tab="chuan">串讲</button><button class="tab-btn" data-tab="jiedu">解读</button><button class="tab-btn" data-tab="dao">导读</button><button class="tab-btn" data-tab="sheng">省察</button></div>
+      <div class="panels"><div class="panel active" data-panel="yi"><div class="sentences"><div class="srow"><div class="src">好誉者多辱也。</div><div class="tr">喜欢名誉的人，往往遭受更多的屈辱。</div></div><div class="srow"><div class="src">誉满主惊，名高众之所忌焉。</div><div class="tr">声誉太满让君主惊惧，名声太高让众人忌惮。</div></div><div class="srow"><div class="src">誉存其伪，<ruby>谄<rt>chǎn</rt></ruby>者以誉欺人。</div><div class="tr">名誉中夹杂着虚假，谄媚的人用名誉欺骗人。</div></div><div class="srow"><div class="src">名不由己，明者言不自赞。</div><div class="tr">名声不由自己做主，明智的人不自我夸赞。</div></div><div class="srow"><div class="src">贪巧之<ruby class="tj" title="此处「器工招损」中「工」通「功」，精巧之意。">功</ruby>，天不佑也。</div><div class="tr">贪求取巧的功劳，上天不会保佑。</div></div><div class="srow"><div class="src">赏誉勿轻，轻则誉贱，誉贱则无<ruby class="tj" title="此处「器工招损」中「工」通「功」，精巧之意。">功</ruby>也。</div><div class="tr">赏赐名誉不要轻率，轻率则名誉贬值，名誉贬值则起不到激励作用。</div></div><div class="srow"><div class="src">受誉知辞，辞则德显，显则释疑也。</div><div class="tr">受誉时懂得辞让，辞让则德行显明，显明则释除嫌疑。</div></div><div class="srow"><div class="src">上下无争，誉之不废焉。</div><div class="tr">上下不争夺，名誉就不会废弃。</div></div><div class="srow"><div class="src">人无誉堪存，誉非正当灭。</div><div class="tr">人没有名誉也可以生存，名誉不正当则会灭亡。</div></div><div class="srow"><div class="src">求誉不得，或为福也。</div><div class="tr">求名誉而得不到，或许是福气。</div></div></div></div><div class="panel" data-panel="chuan"><p>本卷主题：誉。</p><p>名誉是把双刃剑</p><p>关键句解读：「好誉者多辱」——追求名誉的人反而遭受更多屈辱。名誉太高让人忌惮，誉满则主惊。</p><p>现代映照：受誉知辞——受到赞誉时懂得辞让，辞让则德行显明，显明则释除嫌疑。这是对待名誉的正确态度。</p></div><div class="panel" data-panel="jiedu"><div class="jiedu"><p class="jhint">学派/视角名称可点击，展开简介</p><div class="jrow"><button type="button" class="jlabel" aria-expanded="false">生活启发</button><div class="jbody"><span class="jbasis">所本：日用践履</span><div class="jintro">《止学》讲的是「在什么地方该停下来」的学问。每一卷都是告诉你：在某个领域——智、势、利、辩、誉、情、蹇、怨、心、身——该在什么地方适可而止。</div><p>「好誉者多辱」——追求名誉的人反而遭受更多屈辱。名誉太高让人忌惮，誉满则主惊。 受誉知辞——受到赞誉时懂得辞让，辞让则德行显明，显明则释除嫌疑。这是对待名誉的正确态度。</p></div></div></div></div><div class="panel" data-panel="dao"><p>本章核心在于「誉」二字。读时注意王通如何将「止」的哲学贯穿于具体的人生处境——每一卷都是在告诉你：在某个领域，该在什么地方停下来。</p></div><div class="panel" data-panel="sheng"><div class="sheng-wrap"><ol class="sheng"><li>你追求的名誉给你带来了快乐还是屈辱？</li><li>受到赞誉时你是否懂得辞让？</li></ol><div class="sheng-note-box"><label class="sheng-lab">我的践行笔记 <span class="sheng-count" id="shengCount-5">0</span> 字</label><textarea class="sheng-note" id="shengNote-5" data-n="5" rows="3" placeholder="把今天的体悟写下来：哪一句戳中你？你打算怎么用？"></textarea></div></div></div></div>
+    </div>
+  </article>
+  <article class="chapter view" id="ch-6" data-chapter="6" data-view="ch">
+    <div class="ch-head"><span class="seal seal-lg">六</span>
+      <div><h2>第六章</h2><p class="lab">情卷六</p></div>
+      <span class="spacer"></span>
+      <button class="btn ghost share-btn" data-n="6" title="复制本章链接，分享给书友即可直达本章">分享本章</button></div>
+    <div class="ch-text"><p>情滥无行，欲多失矩。其色如一，鬼神莫测。上无度失威，下无忍莫立。上下知离，其位自安。君臣殊密，其臣反殃。小人之荣，情不可攀也。情存疏也，近不过己，智者无痴焉。情难追也，逝者不返，明者无悔焉。多情者多艰，寡情者少艰。情之不敛，运无幸耳。</p></div>
+    <div class="ch-foot"><a href="#toc">回到目录</a></div>
+    <div class="det">
+      <div class="det-label">本章详解</div>
+      <div class="tabs" role="tablist"><button class="tab-btn active" data-tab="yi">译文</button><button class="tab-btn" data-tab="chuan">串讲</button><button class="tab-btn" data-tab="jiedu">解读</button><button class="tab-btn" data-tab="dao">导读</button><button class="tab-btn" data-tab="sheng">省察</button></div>
+      <div class="panels"><div class="panel active" data-panel="yi"><div class="sentences"><div class="srow"><div class="src">情滥无行，欲多失矩。</div><div class="tr">情感泛滥就没有品行，欲望太多就失去法度。</div></div><div class="srow"><div class="src">其色如一，鬼神莫测。</div><div class="tr">喜怒不形于色如同始终如一，鬼神也难以测度。</div></div><div class="srow"><div class="src">上无度失威，下无忍莫立。</div><div class="tr">上位者没有法度就失去威严，下位者不能忍耐就难以立足。</div></div><div class="srow"><div class="src">上下知离，其位自安。</div><div class="tr">上下级懂得保持距离，各自的位置自然安稳。</div></div><div class="srow"><div class="src">君臣殊密，其臣反殃。</div><div class="tr">君主与臣子过分亲密，臣子反而遭殃。</div></div><div class="srow"><div class="src">小人之荣，情不可攀也。</div><div class="tr">小人得志时的荣宠，不必去攀附。</div></div><div class="srow"><div class="src">情存疏也，近不过己，智者无痴焉。</div><div class="tr">感情需要保持疏远，亲近不要超过自己，智者不会痴迷。</div></div><div class="srow"><div class="src">情难追也，逝者不返，明者无悔焉。</div><div class="tr">感情难以追回，逝去的不会再来，明智的人不后悔。</div></div><div class="srow"><div class="src">多情者多艰，寡情者少艰。</div><div class="tr">感情丰富的人磨难多，感情淡薄的人磨难少。</div></div><div class="srow"><div class="src">情之不敛，运无幸耳。</div><div class="tr">感情不加收敛，运气就不会好。</div></div></div></div><div class="panel" data-panel="chuan"><p>本卷主题：情。</p><p>情感需要节制</p><p>关键句解读：「情滥无行，欲多失矩」——情感泛滥就失去品行，欲望太多就失去法度。</p><p>现代映照：其色如一，鬼神莫测——喜怒不形于色，鬼神也难以测度。这不是虚伪，而是情感的自律。</p></div><div class="panel" data-panel="jiedu"><div class="jiedu"><p class="jhint">学派/视角名称可点击，展开简介</p><div class="jrow"><button type="button" class="jlabel" aria-expanded="false">生活启发</button><div class="jbody"><span class="jbasis">所本：日用践履</span><div class="jintro">《止学》讲的是「在什么地方该停下来」的学问。每一卷都是告诉你：在某个领域——智、势、利、辩、誉、情、蹇、怨、心、身——该在什么地方适可而止。</div><p>「情滥无行，欲多失矩」——情感泛滥就失去品行，欲望太多就失去法度。 其色如一，鬼神莫测——喜怒不形于色，鬼神也难以测度。这不是虚伪，而是情感的自律。</p></div></div></div></div><div class="panel" data-panel="dao"><p>本章核心在于「情」二字。读时注意王通如何将「止」的哲学贯穿于具体的人生处境——每一卷都是在告诉你：在某个领域，该在什么地方停下来。</p></div><div class="panel" data-panel="sheng"><div class="sheng-wrap"><ol class="sheng"><li>你的情绪是否泛滥成灾？</li><li>你能不能做到「其色如一」——喜怒不形于色？</li></ol><div class="sheng-note-box"><label class="sheng-lab">我的践行笔记 <span class="sheng-count" id="shengCount-6">0</span> 字</label><textarea class="sheng-note" id="shengNote-6" data-n="6" rows="3" placeholder="把今天的体悟写下来：哪一句戳中你？你打算怎么用？"></textarea></div></div></div></div>
+    </div>
+  </article>
+  <article class="chapter view" id="ch-7" data-chapter="7" data-view="ch">
+    <div class="ch-head"><span class="seal seal-lg">七</span>
+      <div><h2>第七章</h2><p class="lab">蹇卷七</p></div>
+      <span class="spacer"></span>
+      <button class="btn ghost share-btn" data-n="7" title="复制本章链接，分享给书友即可直达本章">分享本章</button></div>
+    <div class="ch-text"><p>人困乃正，命顺乃奇。以正化奇，止为枢也。事变非智勿晓，事本非止勿存。天灾示警，逆之必亡；人祸告诫，省之固益。躁生百端，困出妄念，非止莫阻害之蔓焉。视己勿重者重，视人为轻者轻。患以心生，以<ruby>蹇<rt>jiǎn</rt></ruby>为乐，<ruby>蹇<rt>jiǎn</rt></ruby>不为<ruby>蹇<rt>jiǎn</rt></ruby>矣。穷不言富，贱不趋贵。忍辱为大，不怒为尊。<ruby>蹇<rt>jiǎn</rt></ruby>非敌也，敌乃乱焉。</p></div>
+    <div class="ch-foot"><a href="#toc">回到目录</a></div>
+    <div class="det">
+      <div class="det-label">本章详解</div>
+      <div class="tabs" role="tablist"><button class="tab-btn active" data-tab="yi">译文</button><button class="tab-btn" data-tab="chuan">串讲</button><button class="tab-btn" data-tab="jiedu">解读</button><button class="tab-btn" data-tab="dao">导读</button><button class="tab-btn" data-tab="sheng">省察</button></div>
+      <div class="panels"><div class="panel active" data-panel="yi"><div class="sentences"><div class="srow"><div class="src">人困乃正，命顺乃奇。</div><div class="tr">人遭遇困境是正常的，命运顺遂是罕见的。</div></div><div class="srow"><div class="src">以正化奇，止为枢也。</div><div class="tr">以正常化解反常，「止」是关键枢纽。</div></div><div class="srow"><div class="src">事变非智勿晓，事本非止勿存。</div><div class="tr">事物的变化没有智慧无法洞察，事物的根本不懂「止」就无法存续。</div></div><div class="srow"><div class="src">天灾示警，逆之必亡；人祸告诫，省之固益。</div><div class="tr">天灾是上天的警示，违逆它必定灭亡；人祸是告诫，反省它必定有益。</div></div><div class="srow"><div class="src">躁生百端，困出妄念，非止莫阻害之蔓焉。</div><div class="tr">浮躁生出百般事端，困境催生妄念，没有「止」就无法阻止祸害蔓延。</div></div><div class="srow"><div class="src">视己勿重者重，视人为轻者轻。</div><div class="tr">不把自己看得太重的人反而受到重视，把别人看轻的人反而被轻视。</div></div><div class="srow"><div class="src">患以心生，以<ruby>蹇<rt>jiǎn</rt></ruby>为乐，<ruby>蹇<rt>jiǎn</rt></ruby>不为<ruby>蹇<rt>jiǎn</rt></ruby>矣。</div><div class="tr">祸患从心生，把困境当作快乐，困境就不再是困境了。</div></div><div class="srow"><div class="src">穷不言富，贱不趋贵。</div><div class="tr">穷困时不谈论富有，卑微时不趋附尊贵。</div></div><div class="srow"><div class="src">忍辱为大，不怒为尊。</div><div class="tr">忍辱是最大的，不动怒是尊贵的。</div></div><div class="srow"><div class="src"><ruby>蹇<rt>jiǎn</rt></ruby>非敌也，敌乃乱焉。</div><div class="tr">困境不是敌人，真正的敌人是内心的混乱。</div></div></div></div><div class="panel" data-panel="chuan"><p>本卷主题：蹇。</p><p>困境是人生的常态</p><p>关键句解读：「人困乃正，命顺乃奇」——遭遇困境是正常的，命运顺遂才是罕见的。以正化奇，止为枢也。</p><p>现代映照：以蹇为乐，蹇不为蹇——把困境当作快乐，困境就不再是困境。这是「止学」精神的最高体现。</p></div><div class="panel" data-panel="jiedu"><div class="jiedu"><p class="jhint">学派/视角名称可点击，展开简介</p><div class="jrow"><button type="button" class="jlabel" aria-expanded="false">生活启发</button><div class="jbody"><span class="jbasis">所本：日用践履</span><div class="jintro">《止学》讲的是「在什么地方该停下来」的学问。每一卷都是告诉你：在某个领域——智、势、利、辩、誉、情、蹇、怨、心、身——该在什么地方适可而止。</div><p>「人困乃正，命顺乃奇」——遭遇困境是正常的，命运顺遂才是罕见的。以正化奇，止为枢也。 以蹇为乐，蹇不为蹇——把困境当作快乐，困境就不再是困境。这是「止学」精神的最高体现。</p></div></div></div></div><div class="panel" data-panel="dao"><p>本章核心在于「蹇」二字。读时注意王通如何将「止」的哲学贯穿于具体的人生处境——每一卷都是在告诉你：在某个领域，该在什么地方停下来。</p></div><div class="panel" data-panel="sheng"><div class="sheng-wrap"><ol class="sheng"><li>你正在经历的困境，是否正是「以正化奇」的契机？</li><li>你能不能「以蹇为乐」——把困境当作快乐？</li></ol><div class="sheng-note-box"><label class="sheng-lab">我的践行笔记 <span class="sheng-count" id="shengCount-7">0</span> 字</label><textarea class="sheng-note" id="shengNote-7" data-n="7" rows="3" placeholder="把今天的体悟写下来：哪一句戳中你？你打算怎么用？"></textarea></div></div></div></div>
+    </div>
+  </article>
+  <article class="chapter view" id="ch-8" data-chapter="8" data-view="ch">
+    <div class="ch-head"><span class="seal seal-lg">八</span>
+      <div><h2>第八章</h2><p class="lab">释怨卷八</p></div>
+      <span class="spacer"></span>
+      <button class="btn ghost share-btn" data-n="8" title="复制本章链接，分享给书友即可直达本章">分享本章</button></div>
+    <div class="ch-text"><p>世之不公，人怨难止。穷富为仇，<ruby>弥<rt>mí</rt></ruby>祸不消。君子不念旧恶，旧恶害德也。小人存隙必报，必报自毁也。和而<ruby>弗<rt>fú</rt></ruby>争，谋之首也。名不正而<ruby>谤<rt>bàng</rt></ruby>兴，正名者必自屈也焉。惑不解而恨重，释惑者固自罪焉。私念不生，仇怨不结焉。宽不足以悦人，严堪补也。敬无助于劝善，<ruby>诤<rt>zhèng</rt></ruby>堪教矣。</p></div>
+    <div class="ch-foot"><a href="#toc">回到目录</a></div>
+    <div class="det">
+      <div class="det-label">本章详解</div>
+      <div class="tabs" role="tablist"><button class="tab-btn active" data-tab="yi">译文</button><button class="tab-btn" data-tab="chuan">串讲</button><button class="tab-btn" data-tab="jiedu">解读</button><button class="tab-btn" data-tab="dao">导读</button><button class="tab-btn" data-tab="sheng">省察</button></div>
+      <div class="panels"><div class="panel active" data-panel="yi"><div class="sentences"><div class="srow"><div class="src">世之不公，人怨难止。</div><div class="tr">世上若有不公，百姓的怨气就很难平息。</div></div><div class="srow"><div class="src">穷富为仇，<ruby>弥<rt>mí</rt></ruby>祸不消。</div><div class="tr">穷人与富人互为仇敌，弥合祸患也无法消除。</div></div><div class="srow"><div class="src">君子不念旧恶，旧恶害德也。</div><div class="tr">君子不计较过去的恶怨，旧恶会损害德行。</div></div><div class="srow"><div class="src">小人存隙必报，必报自毁也。</div><div class="tr">小人心存间隙必定报复，必定报复反而自我毁灭。</div></div><div class="srow"><div class="src">和而<ruby>弗<rt>fú</rt></ruby>争，谋之首也。</div><div class="tr">和睦而不争斗，是谋划的首要原则。</div></div><div class="srow"><div class="src">名不正而<ruby>谤<rt>bàng</rt></ruby>兴，正名者必自屈也焉。</div><div class="tr">名分不正则毁谤兴起，正名的人必定要委屈自己。</div></div><div class="srow"><div class="src">惑不解而恨重，释惑者固自罪焉。</div><div class="tr">困惑不解则怨恨加重，释惑的人必定要自责。</div></div><div class="srow"><div class="src">私念不生，仇怨不结焉。</div><div class="tr">心中不生偏私之念，自然不会与别人结下仇怨。</div></div><div class="srow"><div class="src">宽不足以悦人，严堪补也。</div><div class="tr">宽容不一定能取悦人，严厉可以弥补。</div></div><div class="srow"><div class="src">敬无助于劝善，<ruby>诤<rt>zhèng</rt></ruby>堪教矣。</div><div class="tr">恭敬对劝善没有帮助，直言规劝才能起到教诲作用。</div></div></div></div><div class="panel" data-panel="chuan"><p>本卷主题：释怨。</p><p>怨恨需要化解而非报复</p><p>关键句解读：「君子不念旧恶，旧恶害德也」——君子不计较旧恶，因为旧恶会损害自己的德行。</p><p>现代映照：和而弗争，谋之首也——和睦而不争斗是谋划的首要原则。以和化解怨，而非以怨报怨。</p></div><div class="panel" data-panel="jiedu"><div class="jiedu"><p class="jhint">学派/视角名称可点击，展开简介</p><div class="jrow"><button type="button" class="jlabel" aria-expanded="false">生活启发</button><div class="jbody"><span class="jbasis">所本：日用践履</span><div class="jintro">《止学》讲的是「在什么地方该停下来」的学问。每一卷都是告诉你：在某个领域——智、势、利、辩、誉、情、蹇、怨、心、身——该在什么地方适可而止。</div><p>「君子不念旧恶，旧恶害德也」——君子不计较旧恶，因为旧恶会损害自己的德行。 和而弗争，谋之首也——和睦而不争斗是谋划的首要原则。以和化解怨，而非以怨报怨。</p></div></div></div></div><div class="panel" data-panel="dao"><p>本章核心在于「释怨」二字。读时注意王通如何将「止」的哲学贯穿于具体的人生处境——每一卷都是在告诉你：在某个领域，该在什么地方停下来。</p></div><div class="panel" data-panel="sheng"><div class="sheng-wrap"><ol class="sheng"><li>你有没有还在念旧恶——它正在损害你的德行？</li><li>你能不能做到「和而弗争」？</li></ol><div class="sheng-note-box"><label class="sheng-lab">我的践行笔记 <span class="sheng-count" id="shengCount-8">0</span> 字</label><textarea class="sheng-note" id="shengNote-8" data-n="8" rows="3" placeholder="把今天的体悟写下来：哪一句戳中你？你打算怎么用？"></textarea></div></div></div></div>
+    </div>
+  </article>
+  <article class="chapter view" id="ch-9" data-chapter="9" data-view="ch">
+    <div class="ch-head"><span class="seal seal-lg">九</span>
+      <div><h2>第九章</h2><p class="lab">心卷九</p></div>
+      <span class="spacer"></span>
+      <button class="btn ghost share-btn" data-n="9" title="复制本章链接，分享给书友即可直达本章">分享本章</button></div>
+    <div class="ch-text"><p>欲无止也，其心堪制。惑无尽也，其行乃解。不求于人，其尊<ruby>弗<rt>fú</rt></ruby>伤。无<ruby>嗜<rt>shì</rt></ruby>之病，其身<ruby>靡<rt>mǐ</rt></ruby>失。自弃者人莫救也。苦乐无形，成于心焉。荣辱存异，贤者同焉。事之未济，志之非达，心无怨而忧患<ruby>弗<rt>fú</rt></ruby>加矣。仁者好礼，不欺其心也。智者示愚，不显其心哉。</p></div>
+    <div class="ch-foot"><a href="#toc">回到目录</a></div>
+    <div class="det">
+      <div class="det-label">本章详解</div>
+      <div class="tabs" role="tablist"><button class="tab-btn active" data-tab="yi">译文</button><button class="tab-btn" data-tab="chuan">串讲</button><button class="tab-btn" data-tab="jiedu">解读</button><button class="tab-btn" data-tab="dao">导读</button><button class="tab-btn" data-tab="sheng">省察</button></div>
+      <div class="panels"><div class="panel active" data-panel="yi"><div class="sentences"><div class="srow"><div class="src">欲无止也，其心堪制。</div><div class="tr">欲望没有止境，但人心可以克制。</div></div><div class="srow"><div class="src">惑无尽也，其行乃解。</div><div class="tr">迷惑没有尽头，但行动可以化解。</div></div><div class="srow"><div class="src">不求于人，其尊<ruby>弗<rt>fú</rt></ruby>伤。</div><div class="tr">不向别人乞求，自己的尊严就不会受损。</div></div><div class="srow"><div class="src">无<ruby>嗜<rt>shì</rt></ruby>之病，其身<ruby>靡<rt>mǐ</rt></ruby>失。</div><div class="tr">没有嗜好的毛病，自身就不会失误。</div></div><div class="srow"><div class="src">自弃者人莫救也。</div><div class="tr">自我放弃的人，别人无法拯救。</div></div><div class="srow"><div class="src">苦乐无形，成于心焉。</div><div class="tr">苦乐本无形体，全在于心。</div></div><div class="srow"><div class="src">荣辱存异，贤者同焉。</div><div class="tr">荣辱虽然不同，贤者一视同仁。</div></div><div class="srow"><div class="src">事之未济，志之非达，心无怨而忧患<ruby>弗<rt>fú</rt></ruby>加矣。</div><div class="tr">事情没有成功，志向没有实现，但心中无怨则忧患不会降临。</div></div><div class="srow"><div class="src">仁者好礼，不欺其心也。</div><div class="tr">仁者崇尚礼仪，不欺骗自己的心。</div></div><div class="srow"><div class="src">智者示愚，不显其心哉。</div><div class="tr">智者表现出愚笨，不显露自己的心。</div></div></div></div><div class="panel" data-panel="chuan"><p>本卷主题：心。</p><p>心是一切苦乐荣辱的根源</p><p>关键句解读：「苦乐无形，成于心焉」——苦乐本无形体，全在于心。心怎么想，世界就是什么样。</p><p>现代映照：智者示愚，不显其心哉——智者表现出愚笨，不显露自己的心。收敛锋芒，深藏不露。</p></div><div class="panel" data-panel="jiedu"><div class="jiedu"><p class="jhint">学派/视角名称可点击，展开简介</p><div class="jrow"><button type="button" class="jlabel" aria-expanded="false">生活启发</button><div class="jbody"><span class="jbasis">所本：日用践履</span><div class="jintro">《止学》讲的是「在什么地方该停下来」的学问。每一卷都是告诉你：在某个领域——智、势、利、辩、誉、情、蹇、怨、心、身——该在什么地方适可而止。</div><p>「苦乐无形，成于心焉」——苦乐本无形体，全在于心。心怎么想，世界就是什么样。 智者示愚，不显其心哉——智者表现出愚笨，不显露自己的心。收敛锋芒，深藏不露。</p></div></div></div></div><div class="panel" data-panel="dao"><p>本章核心在于「心」二字。读时注意王通如何将「止」的哲学贯穿于具体的人生处境——每一卷都是在告诉你：在某个领域，该在什么地方停下来。</p></div><div class="panel" data-panel="sheng"><div class="sheng-wrap"><ol class="sheng"><li>你的苦乐是不是「成于心」——由心态决定的？</li><li>你有没有「智者示愚」——不显露自己的聪明？</li></ol><div class="sheng-note-box"><label class="sheng-lab">我的践行笔记 <span class="sheng-count" id="shengCount-9">0</span> 字</label><textarea class="sheng-note" id="shengNote-9" data-n="9" rows="3" placeholder="把今天的体悟写下来：哪一句戳中你？你打算怎么用？"></textarea></div></div></div></div>
+    </div>
+  </article>
+  <article class="chapter view" id="ch-10" data-chapter="10" data-view="ch">
+    <div class="ch-head"><span class="seal seal-lg">十</span>
+      <div><h2>第十章</h2><p class="lab">修身卷十</p></div>
+      <span class="spacer"></span>
+      <button class="btn ghost share-btn" data-n="10" title="复制本章链接，分享给书友即可直达本章">分享本章</button></div>
+    <div class="ch-text"><p>服人者德也。德之不修，其才必曲，其人非善矣。纳言无失，不<ruby>辍<rt>chuò</rt></ruby>亡废。小处容<ruby>疵<rt>cī</rt></ruby>，大节堪毁。敬人敬心，德之厚也。诚非致虚，君子不行诡道。祸由己生，小人难于胜己。<ruby>谤<rt>bàng</rt></ruby>言无惧，强者不纵，堪验其德焉。不察其德，非识人也。识而勿用，非大德也。</p></div>
+    <div class="ch-foot"><a href="#toc">回到目录</a></div>
+    <div class="det">
+      <div class="det-label">本章详解</div>
+      <div class="tabs" role="tablist"><button class="tab-btn active" data-tab="yi">译文</button><button class="tab-btn" data-tab="chuan">串讲</button><button class="tab-btn" data-tab="jiedu">解读</button><button class="tab-btn" data-tab="dao">导读</button><button class="tab-btn" data-tab="sheng">省察</button></div>
+      <div class="panels"><div class="panel active" data-panel="yi"><div class="sentences"><div class="srow"><div class="src">服人者德也。</div><div class="tr">让人信服的是德行。</div></div><div class="srow"><div class="src">德之不修，其才必曲，其人非善矣。</div><div class="tr">不修养德行，才能必定偏曲，这个人也不是善人。</div></div><div class="srow"><div class="src">纳言无失，不<ruby>辍<rt>chuò</rt></ruby>亡废。</div><div class="tr">听取谏言就不会失误，不停辍就不会荒废。</div></div><div class="srow"><div class="src">小处容<ruby>疵<rt>cī</rt></ruby>，大节堪毁。</div><div class="tr">在小处容忍瑕疵，大节也会被毁掉。</div></div><div class="srow"><div class="src">敬人敬心，德之厚也。</div><div class="tr">尊敬人且尊敬其心，是德行深厚的表现。</div></div><div class="srow"><div class="src">诚非致虚，君子不行诡道。</div><div class="tr">真诚不是虚情假意，君子不走诡诈之路。</div></div><div class="srow"><div class="src">祸由己生，小人难于胜己。</div><div class="tr">祸患是自己招致的，小人难以战胜自己。</div></div><div class="srow"><div class="src"><ruby>谤<rt>bàng</rt></ruby>言无惧，强者不纵，堪验其德焉。</div><div class="tr">面对毁谤不畏惧，强者不放纵，可以检验其德行。</div></div><div class="srow"><div class="src">不察其德，非识人也。</div><div class="tr">不考察其德行，不算识人。</div></div><div class="srow"><div class="src">识而勿用，非大德也。</div><div class="tr">识人而不善用，不是大德。</div></div></div></div><div class="panel" data-panel="chuan"><p>本卷主题：修身。</p><p>德行是立身之本</p><p>关键句解读：「服人者德也」——让人信服的是德行，不是权势、不是才智、不是利益。</p><p>现代映照：不察其德，非识人也。识而勿用，非大德也——识人要察德，察德后要善用。这是修身的外推。</p></div><div class="panel" data-panel="jiedu"><div class="jiedu"><p class="jhint">学派/视角名称可点击，展开简介</p><div class="jrow"><button type="button" class="jlabel" aria-expanded="false">生活启发</button><div class="jbody"><span class="jbasis">所本：日用践履</span><div class="jintro">《止学》讲的是「在什么地方该停下来」的学问。每一卷都是告诉你：在某个领域——智、势、利、辩、誉、情、蹇、怨、心、身——该在什么地方适可而止。</div><p>「服人者德也」——让人信服的是德行，不是权势、不是才智、不是利益。 不察其德，非识人也。识而勿用，非大德也——识人要察德，察德后要善用。这是修身的外推。</p></div></div></div></div><div class="panel" data-panel="dao"><p>本章核心在于「修身」二字。读时注意王通如何将「止」的哲学贯穿于具体的人生处境——每一卷都是在告诉你：在某个领域，该在什么地方停下来。</p></div><div class="panel" data-panel="sheng"><div class="sheng-wrap"><ol class="sheng"><li>你让人信服的是你的权势才智，还是你的德行？</li><li>你有没有在「修身」——修炼自己的德行？</li></ol><div class="sheng-note-box"><label class="sheng-lab">我的践行笔记 <span class="sheng-count" id="shengCount-10">0</span> 字</label><textarea class="sheng-note" id="shengNote-10" data-n="10" rows="3" placeholder="把今天的体悟写下来：哪一句戳中你？你打算怎么用？"></textarea></div></div></div></div>
+    </div>
+  </article>
+      </section>
+
+      <nav class="pager" id="pager">
+        <div class="pager-row">
+          <button class="btn ghost" id="prevCh" aria-label="上一章">← 上一章</button>
+          <span class="pager-info" id="pagerInfo"></span>
+          <button class="btn" id="nextCh" aria-label="下一章">下一章 →</button>
+        </div>
+      </nav>
+
+      <footer>
+        <p>文本依据：朱熹《四书章句集注 · 止学章句》十章，并与《礼记 · 止学》原文交叉校对。</p>
+        <p>止学共读 · 一天一章 · 十天</p>
+      </footer>
+    </div>
+  </div>
+</div>
+
+<div id="tocBackdrop"></div>
+<nav class="bottom-nav" id="bottomNav" aria-label="底部导航">
+  <button class="bn-item act-home">首页</button>
+  <button class="bn-item act-study">研读</button>
+  <button class="bn-item act-today">今日</button>
+  <button class="bn-item act-toc">目录</button>
+  <button class="bn-item act-tools" id="toolsBtnBottom">工具箱</button>
+</nav>
+<button class="backtop" id="backTop" title="回到顶部">顶</button>
+<div class="toast" id="toast"></div>
+<script>
+var CHAPTERS = [{"n": 1, "label": "智卷一", "text": "智极则愚也。圣人不患智寡，患德有失焉。才高非智，智者弗显也。位尊实危，智者不就也。大智知止，小智惟谋，智有穷而道无尽哉。谋人者成于智，亦丧于智也。谋身者恃其智，亦舍其智也。智有所缺，深存其敌，慎之少祸焉。智不及而谋大者毁，智无歇而谋远者逆。智者言智，愚者言愚，以愚饰智，以智止智，智也。", "paras": ["智极则愚也。圣人不患智寡，患德有失焉。才高非智，智者弗显也。位尊实危，智者不就也。大智知止，小智惟谋，智有穷而道无尽哉。谋人者成于智，亦丧于智也。谋身者恃其智，亦舍其智也。智有所缺，深存其敌，慎之少祸焉。智不及而谋大者毁，智无歇而谋远者逆。智者言智，愚者言愚，以愚饰智，以智止智，智也。"]}, {"n": 2, "label": "用势卷二", "text": "势无常也，仁者勿恃。势伏凶也，智者不矜。势莫加君子，德休与小人。君子势不于力也，力尽而势亡焉。小人势不惠人也，趋之必祸焉。众成其势，一人堪毁。强者凌弱，人怨乃弃。势极无让者疑，位尊弗恭者忌。势或失之，名或谤之，少怨者再得也。势固灭之，人固死之，无骄者惠嗣焉。", "paras": ["势无常也，仁者勿恃。势伏凶也，智者不矜。势莫加君子，德休与小人。君子势不于力也，力尽而势亡焉。小人势不惠人也，趋之必祸焉。众成其势，一人堪毁。强者凌弱，人怨乃弃。势极无让者疑，位尊弗恭者忌。势或失之，名或谤之，少怨者再得也。势固灭之，人固死之，无骄者惠嗣焉。"]}, {"n": 3, "label": "利卷三", "text": "惑人者无逾利也。利无求弗获，德无施不积。众逐利而富寡，贤让功而名高。利大伤身，利小惠人，择之宜慎也。天贵于时，人贵于明，动之有戒也。众见其利者，非利也。众见其害者，或利也。君子重义轻利，小人嗜利远信，利御小人而莫御君子矣。利无尽处，命有尽时，不怠可焉。利无独据，运有兴衰，存畏警焉。", "paras": ["惑人者无逾利也。利无求弗获，德无施不积。众逐利而富寡，贤让功而名高。利大伤身，利小惠人，择之宜慎也。天贵于时，人贵于明，动之有戒也。众见其利者，非利也。众见其害者，或利也。君子重义轻利，小人嗜利远信，利御小人而莫御君子矣。利无尽处，命有尽时，不怠可焉。利无独据，运有兴衰，存畏警焉。"]}, {"n": 4, "label": "辩卷四", "text": "物朴乃存，器工招损。言拙意隐，辞尽锋出。识不逾人者，莫言断也。势不及人者，休言讳也。力不胜人者，勿言强也。王者不辩，辩则少威焉。智者讷言，讷则惑敌焉。勇者无语，语则怯行焉。忠臣不表其功，窃功者必奸也。君子堪隐人恶，谤贤者固小人也矣。", "paras": ["物朴乃存，器工招损。言拙意隐，辞尽锋出。识不逾人者，莫言断也。势不及人者，休言讳也。力不胜人者，勿言强也。王者不辩，辩则少威焉。智者讷言，讷则惑敌焉。勇者无语，语则怯行焉。忠臣不表其功，窃功者必奸也。君子堪隐人恶，谤贤者固小人也矣。"]}, {"n": 5, "label": "誉卷五", "text": "好誉者多辱也。誉满主惊，名高众之所忌焉。誉存其伪，谄者以誉欺人。名不由己，明者言不自赞。贪巧之功，天不佑也。赏誉勿轻，轻则誉贱，誉贱则无功也。受誉知辞，辞则德显，显则释疑也。上下无争，誉之不废焉。人无誉堪存，誉非正当灭。求誉不得，或为福也。", "paras": ["好誉者多辱也。誉满主惊，名高众之所忌焉。誉存其伪，谄者以誉欺人。名不由己，明者言不自赞。贪巧之功，天不佑也。赏誉勿轻，轻则誉贱，誉贱则无功也。受誉知辞，辞则德显，显则释疑也。上下无争，誉之不废焉。人无誉堪存，誉非正当灭。求誉不得，或为福也。"]}, {"n": 6, "label": "情卷六", "text": "情滥无行，欲多失矩。其色如一，鬼神莫测。上无度失威，下无忍莫立。上下知离，其位自安。君臣殊密，其臣反殃。小人之荣，情不可攀也。情存疏也，近不过己，智者无痴焉。情难追也，逝者不返，明者无悔焉。多情者多艰，寡情者少艰。情之不敛，运无幸耳。", "paras": ["情滥无行，欲多失矩。其色如一，鬼神莫测。上无度失威，下无忍莫立。上下知离，其位自安。君臣殊密，其臣反殃。小人之荣，情不可攀也。情存疏也，近不过己，智者无痴焉。情难追也，逝者不返，明者无悔焉。多情者多艰，寡情者少艰。情之不敛，运无幸耳。"]}, {"n": 7, "label": "蹇卷七", "text": "人困乃正，命顺乃奇。以正化奇，止为枢也。事变非智勿晓，事本非止勿存。天灾示警，逆之必亡；人祸告诫，省之固益。躁生百端，困出妄念，非止莫阻害之蔓焉。视己勿重者重，视人为轻者轻。患以心生，以蹇为乐，蹇不为蹇矣。穷不言富，贱不趋贵。忍辱为大，不怒为尊。蹇非敌也，敌乃乱焉。", "paras": ["人困乃正，命顺乃奇。以正化奇，止为枢也。事变非智勿晓，事本非止勿存。天灾示警，逆之必亡；人祸告诫，省之固益。躁生百端，困出妄念，非止莫阻害之蔓焉。视己勿重者重，视人为轻者轻。患以心生，以蹇为乐，蹇不为蹇矣。穷不言富，贱不趋贵。忍辱为大，不怒为尊。蹇非敌也，敌乃乱焉。"]}, {"n": 8, "label": "释怨卷八", "text": "世之不公，人怨难止。穷富为仇，弥祸不消。君子不念旧恶，旧恶害德也。小人存隙必报，必报自毁也。和而弗争，谋之首也。名不正而谤兴，正名者必自屈也焉。惑不解而恨重，释惑者固自罪焉。私念不生，仇怨不结焉。宽不足以悦人，严堪补也。敬无助于劝善，诤堪教矣。", "paras": ["世之不公，人怨难止。穷富为仇，弥祸不消。君子不念旧恶，旧恶害德也。小人存隙必报，必报自毁也。和而弗争，谋之首也。名不正而谤兴，正名者必自屈也焉。惑不解而恨重，释惑者固自罪焉。私念不生，仇怨不结焉。宽不足以悦人，严堪补也。敬无助于劝善，诤堪教矣。"]}, {"n": 9, "label": "心卷九", "text": "欲无止也，其心堪制。惑无尽也，其行乃解。不求于人，其尊弗伤。无嗜之病，其身靡失。自弃者人莫救也。苦乐无形，成于心焉。荣辱存异，贤者同焉。事之未济，志之非达，心无怨而忧患弗加矣。仁者好礼，不欺其心也。智者示愚，不显其心哉。", "paras": ["欲无止也，其心堪制。惑无尽也，其行乃解。不求于人，其尊弗伤。无嗜之病，其身靡失。自弃者人莫救也。苦乐无形，成于心焉。荣辱存异，贤者同焉。事之未济，志之非达，心无怨而忧患弗加矣。仁者好礼，不欺其心也。智者示愚，不显其心哉。"]}, {"n": 10, "label": "修身卷十", "text": "服人者德也。德之不修，其才必曲，其人非善矣。纳言无失，不辍亡废。小处容疵，大节堪毁。敬人敬心，德之厚也。诚非致虚，君子不行诡道。祸由己生，小人难于胜己。谤言无惧，强者不纵，堪验其德焉。不察其德，非识人也。识而勿用，非大德也。", "paras": ["服人者德也。德之不修，其才必曲，其人非善矣。纳言无失，不辍亡废。小处容疵，大节堪毁。敬人敬心，德之厚也。诚非致虚，君子不行诡道。祸由己生，小人难于胜己。谤言无惧，强者不纵，堪验其德焉。不察其德，非识人也。识而勿用，非大德也。"]}];
+var TOTAL = 10;
+var CN = ["一", "二", "三", "四", "五", "六", "七", "八", "九", "十"];
+var ANSHEN = ["大智知止。你今天在什么地方该停下来？", "势无常也。你倚仗的东西，是否也在消亡？", "众见其利者，非利也。众人追逐的，你还要追吗？", "物朴乃存。朴素，才是长存之道。", "好誉者多辱。名誉是双刃剑——拿得起，放得下。", "其色如一。喜怒不形于色，是自律，不是虚伪。", "人困乃正。困境不是敌人，乱才是。", "君子不念旧恶。旧恶伤的是自己，不是别人。", "苦乐成于心。你的苦乐，由你的心决定。", "服人者德也。让人信服的从来不是权势，是德行。"];
+var SHENGQ = {"1": ["你是否在某个方面「智极则愚」——太聪明反而成了愚蠢？", "你今天有没有「以智止智」——用智慧来收敛自己的智巧？"], "2": ["你倚仗的权势或地位，是否也在消亡？", "你有没有「势莫加君子」——不让权势凌驾于自己之上？"], "3": ["你追逐的利益是「众见其利」还是「众见其害」？", "你有没有「利无独据」——利益不能独占的意识？"], "4": ["你有没有在不需要争辩的时候选择了沉默？", "你的言语是「言拙意隐」还是「辞尽锋出」？"], "5": ["你追求的名誉给你带来了快乐还是屈辱？", "受到赞誉时你是否懂得辞让？"], "6": ["你的情绪是否泛滥成灾？", "你能不能做到「其色如一」——喜怒不形于色？"], "7": ["你正在经历的困境，是否正是「以正化奇」的契机？", "你能不能「以蹇为乐」——把困境当作快乐？"], "8": ["你有没有还在念旧恶——它正在损害你的德行？", "你能不能做到「和而弗争」？"], "9": ["你的苦乐是不是「成于心」——由心态决定的？", "你有没有「智者示愚」——不显露自己的聪明？"], "10": ["你让人信服的是你的权势才智，还是你的德行？", "你有没有在「修身」——修炼自己的德行？"]};
+var LS_KEY = 'zhixue_start_v1';
+var PAGED = true;          /* 默认分页阅读 */
+var CURRENT = 1;           /* 当前阅读章号（封面/研读时仍记录上次章） */
+function currentChapter(){ return CURRENT; }
+
+/* 阅读进度书签：记住最后读到的章，目录标灰已读，封面提供「继续阅读」 */
+var LAST_KEY = 'zhixue_last_v1';
+var lastRead = parseInt(lsGet(LAST_KEY) || '0', 10) || 0;
+function markReadToc(){
+  var links = document.querySelectorAll('.toc a');
+  for (var i = 0; i < links.length; i++) {
+    links[i].classList.toggle('read', +links[i].getAttribute('data-n') <= lastRead);
+  }
+  var rb = document.getElementById('resumeBtn');
+  if (rb) {
+    if (lastRead > 0) { rb.hidden = false; rb.textContent = '继续阅读 · 第' + CN[lastRead - 1] + '章'; }
+    else { rb.hidden = true; }
+  }
+}
+
+function $(s){ return document.querySelector(s); }
+function eachNode(list, fn){ for (var i = 0; i < list.length; i++) { fn(list[i], i); } }
+/* 浏览器本地缓存开始日期：优先 localStorage，沙箱/隐私模式不可用时回退到 cookie，
+   确保「今日共读」设置不会每次重置 */
+function lsGet(k){
+  try { var v = window.localStorage.getItem(k); if (v) { return v; } } catch (e) {}
+  try { var m = document.cookie.match(new RegExp('(?:^|; )' + k + '=([^;]*)')); if (m) { return decodeURIComponent(m[1]); } } catch (e) {}
+  return null;
+}
+function lsSet(k, v){
+  try { window.localStorage.setItem(k, v); } catch (e) {}
+  try { document.cookie = k + '=' + encodeURIComponent(v) + ';path=/;max-age=31536000'; } catch (e) {}
+}
+/* 老版本 WebView 不支持带选项的 scrollIntoView */
+function scrollToEl(el, center){
+  try { el.scrollIntoView(center ? { behavior: 'smooth', block: 'center' } : { behavior: 'smooth', block: 'start' }); }
+  catch (e) { try { el.scrollIntoView(); } catch (e2) {} }
+}
+/* 受控缓动滚动：固定时长(默认500ms)到位，避免全局 scroll-behavior:smooth 在超长文档上“长距离爬行”数秒；
+   behavior:'auto' 覆盖 CSS 平滑，由 rAF 自行插值，结果稳定可测 */
+function easeScrollTo(top, duration){
+  duration = duration || 500;
+  top = Math.max(0, Math.round(top));
+  var start = window.scrollY || window.pageYOffset || 0;
+  var dist = top - start;
+  if (Math.abs(dist) < 2) { return; }
+  var t0 = (window.performance && performance.now) ? performance.now() : Date.now();
+  var step = function(now){
+    var p = Math.min(1, (now - t0) / duration);
+    var e = 1 - Math.pow(1 - p, 3); /* easeOutCubic */
+    try { window.scrollTo({ top: start + dist * e, behavior: 'auto' }); }
+    catch (err) { window.scrollTo(0, start + dist * e); }
+    if (p < 1) { (window.requestAnimationFrame || setTimeout)(step); }
+  };
+  (window.requestAnimationFrame || function(f){ return setTimeout(function(){ f((window.performance&&performance.now)?performance.now():Date.now()); }, 16); })(step);
+}
+function isWide(){ try { return window.matchMedia('(min-width:1024px)').matches; } catch (e) { return false; } }
+function pad(n){ return (n < 10 ? '0' : '') + n; }
+function dateStr(d){ return d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate()); }
+function parseDate(s){ var p = s.split('-'); return new Date(+p[0], +p[1] - 1, +p[2]); }
+function fmtCN(d){ return (d.getMonth() + 1) + '月' + d.getDate() + '日'; }
+function addDays(s, n){ var d = parseDate(s); d.setDate(d.getDate() + n); return d; }
+
+var startDate = lsGet(LS_KEY);
+if (!startDate) { startDate = dateStr(new Date()); }
+
+function dayIndex(){
+  var t = parseDate(dateStr(new Date()));
+  var s = parseDate(startDate);
+  return Math.round((t - s) / 86400000) + 1;
+}
+
+/* 刷新目录中的日程日期 */
+function refreshTocDates(){
+  var ds = document.querySelectorAll('.toc .d');
+  for (var i = 0; i < ds.length && i < TOTAL; i++) {
+    ds[i].textContent = '第' + (i + 1) + '天 · ' + fmtCN(addDays(startDate, i));
+  }
+}
+
+/* 今日共读状态：徽章 / 本章 / 进度 / 目录高亮 */
+function updateToday(){
+  var idx = dayIndex();
+  var d = Math.max(1, Math.min(TOTAL, idx));
+  var notStarted = idx < 1;
+  var done = idx > TOTAL;
+  $('#dayChip').textContent = done ? '33 / 33 天 · 已完成'
+    : (notStarted ? '共读未开始' : '第 ' + idx + ' / ' + TOTAL + ' 天');
+  $('#todayLine').innerHTML = done ? '十天已通读完毕 · 温故而知新'
+    : (notStarted ? '共读尚未开始 · 首日从第一章读起'
+       : '第' + CN[d - 1] + '章 · ' + CHAPTERS[d - 1].label);
+  $('#progressBar').style.width = (done ? 100 : d / TOTAL * 100) + '%';
+  var links = document.querySelectorAll('.toc a');
+  for (var i = 0; i < links.length; i++) {
+    links[i].classList.toggle('today', !done && +links[i].getAttribute('data-n') === d);
+  }
+  refreshAnshen(d);
+}
+
+/* 我的践行笔记：按章存本机，载入即回填；导出为 33 天自省文本 */
+var SHENG_KEY = 'zhixue_sheng_';
+function shengKey(n){ return SHENG_KEY + n; }
+function loadShengNotes(){
+  var tas = document.querySelectorAll('.sheng-note');
+  for (var i = 0; i < tas.length; i++) {
+    var ta = tas[i];
+    var n = ta.getAttribute('data-n');
+    var v = '';
+    try { v = window.localStorage.getItem(shengKey(n)) || ''; } catch (e) {}
+    ta.value = v;
+    var cnt = document.getElementById('shengCount-' + n);
+    if (cnt) { cnt.textContent = v.length; }
+  }
+}
+function bindShengNotes(){
+  document.addEventListener('input', function(e){
+    var ta = e.target;
+    if (!ta || ta.className !== 'sheng-note') { return; }
+    var n = ta.getAttribute('data-n');
+    try { window.localStorage.setItem(shengKey(n), ta.value); } catch (err) {}
+    var cnt = document.getElementById('shengCount-' + n);
+    if (cnt) { cnt.textContent = ta.value.length; }
+  });
+}
+function exportSheng(){
+  var tip = document.getElementById('exportTip');
+  var lines = ['《止学》我的 10 天自省', '（生成于 ' + dateStr(new Date()) + '）', ''];
+  for (var n = 1; n <= TOTAL; n++) {
+    var qs = (SHENGQ[String(n)] || []);
+    var note = '';
+    try { note = window.localStorage.getItem(shengKey(n)) || ''; } catch (e) {}
+    if (!qs.length && !note.trim()) { continue; }
+    lines.push('第' + CN[n - 1] + '章 · ' + (CHAPTERS[n - 1] ? CHAPTERS[n - 1].label : ''));
+    for (var i = 0; i < qs.length; i++) { lines.push('  自省问：' + qs[i]); }
+    lines.push('  我的笔记：' + (note.trim() || '（未写）'));
+    lines.push('');
+  }
+  var text = lines.join('\n');
+  try {
+    var blob = new Blob([text], { type: 'text/plain;charset=utf-8' });
+    var url = URL.createObjectURL(blob);
+    var a = document.createElement('a');
+    a.href = url; a.download = '止学_我的' + TOTAL + '天自省.txt';
+    document.body.appendChild(a); a.click(); document.body.removeChild(a);
+    setTimeout(function(){ try { URL.revokeObjectURL(url); } catch (e) {} }, 1000);
+    if (tip) { tip.textContent = '已导出 ' + (lines.length) + ' 行（仅含你写的内容）'; }
+  } catch (e) {
+    if (tip) { tip.textContent = '当前环境不支持下载，已复制到剪贴板'; }
+    copyText(text);
+  }
+}
+
+/* 今日安心签：按今日章（或当前章）取一句，可分享 */
+function refreshAnshen(chapter){
+  var el = document.getElementById('anshenText');
+  if (!el) { return; }
+  var n = (typeof chapter === 'number' && chapter >= 1 && chapter <= TOTAL) ? chapter : Math.max(1, Math.min(TOTAL, dayIndex()));
+  var txt = (ANSHEN && ANSHEN[n - 1]) ? ANSHEN[n - 1] : '';
+  el.textContent = txt;
+  el.setAttribute('data-n', n);
+  var tp = document.getElementById('tpAnshenText');
+  if (tp) { tp.textContent = txt; tp.setAttribute('data-n', n); }
+}
+function shareAnshen(){
+  var el = document.getElementById('anshenText');
+  if (!el) { return; }
+  var txt = el.textContent.trim();
+  if (!txt) { return; }
+  var n = el.getAttribute('data-n') || '1';
+  var base = SHARE_BASE || ((location.origin || '') + (location.pathname || ''));
+  var link = base ? (base.replace(/\/$/, '') + '#ch-' + n) : '';
+  copyText('【今日安心签】《止学·第' + CN[n - 1] + '章》\n' + txt + (link ? '\n' + link : ''));
+}
+
+/* 跳到今日共读章节 */
+function jumpToday(){
+  var d = Math.max(1, Math.min(TOTAL, dayIndex()));
+  if (PAGED) { showChapter(d); return; }
+  var el = document.getElementById('ch-' + d);
+  if (!el) { return; }
+  scrollToEl(el);
+  el.classList.remove('flash');
+  void el.offsetWidth;
+  el.classList.add('flash');
+  try { history.replaceState(null, '', '#ch-' + d); } catch (e) {}
+}
+
+/* 让目录栏滚动到当前章节（宽屏）或展开目录（窄屏） */
+function revealTocActive(){
+  var dd = document.getElementById('tocDetails');
+  if (dd && !dd.open) { dd.open = true; }
+  var act = document.querySelector('.toc a.active') || document.querySelector('.toc a');
+  if (act) { scrollToEl(act, true); }
+}
+
+function chapterCopyText(n){
+  var c = CHAPTERS[n - 1];
+  var t = c.paras ? c.paras.join('\n') : c.text;
+  return '《止学》第' + CN[n - 1] + '章（' + c.label + '）\n\n' + t;
+}
+
+function copyText(t){
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(t).then(function(){ toast('已复制，去群里粘贴吧'); }, function(){ legacyCopy(t); });
+  } else { legacyCopy(t); }
+}
+function legacyCopy(t){
+  var ta = document.createElement('textarea');
+  ta.value = t;
+  ta.setAttribute('readonly', '');
+  ta.style.position = 'fixed';
+  ta.style.opacity = '0';
+  document.body.appendChild(ta);
+  ta.select();
+  try { document.execCommand('copy'); toast('已复制，去群里粘贴吧'); }
+  catch (e) { toast('复制失败，请手动选择文本'); }
+  document.body.removeChild(ta);
+}
+
+var toastTimer = null;
+function toast(msg, ms){
+  var el = $('#toast');
+  el.textContent = msg;
+  el.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(function(){ el.classList.remove('show'); }, ms || 1800);
+}
+
+/* 分享本章：优先调用系统分享面板（移动端），否则复制带 #ch-N 的直达链接。
+   固定输出公开站点地址 SHARE_BASE：书友打开即直达本章，无需登录。
+   若将来更换/下线了公开站点，改这里即可；留空则回退为当前页面地址。 */
+var SHARE_BASE = '';
+function shareChapter(n){
+  n = Math.max(1, Math.min(TOTAL, n));
+  var base = SHARE_BASE || ((location.origin || '') + (location.pathname || ''));
+  var url = base + '#ch-' + n;
+  var title = '《止学》第' + CN[n - 1] + '章 · ' + CHAPTERS[n - 1].label;
+  /* 先把地址栏同步为该章（replaceState 不产生历史记录）：
+     个别浏览器/WebView 的系统分享会忽略传入 url、改用当前页面地址，
+     同步后即使走这条路，分享出去的也一定是带 #ch-N 的直达链接。 */
+  try { history.replaceState(null, '', '#ch-' + n); } catch (e) {}
+  if (navigator.share) {
+    navigator.share({ title: title, text: title, url: url }).catch(function (err) {
+      /* 用户主动取消（AbortError）不打扰；其余失败（权限被拒、iframe 内被禁等）回退为复制 */
+      if (err && err.name === 'AbortError') { return; }
+      copyText(url);
+      toast('已复制本章链接，分享即可直达');
+    });
+    return;
+  }
+  copyText(url);
+  toast('已复制本章链接，分享即可直达');
+}
+
+$('#todayBtn').addEventListener('click', jumpToday);
+/* 继续阅读：回到上次读到的章（分页切视图 / 连续滚动定位） */
+var resumeBtn = document.getElementById('resumeBtn');
+if (resumeBtn) {
+  resumeBtn.addEventListener('click', function(){
+    var n = Math.max(1, Math.min(TOTAL, lastRead || 1));
+    if (PAGED) { showChapter(n); return; }
+    var el = document.getElementById('ch-' + n);
+    if (!el) { return; }
+    scrollToEl(el);
+    el.classList.remove('flash');
+    void el.offsetWidth;
+    el.classList.add('flash');
+  });
+}
+$('#jumpBtn').addEventListener('click', jumpToday);
+/* 窄屏抽屉打开后：把目录滚动到当前章（分页取 CURRENT，连续取 scroll-spy 高亮，均兜底为今日章） */
+function revealTocMobile(){
+  var dd = document.getElementById('tocDetails');
+  if (dd && !dd.open) { dd.open = true; }
+  var act = document.querySelector('.toc a.active');
+  if (!act) {
+    var dn = (typeof CURRENT === 'number' && CURRENT >= 1) ? CURRENT : Math.max(1, Math.min(TOTAL, dayIndex()));
+    act = document.querySelector('.toc a[data-n="' + dn + '"]');
+  }
+  var sc = document.querySelector('.sidebar');
+  if (!act || !sc) { return; }
+  var doScroll = function(){
+    try {
+      var er = act.getBoundingClientRect(), sr = sc.getBoundingClientRect();
+      /* 垂直方向不受抽屉水平滑入动画影响，可立即计算；动画结束后再校准一次 */
+      sc.scrollTop += er.top - sr.top - (sr.height - er.height) / 2;
+    } catch (e) {}
+  };
+  doScroll();
+  setTimeout(doScroll, 300);
+}
+/* 目录按钮：宽屏滚动目录到当前章；窄屏开/关抽屉（打开时顺带滚动到当前章） */
+function toggleToc(force){
+  var open = (typeof force === 'boolean') ? force : !document.body.classList.contains('toc-open');
+  document.body.classList.toggle('toc-open', open);
+  eachNode(document.querySelectorAll('.act-toc'), function(el){ el.classList.toggle('active', open); });
+  if (open && !isWide()) { revealTocMobile(); }
+}
+$('#tocBtn').addEventListener('click', function(){
+  if (isWide()) { revealTocActive(); } else { toggleToc(); }
+});
+$('#tocBackdrop').addEventListener('click', function(){ document.body.classList.remove('toc-open'); });
+/* 注音开关（顶栏 + 抽屉工具区两处按钮，状态同步） */
+function syncPy(){
+  var on = !document.body.classList.contains('no-py');
+  var bs = document.querySelectorAll('.py-toggle');
+  for (var i = 0; i < bs.length; i++) { bs[i].classList.toggle('on', on); bs[i].textContent = on ? '开' : '关'; }
+}
+(function(){
+  var bs = document.querySelectorAll('.py-toggle');
+  for (var i = 0; i < bs.length; i++) {
+    (function(b){
+      b.addEventListener('click', function(){
+        document.body.classList.toggle('no-py');
+        syncPy();
+      });
+    })(bs[i]);
+  }
+  syncPy();
+})();
+/* 首页 / 研读：分页模式切换视图；连续模式平滑滚动到对应区 */
+$('#homeBtn').addEventListener('click', function(){
+  if (PAGED) { showCover(); } else { var c = document.getElementById('cover'); if (c) scrollToEl(c); }
+});
+$('#studyBtn').addEventListener('click', function(){
+  if (PAGED) { showStudy(); } else { var s = document.getElementById('study'); if (s) scrollToEl(s); }
+});
+/* 底部 tab 栏（移动端）：与顶栏导航同逻辑 */
+eachNode(document.querySelectorAll('.bn-item'), function(el){
+  el.addEventListener('click', function(){
+    if (el.classList.contains('act-home')) {
+      if (PAGED) { showCover(); } else { var c = document.getElementById('cover'); if (c) scrollToEl(c); }
+    } else if (el.classList.contains('act-study')) {
+      if (PAGED) { showStudy(); } else { var s = document.getElementById('study'); if (s) scrollToEl(s); }
+    } else if (el.classList.contains('act-today')) {
+      jumpToday();
+    } else if (el.classList.contains('act-toc')) {
+      if (isWide()) { revealTocActive(); } else { toggleToc(); }
+    }
+  });
+});
+
+document.addEventListener('click', function(e){
+  var t = e.target;
+  /* 通假/异读虚线字：点击弹出说明（悬浮 title 同文案），注明「某通某」及含义 */
+  var tj = t.closest ? t.closest('ruby.tj') : null;
+  if (tj) {
+    toast(tj.getAttribute('title') || '', 4200);
+    return;
+  }
+  /* 解读面板：点击学派名展开/收起简介 */
+  var jl = t.closest ? t.closest('.jlabel') : null;
+  if (jl) {
+    var jr = jl.closest('.jrow');
+    if (jr) {
+      var jopen = !jr.classList.contains('jopen');
+      jr.classList.toggle('jopen', jopen);
+      jl.setAttribute('aria-expanded', jopen ? 'true' : 'false');
+    }
+    return;
+  }
+  /* 章节详解：切换 译文/注释/串讲/解读/导读 标签页 */
+  var tab = t.closest ? t.closest('.tab-btn') : null;
+  if (tab) {
+    var art = tab.closest('.chapter');
+    if (art) {
+      var name = tab.getAttribute('data-tab');
+      var btns = art.querySelectorAll('.tab-btn');
+      for (var i = 0; i < btns.length; i++) { btns[i].classList.toggle('active', btns[i] === tab); }
+      var pans = art.querySelectorAll('.panel');
+      for (var j = 0; j < pans.length; j++) { pans[j].classList.toggle('active', pans[j].getAttribute('data-panel') === name); }
+    }
+    return;
+  }
+  /* 页面内跳转链接：分页模式下接管为「切换视图」；连续模式下交给原生锚点 */
+  var ha = t.closest ? t.closest('a[href^="#"]') : null;
+  if (ha && PAGED) {
+    var hid = ha.getAttribute('href');
+    if (hid === '#study') { e.preventDefault(); showStudy(); return; }
+    if (hid === '#cover') { e.preventDefault(); showCover(); return; }
+    if (/^#ch-\d+$/.test(hid)) {
+      e.preventDefault();
+      var nn = parseInt(hid.slice(4), 10);
+      if (!isWide()) { document.body.classList.remove('toc-open'); }
+      showChapter(nn);
+      return;
+    }
+  }
+  /* 回到目录 */
+  var back = t.closest ? t.closest('a[href="#toc"]') : null;
+  if (back) {
+    if (isWide()) {
+      e.preventDefault();
+      revealTocActive();
+    } else {
+      e.preventDefault();
+      toggleToc(true);
+    }
+    return;
+  }
+  var b = t.closest ? t.closest('.share-btn') : null;
+  if (b) { shareChapter(+b.getAttribute('data-n')); }
+});
+
+/* 修改开始日期：刷新日程并直接跳到对应章节；输入即时缓存到浏览器本地 */
+$('#startDate').value = startDate;
+var planDate0 = document.getElementById('planDateLabel');
+if (planDate0) { planDate0.textContent = startDate; }
+function onStartChange(){
+  var v = $('#startDate').value;
+  if (!v) { return; }
+  startDate = v;
+  lsSet(LS_KEY, v);
+  var pd = document.getElementById('planDateLabel');
+  if (pd) { pd.textContent = startDate; }
+  refreshTocDates();
+  updateToday();
+  jumpToday();
+  var idx = dayIndex();
+  var msg = idx < 1 ? '共读未开始，已定位到第一章'
+    : (idx > TOTAL ? '已通读完毕，定位到最后一章' : '已记住开始日期，定位到第 ' + idx + '章');
+  toast(msg);
+}
+$('#startDate').addEventListener('change', onStartChange);
+$('#startDate').addEventListener('input', onStartChange);
+
+/* 滚动联动：正文滚到哪一章，目录就高亮该项，并把目录栏滚动到对应位置（仅宽屏） */
+var spyCurrent = 0;
+var spyRaf = null;
+var raf = window.requestAnimationFrame || function(f){ return setTimeout(f, 16); };
+function chapterAtViewport(){
+  var arts = document.querySelectorAll('article.chapter');
+  if (!arts.length) { return 1; }
+  /* 已滚到页面底部：最后一章无法再抬到顶部，直接视为当前章 */
+  var sc = (document.documentElement || document.body);
+  var scrollBottom = window.scrollY + window.innerHeight;
+  if (scrollBottom >= sc.scrollHeight - 4) { return arts.length; }
+  var n = 1;
+  for (var i = 0; i < arts.length; i++) {
+    if (arts[i].getBoundingClientRect().top <= 140) { n = i + 1; } else { break; }
+  }
+  return n;
+}
+function scrollSidebarTo(el){
+  try {
+    var sc = document.querySelector('.sidebar');
+    if (!sc || !el) { return; }
+    var er = el.getBoundingClientRect(), sr = sc.getBoundingClientRect();
+    if (er.top < sr.top + 4 || er.bottom > sr.bottom - 4) {
+      sc.scrollTop += er.top - sr.top - (sr.height - er.height) / 2;
+    }
+  } catch (e) {}
+}
+function markActive(n){
+  var links = document.querySelectorAll('.toc a');
+  for (var i = 0; i < links.length; i++) {
+    links[i].classList.toggle('active', +links[i].getAttribute('data-n') === n);
+  }
+  if (isWide()) {
+    scrollSidebarTo(document.querySelector('.toc a[data-n="' + n + '"]'));
+  }
+}
+function onScrollSpy(){
+  if (PAGED) { return; }
+  if (spyRaf) { return; }
+  spyRaf = raf(function(){
+    spyRaf = null;
+    var n = chapterAtViewport();
+    if (n !== spyCurrent) { spyCurrent = n; markActive(n); }
+  });
+}
+window.addEventListener('scroll', function(){
+  $('#backTop').classList.toggle('show', window.scrollY > 600);
+  onScrollSpy();
+}, { passive: true });
+$('#backTop').addEventListener('click', function(){
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+});
+
+/* 目录详情始终展开（宽屏在侧栏、窄屏在抽屉中均需可见） */
+function syncTocDetails(){
+  var dd = document.getElementById('tocDetails');
+  if (dd) { dd.open = true; }
+}
+syncTocDetails();
+window.addEventListener('resize', syncTocDetails);
+
+/* ===== 分页阅读：视图切换 ===== */
+/* 当前页高亮：封面→首页；研读→研读；章节→若恰为今日则高亮「今日」；目录仅在抽屉打开时高亮 */
+function setNavActive(name, n){
+  eachNode(document.querySelectorAll('.nav-btn, .bn-item'), function(el){ el.classList.remove('active'); });
+  if (name === 'cover' || name === 'study') {
+    var cls = (name === 'cover') ? 'act-home' : 'act-study';
+    eachNode(document.querySelectorAll('.' + cls), function(el){ el.classList.add('active'); });
+  } else if (name === 'ch') {
+    if (n === Math.max(1, Math.min(TOTAL, dayIndex()))) {
+      eachNode(document.querySelectorAll('.act-today'), function(el){ el.classList.add('active'); });
+    }
+  }
+}
+function setView(name, n){
+  var views = document.querySelectorAll('.view');
+  for (var i = 0; i < views.length; i++) { views[i].classList.remove('active-view'); }
+  if (name === 'cover') {
+    var cov = document.getElementById('cover'); if (cov) { cov.classList.add('active-view'); }
+    document.body.classList.remove('view-chapter');
+  } else if (name === 'study') {
+    var st = document.getElementById('study'); if (st) { st.classList.add('active-view'); }
+    document.body.classList.remove('view-chapter');
+  } else {
+    var el = document.getElementById('ch-' + n);
+    if (el) { el.classList.add('active-view'); }
+    document.body.classList.add('view-chapter');
+    updatePager(n);
+  }
+  setNavActive(name, n);
+  try { window.scrollTo(0, 0); } catch (e2) {}
+}
+function updatePager(n){
+  var info = document.getElementById('pagerInfo');
+  if (info) { info.innerHTML = '第' + CN[n - 1] + '章<span class="psep"> · </span><span class="plabel">' + CHAPTERS[n - 1].label + '</span>'; }
+  var prev = document.getElementById('prevCh'), next = document.getElementById('nextCh');
+  if (prev) { prev.disabled = (n <= 1); }
+  if (next) { next.disabled = (n >= TOTAL); }
+}
+function showCover(){ setView('cover'); try { history.replaceState(null, '', '#cover'); } catch (e) {} }
+function showStudy(){ setView('study'); try { history.replaceState(null, '', '#study'); } catch (e) {} }
+function showChapter(n, keepHash){
+  n = Math.max(1, Math.min(TOTAL, n));
+  CURRENT = n;
+  setView('ch', n);
+  markActive(n);
+  if (n > lastRead) { lastRead = n; lsSet(LAST_KEY, String(n)); }
+  markReadToc();
+  if (keepHash !== false) { try { history.replaceState(null, '', '#ch-' + n); } catch (e) {} }
+}
+
+/* 翻页按钮（上一章 / 下一章） */
+var pPrev = document.getElementById('prevCh'), pNext = document.getElementById('nextCh');
+if (pPrev) { pPrev.addEventListener('click', function(){ if (CURRENT > 1) { showChapter(CURRENT - 1); } }); }
+if (pNext) { pNext.addEventListener('click', function(){ if (CURRENT < TOTAL) { showChapter(CURRENT + 1); } }); }
+
+/* 模式切换：分页 <-> 连续阅读（顶栏 + 抽屉工具区两处按钮，状态同步） */
+function syncMode(){
+  var state = document.getElementById('modeState');
+  var ts = document.querySelectorAll('.mode-toggle');
+  for (var i = 0; i < ts.length; i++) { ts[i].textContent = PAGED ? '切换为连续阅读' : '切换为分页阅读'; }
+  if (state) { state.textContent = PAGED ? '分页阅读' : '连续阅读'; }
+}
+(function(){
+  var ts = document.querySelectorAll('.mode-toggle');
+  for (var i = 0; i < ts.length; i++) {
+    (function(b){
+      b.addEventListener('click', function(){
+        PAGED = !PAGED;
+        document.body.classList.toggle('paged', PAGED);
+        if (!PAGED) {
+          var vs = document.querySelectorAll('.view');
+          for (var j = 0; j < vs.length; j++) { vs[j].classList.add('active-view'); }
+          document.body.classList.remove('view-chapter');
+        } else {
+          showChapter(CURRENT);
+        }
+        syncMode();
+      });
+    })(ts[i]);
+  }
+  syncMode();
+})();
+
+/* 键盘左右翻页（仅分页 + 章节视图） */
+document.addEventListener('keydown', function(e){
+  if (!PAGED) { return; }
+  var tag = (e.target && e.target.tagName) || '';
+  if (tag === 'INPUT' || tag === 'TEXTAREA') { return; }
+  if (document.body.classList.contains('view-chapter')) {
+    if (e.key === 'ArrowLeft' && CURRENT > 1) { showChapter(CURRENT - 1); }
+    else if (e.key === 'ArrowRight' && CURRENT < TOTAL) { showChapter(CURRENT + 1); }
+  }
+});
+
+/* URL hash 变化（手动改地址 / 浏览器前进后退） */
+window.addEventListener('hashchange', function(){
+  var h = location.hash;
+  var m = h.match(/ch-(\d+)/);
+  if (m) { var n = +m[1]; if (n >= 1 && n <= TOTAL) { showChapter(n); return; } }
+  if (h === '#study') { showStudy(); return; }
+  if (h === '#cover') { showCover(); return; }
+});
+
+/* 工具箱面板：统一收纳系统功能（阅读设置 / 笔记 / 分享） */
+function openTools(){ var p = $('#toolsPanel'), m = $('#toolsMask'); if (p) p.classList.add('open'); if (m) m.classList.add('open'); }
+function closeTools(){ var p = $('#toolsPanel'), m = $('#toolsMask'); if (p) p.classList.remove('open'); if (m) m.classList.remove('open'); }
+try {
+  $('#toolsBtn').addEventListener('click', function(e){ e.stopPropagation(); var p = $('#toolsPanel'); if (p.classList.contains('open')) { closeTools(); } else { openTools(); } });
+  var tb = $('#toolsBtnBottom'); if (tb) { tb.addEventListener('click', function(e){ e.stopPropagation(); openTools(); }); }
+  $('#toolsClose').addEventListener('click', closeTools);
+  $('#toolsMask').addEventListener('click', closeTools);
+  $('#shareAnshen').addEventListener('click', function(){ shareAnshen(); closeTools(); });
+} catch (e) {}
+
+/* 初始化（每项独立容错，单点失败不影响其他功能） */
+try { refreshTocDates(); } catch (e) {}
+try { updateToday(); } catch (e) {}
+try { markReadToc(); } catch (e) {}
+try { loadShengNotes(); } catch (e) {}
+try { bindShengNotes(); } catch (e) {}
+try { $('#exportSheng').addEventListener('click', exportSheng); } catch (e) {}
+try { $('#anshenShare').addEventListener('click', shareAnshen); } catch (e) {}
+document.body.classList.add('paged');   /* 默认分页阅读 */
+try {
+  var h0 = location.hash;
+  var m0 = h0.match(/ch-(\d+)/);
+  if (m0) { var n0 = +m0[1]; if (n0 >= 1 && n0 <= TOTAL) { showChapter(n0); } else { showCover(); } }
+  else if (h0 === '#study') { showStudy(); }
+  else { showCover(); markActive(Math.max(1, Math.min(TOTAL, dayIndex()))); }
+} catch (e) { try { showCover(); } catch (e2) {} }
+
+/* URL 带章节链接打开时：高亮闪烁（跳转由原生锚点完成） */
+(function(){
+  try {
+    var m = location.hash.match(/ch-(\d+)/);
+    if (m) {
+      var n = +m[1];
+      if (n >= 1 && n <= TOTAL) {
+        var el = document.getElementById('ch-' + n);
+        if (el) { setTimeout(function(){ el.classList.add('flash'); }, 400); }
+      }
+    }
+  } catch (e) {}
+})();
+</script>
+</body>
+</html>

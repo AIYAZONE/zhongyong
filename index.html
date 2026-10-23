@@ -1959,13 +1959,13 @@ function revealTocMobile(){
 function toggleToc(force){
   var open = (typeof force === 'boolean') ? force : !document.body.classList.contains('toc-open');
   document.body.classList.toggle('toc-open', open);
-  eachNode(document.querySelectorAll('.act-toc'), function(el){ el.classList.toggle('active', open); });
+  /* 移动端目录按钮不保持选中态——与工具箱一致，点击即开关，关闭后无 active */
   if (open && !isWide()) { revealTocMobile(); }
 }
 $('#tocBtn').addEventListener('click', function(){
   if (isWide()) { revealTocActive(); } else { toggleToc(); }
 });
-$('#tocBackdrop').addEventListener('click', function(){ document.body.classList.remove('toc-open'); });
+$('#tocBackdrop').addEventListener('click', function(){ document.body.classList.remove('toc-open'); eachNode(document.querySelectorAll('.act-toc'), function(el){ el.classList.remove('active'); }); });
 /* 注音开关（顶栏 + 抽屉工具区两处按钮，状态同步） */
 function syncPy(){
   var on = !document.body.classList.contains('no-py');

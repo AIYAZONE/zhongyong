@@ -172,8 +172,8 @@ footer{padding:34px 0 46px;text-align:center;color:var(--soft);font-size:12px;li
   .desk-only{display:none}
   .top-actions .nav-btn{display:none}
   .bottom-nav{display:flex}
-  /* 顶栏在移动端不吸顶：随正文滚动消失，最大化正文可视面积；主导航已由底部固定 tab 栏承载 */
-  .topbar{position:static;backdrop-filter:none;border-bottom:none}
+  /* 顶栏在移动端直接隐藏：主导航已由底部固定 tab 栏承载 */
+  .topbar{display:none}
   /* 跳转锚点时不再为吸顶顶栏预留空间 */
   .chapter,.study{scroll-margin-top:12px}
   /* 目录抽屉：章号 / 标题 / 共读日期 两行展示，日期常显 */

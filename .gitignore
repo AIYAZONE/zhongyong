@@ -9,5 +9,18 @@
 .workbuddy/
 .genie
 
+# Data sources (build inputs, not shipped)
+chapters.json
+config.json
+content.json
+sentences.json
+study.json
+p1.json
+p2.json
+pinyin.json
+
+# Build output (regenerable from index.html)
+dist/
+
 # OS junk
 Thumbs.db
